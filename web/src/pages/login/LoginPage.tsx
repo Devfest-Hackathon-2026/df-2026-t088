@@ -37,7 +37,7 @@ interface LoginPageProps {
   unregisteredEmail?: string;
 }
 
-/** PG-009 ログイン（D-145、D-146、D-153）。先生の画面への入口は置かない（先生は /teacher/ を直接開く）。3D も学年の教科も待たない（D-139）。仮の動き：押すとこの端末でログインしたことにする */
+/** PG-009 ログイン（D-145、D-146、D-153）。先生の画面への入口は置かない（先生は /teacher/ を直接開く）。仮の動き：押すとこの端末でログインしたことにする。見本であることを 1 行で知らせる（#572） */
 export function LoginPage({ onLoggedIn, unregisteredEmail }: LoginPageProps) {
   const t = useText();
   const [failed, setFailed] = useState(false);
@@ -75,6 +75,7 @@ export function LoginPage({ onLoggedIn, unregisteredEmail }: LoginPageProps) {
             <MicrosoftLogo />{t(COPY.CP_787)}
           </Button>
         </div>
+        <p className="login__demo-note">{t(COPY.CP_800)}</p>
       </>
     );
   }

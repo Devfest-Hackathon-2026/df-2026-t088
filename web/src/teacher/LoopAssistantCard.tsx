@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ApiError, call } from "../research/api";
 import { useLoopAccess } from "./loop-access";
 import { PATTERN_LABEL } from "./copy";
+import { LoopOccurrenceLine, type LoopStumbles } from "./LoopOccurrenceLine";
 import { problemLabel, unitLabel } from "./unit";
 import "./LoopAssistantCard.css";
 
@@ -16,7 +17,7 @@ type AssistantRow = {
   status: string;
   source: "dummy" | "demo";
   suggestion?: { id: string; candidates: Candidate[]; selectedCandidateNumber?: number };
-  effect: { status: "undetermined" | "compared"; before: Side; after: Side; tryAlternatives: boolean; alternatives: Candidate[] };
+  effect: { status: "undetermined" | "compared"; before: Side; after: Side; tryAlternatives: boolean; alternatives: Candidate[]; stumbles?: LoopStumbles };
 };
 
 type State = { items: AssistantRow[] | null; error: string | null; keyRequired: boolean };
@@ -27,7 +28,7 @@ function rate(side: Side): string {
 }
 
 // 承認キーは先生の画面の上の行（TeacherApproverKey）で 1 回だけ入れる。学級に入っている先生は、キー無しで自分の学級の分を使う
-export function LoopAssistantCard() {
+export function LoopAssistantCard({ onChanged }: { onChanged?: () => void } = {}) {
   const [state, setState] = useState<State>({ items: null, error: null, keyRequired: false });
   const { approverKey, headers, unauthorizedText } = useLoopAccess();
   const [selected, setSelected] = useState<Record<string, number>>({});
@@ -56,6 +57,12 @@ export function LoopAssistantCard() {
 
   useEffect(() => { void refresh(); }, [approverKey]);
 
+  // 承認・却下・取り消し・見本・「更新」の後は、左の輪も読み直す（#573。輪は別に読み込んでいるので、開き直すまで古いままだった）
+  async function refreshAll() {
+    await refresh();
+    onChanged?.();
+  }
+
   async function decide(item: AssistantRow, decision: "approved" | "rejected") {
     if (!item.suggestion) return;
     const reason = (reasons[item.suggestion.id] ?? "").trim();
@@ -67,7 +74,7 @@ export function LoopAssistantCard() {
       }, headers);
       setReasons((current) => ({ ...current, [item.suggestion!.id]: "" }));
       setState((current) => ({ ...current, error: null }));
-      await refresh();
+      await refreshAll();
     } catch (error) {
       const keyRequired = error instanceof ApiError && error.code === "UNAUTHORIZED";
       setState((current) => ({ ...current, error: keyRequired ? unauthorizedText("承認キーが必要か、合っていません") : "決定を保存できませんでした", keyRequired }));
@@ -85,7 +92,7 @@ export function LoopAssistantCard() {
       await call("POST", `/api/v1/suggestions/${encodeURIComponent(item.suggestion.id)}/revoke`, { role: "teacher", reason }, headers);
       setReasons((current) => ({ ...current, [item.suggestion!.id]: "" }));
       setState((current) => ({ ...current, error: null }));
-      await refresh();
+      await refreshAll();
     } catch (error) {
       const keyRequired = error instanceof ApiError && error.code === "UNAUTHORIZED";
       setState((current) => ({ ...current, error: keyRequired ? unauthorizedText("承認キーが必要か、合っていません") : "取り消しを保存できませんでした", keyRequired }));
@@ -99,7 +106,7 @@ export function LoopAssistantCard() {
     setBusy(true);
     try {
       await call("POST", `/api/v1/loop/assistant/${encodeURIComponent(item.suggestion.id)}/alternatives`, {}, headers);
-      await refresh();
+      await refreshAll();
     } catch (error) {
       const keyRequired = error instanceof ApiError && error.code === "UNAUTHORIZED";
       setState((current) => ({ ...current, error: keyRequired ? unauthorizedText("承認キーが必要か、合っていません") : "別の案を読み込めませんでした", keyRequired }));
@@ -117,7 +124,7 @@ export function LoopAssistantCard() {
       if (approved && onlyPattern) setSampleAfterAdded((current) => ({ ...current, [onlyPattern]: true }));
       else setSampleBaseAdded(true);
       setState((current) => ({ ...current, error: null }));
-      await refresh();
+      await refreshAll();
     } catch (error) {
       // 混んでいるとき（429）は、待てば直ると分かる文を出す。押し直しは、応答が返るまでボタンが効かない（busy）で止める（#377）
       const crowded = error instanceof ApiError && error.code === "RATE_LIMITED";
@@ -132,7 +139,7 @@ export function LoopAssistantCard() {
       <div className="loop-assistant__heading">
         <h2 id="loop-assistant-title">学びの輪アシスタント</h2>
         {!sampleBaseAdded && <button type="button" onClick={() => void addSampleRecords(false)} disabled={busy}>見本を入れる</button>}
-        <button type="button" onClick={() => void refresh()} disabled={busy}>更新</button>
+        <button type="button" onClick={() => void refreshAll()} disabled={busy}>更新</button>
       </div>
       {state.error && <p role="alert">{state.error}</p>}
       {state.items === null && !state.error && <p role="status">読み込んでいます</p>}
@@ -183,6 +190,7 @@ export function LoopAssistantCard() {
                   {item.source === "dummy" && item.effect.after.count === 0 && !sampleAfterAdded[item.pattern] && <button type="button" onClick={() => void addSampleRecords(true, item.pattern)} disabled={busy}>見本の承認後記録を入れる</button>}
                   {item.effect.tryAlternatives && item.effect.alternatives.length > 0 && <button type="button" onClick={() => void tryAlternative(item)} disabled={busy}>別の案を試す</button>}
                 </p>}
+                {item.status === "approved" && <LoopOccurrenceLine stumbles={item.effect.stumbles} />}
                 {item.status === "rejected" && <p>この案は却下されました</p>}
                 {item.status === "revoked" && <p>承認は取り消されました</p>}
               </article>

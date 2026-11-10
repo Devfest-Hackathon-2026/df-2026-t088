@@ -1,3 +1,5 @@
+import "./dev/developer-lessons.css";
+import { Ruby } from "./components/Ruby";
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import type { ComponentType, LazyExoticComponent } from "react";
 import { flushSync } from "react-dom";
@@ -25,7 +27,7 @@ import { chaptersOf, shownSubjectsOf } from "./data";
 import type { Chapter, SubjectId } from "./data";
 import type { Grade } from "./data/kanji-grades";
 import { KOKUGO_COURSE, findKokugoLesson } from "./lesson/kokugo-lessons";
-import { findLesson } from "./lesson/fraction-lessons";
+import { hasMathLesson } from "./game/lesson-gateway";
 import { initPlanOverrides } from "./lesson/plan-source";
 import { useCourseGame } from "./game/course";
 import type { Course } from "./game/course";
@@ -52,12 +54,18 @@ function debugGradeComponent() {
 // 問題がある算数以外の章は、今は5年国語の漢字の章だけ。ほかの章は「じゅんび中」（FR-006）
 const KANJI_CHAPTER_ID = "kokugo-kanji-5";
 
+const DeveloperLessons = import.meta.env.DEV ? lazy(() => import("./dev/DeveloperLessons")) : null;
+
 export function App() {
+  const [developer, setDeveloper] = useState(false);
   // 学年は App の中身が読む。テストは <App /> をそのまま描くので、Provider はここに置く
   const DebugGrade = debugGradeComponent();
   return (
     <GradeProvider>
-      <AppBody />
+      {developer && DeveloperLessons
+        ? <Suspense fallback={<p>教材を読み込んでいます</p>}><DeveloperLessons onClose={() => setDeveloper(false)} /></Suspense>
+        : <AppBody />}
+      {DeveloperLessons && !developer && <button type="button" className="developer-entry" onClick={() => setDeveloper(true)}><Ruby text="[開発者|かいはつしゃ][用|よう]：[全|ぜん][学習|がくしゅう]を[見る|みる]" /></button>}
       {DebugGrade && <Suspense fallback={null}><DebugGrade /></Suspense>}
     </GradeProvider>
   );
@@ -255,7 +263,7 @@ function AppBody() {
     }
     // 算数もほかの教科と同じ教科の島で章を選ぶ（D-130）。すごろくの道の章えらび（pages/chapter-map の ChapterMapPage）は退避して、画面からは使わない
     if (path === "/sansu") {
-      const sansuCourse: Course = { subjectId: "sansu", chapters: game.chapters, hasLesson: (chapterId, target) => findLesson(chapterId, target) !== undefined };
+      const sansuCourse: Course = { subjectId: "sansu", chapters: game.chapters, hasLesson: hasMathLesson };
       return <SubjectIslandPage subjectId="sansu" course={sansuCourse} game={game} onOpenChapter={(chapter) => game.openChapter(chapter.id)} onOpenMap={() => openMap("sansu")} />;
     }
     if (isLessonPath(path) && isIslandPath) {

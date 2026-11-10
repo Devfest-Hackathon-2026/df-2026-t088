@@ -272,6 +272,8 @@
 
 /* CMP-020 まちがえた答えの図。目盛りは ものさしと同じ線で描く。ずれは色を足さず、点線と斜線で示す（R-03） */
 .lesson-compare { display: grid; gap: var(--space-1); margin-top: var(--space-3); padding-top: var(--space-3); border-top: var(--stroke-2) dashed var(--color-border); }
+.lesson-compare__diagram { display: grid; gap: var(--space-1); }
+.lesson-compare > .fraction-walk__toggle { justify-self: start; }
 .lesson-compare-title { font-size: var(--text-small); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
 .lesson-compare-label { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-1); font-size: var(--text-small); line-height: var(--text-small-line); }
 .lesson-compare-value { display: inline-flex; align-items: center; color: var(--color-fg-strong); }
@@ -404,6 +406,21 @@
 .number-remainder__field { display: flex; align-items: center; gap: var(--space-2); }
 .number-remainder__field .lesson-answer__input { flex: none; width: 6em; }
 
+
+
+.fraction-compare { margin: var(--space-3) 0; }
+.fraction-compare__row p { margin: var(--space-2) 0; }
+.fraction-compare__bar { display: flex; width: min(100%, 400px); }
+.fraction-compare__bar span { flex: 1; min-width: 0; text-align: center; padding: var(--space-1) 0; border: 1px solid var(--color-border); background: var(--color-bg); }
+.fraction-compare__bar .is-filled { background: var(--color-subject-rika); }
+.common-guide__panel { margin-top: var(--space-2); padding: var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); }
+.common-guide__controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.common-guide__controls input { width: 5em; font: inherit; }
+.common-guide__controls button { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-1) var(--space-2); }
+.common-guide__bar { display: flex; width: min(100%, 400px); }
+.common-guide__bar span { flex: 1; min-width: 0; height: 2em; border: 1px solid var(--color-border); background: var(--color-bg); }
+.common-guide__bar .is-filled { background: var(--color-subject-rika); }
+
 /* D-238 767px 以下の学習。問題の式を画面の上に、その時に押すボタンの列を下に固定し、間だけが縦に動く（ページごと動かし、上と下は position: sticky で留める）。
    間の並びは ものさし → のこりのタイル → ヒント → 説明の文。カードの枠は外し（display: contents）、中の物を order で並べ替える。
    768px 以上は何も変えない（高さ 599px 以下の左右2段も固定しない）。この塊は、上の .number-cards や .lesson-quiet-button より後に置く（同じ強さで後が勝つ） */
@@ -509,3 +526,5 @@
   .lesson-pinned .lesson-answer { margin-top: 0; }
   .lesson-back-row { scroll-margin-bottom: 0; }
 }
+
+.lesson-fraction-input-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }

@@ -13,6 +13,7 @@ import { TimetablePage } from "./TimetablePage";
 import { PrintHandoutPage } from "./PrintHandoutPage";
 import { ProblemOrderPage } from "./ProblemOrderPage";
 import { MembersPage } from "./MembersPage";
+import { StudioPage } from "./StudioPage";
 import { NAMED_PATTERNS } from "../research/api";
 import { TeacherGate } from "./TeacherGate";
 import "../styles/tokens.css";
@@ -30,7 +31,7 @@ const lessonKey = params.get("lesson");
 const problem = params.get("problem");
 const pattern = params.get("pattern");
 const named = NAMED_PATTERNS.find((value) => value === pattern) ?? null;
-// ?view=submissions なら提出の状況（SCR-T05、#187）
+// ?view=submissions なら提出の状況（SCR-T05、#187）、?view=studio なら教材をつくる（SCR-T15、#374）
 const view = params.get("view");
 const childNumber = params.get("number");
 const tabParam = params.get("tab");
@@ -65,6 +66,8 @@ createRoot(root).render(
         <ProblemOrderPage />
       ) : view === "members" ? (
         <MembersPage />
+      ) : view === "studio" ? (
+        <StudioPage />
       ) : view === "unit" && chapterParam && unitLessonParam ? (
         <UnitPage chapterId={chapterParam} lessonKey={unitLessonParam} period={initialPeriod} />
       ) : view === "child" && childNumber ? (

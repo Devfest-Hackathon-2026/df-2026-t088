@@ -1,0 +1,70 @@
+/* 先生の画面の「教材をつくる」（SCR-T15、#374）。色と文字はトークンだけ使う。
+   768px 以上は 1275×665 に収める（D-126）：左に「選ぶ・書く・承認・くわしい記録」、右にプレビュー。ページは縦に動かさず、プレビューと記録の中だけ動かす */
+.studio-panel--teacher { display: grid; gap: var(--space-2); min-width: 0; }
+.studio-panel--teacher .banner { margin: 0; padding: var(--space-1) var(--space-3); border-left: var(--stroke-4) solid var(--color-border-strong); background: var(--color-now); font-weight: 800; }
+.studio-panel--teacher .studio-panel__steps { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.studio-panel--teacher .studio-panel__card { display: grid; align-content: start; gap: var(--space-1); min-width: 0; padding: var(--space-2) var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); background: var(--color-bg); }
+.studio-panel--teacher .studio-panel__card h2,
+.studio-panel--teacher .studio-panel__comparison h3 { margin: 0; font-size: var(--text-body); color: var(--color-fg-strong); }
+.studio-panel--teacher .field { display: grid; gap: var(--space-1); min-width: 0; font-weight: 800; }
+.studio-panel--teacher .note { margin: 0; color: var(--color-muted-fg); font-size: var(--text-small); }
+.studio-panel--teacher .actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.studio-panel--teacher .studio-panel__card input,
+.studio-panel--teacher .studio-panel__card select { box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; padding: 0 var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); background: var(--color-bg); color: var(--color-fg-strong); font: inherit; }
+.studio-panel--teacher .studio-panel__status { min-height: 0; margin: 0; font-weight: 800; }
+.studio-panel--teacher .studio-panel__status:empty { display: none; }
+.studio-panel--teacher .step__notice { margin: 0; color: var(--color-fg-strong); font-weight: 800; }
+.studio-panel--teacher .step__notice.is-error { padding-left: var(--space-3); border-left: var(--stroke-4) solid var(--color-stamp); }
+.studio-panel--teacher .studio-panel__issues { margin: 0; padding-left: var(--space-5); }
+.studio-panel--teacher .studio-panel__preview-slot { min-height: 0; }
+.studio-panel--teacher .studio-panel__preview,
+.studio-panel--teacher .studio-panel__comparison { display: grid; align-content: start; gap: var(--space-2); padding: var(--space-2); border: var(--stroke-2) dashed var(--color-border-strong); border-radius: var(--radius-slot); background: var(--color-now); }
+.studio-panel--teacher .studio-panel__preview p,
+.studio-panel--teacher .studio-panel__comparison p { margin: 0; }
+.studio-panel--teacher .studio-panel__more summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 800; color: var(--color-fg-strong); }
+
+@media (min-width: 768px) {
+  .studio-page { display: flex; flex-direction: column; box-sizing: border-box; height: 100dvh; min-height: 0; overflow: hidden; padding-top: var(--space-2); padding-bottom: var(--space-2); }
+  .studio-page > * { flex-shrink: 0; }
+  /* 欄の名前が見出しと同じ文なので、「選ぶ」「書く」の見出しは読み上げだけに残し、高さを詰める */
+  .studio-panel--teacher .studio-panel__card--choose h2,
+  .studio-panel--teacher .studio-panel__card--write h2 { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .studio-panel--teacher .studio-panel__card { padding: var(--space-1) var(--space-3); }
+  .studio-panel--teacher .banner { padding: 0 var(--space-3); }
+  .studio-page > .studio-panel--teacher { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .studio-page > .studio-panel--teacher > * { flex-shrink: 0; }
+  .studio-page > .studio-panel--teacher > .studio-panel__steps { flex: 1 1 auto; }
+  .studio-panel--teacher .studio-panel__steps { min-height: 0; grid-template-columns: minmax(300px, 2fr) minmax(0, 3fr); grid-template-rows: auto auto auto minmax(0, 1fr); align-content: start; }
+  .studio-panel--teacher .studio-panel__card--choose { grid-column: 1; grid-row: 1; }
+  .studio-panel--teacher .studio-panel__card--write { grid-column: 1; grid-row: 2; }
+  .studio-panel--teacher .studio-panel__card--approve { grid-column: 1; grid-row: 3; }
+  .studio-panel--teacher .studio-panel__card--more { grid-column: 1; grid-row: 4; min-height: 0; overflow: auto; }
+  .studio-panel--teacher .studio-panel__card--preview { grid-column: 2; grid-row: 1 / -1; min-height: 0; overflow: auto; }
+}
+
+/* 960px 以上は 3 列：左に「選ぶ・書く」、真ん中にプレビュー、右に「承認・くわしい記録」。縦に積むと 1275×665 に入らない（D-126） */
+@media (min-width: 960px) {
+  .studio-panel--teacher .studio-panel__steps { grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr) minmax(260px, 1fr); grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr); }
+  .studio-panel--teacher .studio-panel__card--choose { grid-column: 1; grid-row: 1; }
+  .studio-panel--teacher .studio-panel__card--write { grid-column: 1; grid-row: 2 / -1; align-self: start; }
+  .studio-panel--teacher .studio-panel__card--preview { grid-column: 2; grid-row: 1 / -1; }
+  .studio-panel--teacher .studio-panel__card--approve { grid-column: 3; grid-row: 1 / span 2; align-self: start; }
+  .studio-panel--teacher .studio-panel__card--more { grid-column: 3; grid-row: 3; }
+}
+
+.studio-panel--teacher .studio-panel__card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+
+/* 印刷（#374）：A4 縦。プレビュー（教材）だけを出し、nav・学級の行・各ボタンは消す。1 画面に収めるための高さの固定も外して全部流す */
+@page { size: A4 portrait; margin: 12mm; }
+@media print {
+  .studio-page .teacher-nav-row,
+  .studio-panel--teacher .banner,
+  .studio-panel--teacher .studio-panel__card:not(.studio-panel__card--preview),
+  .studio-panel--teacher button { display: none !important; }
+  .studio-page { display: block !important; height: auto !important; overflow: visible !important; padding: 0 !important; }
+  .studio-page > .studio-panel--teacher,
+  .studio-panel--teacher .studio-panel__steps,
+  .studio-panel--teacher .studio-panel__card--preview { display: block !important; height: auto !important; overflow: visible !important; border: 0; padding: 0; }
+  .studio-panel--teacher .studio-panel__card--preview .studio-panel__preview { break-inside: avoid; border-style: solid; background: var(--color-bg); }
+}
+

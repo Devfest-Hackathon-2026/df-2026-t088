@@ -5,6 +5,7 @@ import type { Grade } from "./data/kanji-grades";
 export const ACCOUNT_KEY = "sugoroku:account";
 // 学年を別のキーに置いていた頃の名残（#188）。取り込んだら消す
 export const LEGACY_GRADE_KEY = "sugoroku:grade";
+const LEARNING_GRADE_KEY = "sugoroku:learning-grade";
 export const SAMPLE_ACCOUNT_NAME = "さとう ひなた";
 export const DEFAULT_AVATAR_ID = "default";
 // #190 で8種類の id が決まったら Avatar.tsx の側へ移す
@@ -77,7 +78,7 @@ export function loadAccount(storage: ReadStorage | null = safeStorage()): Accoun
 }
 
 /**
- * 起動時の学年（FR-012）。本番は保存を読まず、取り込みも書き込みもせず既定の学年にする。
+ * 起動時は明示的に選んだ教材の学年を使う。未選択の本番は仮アカウントの値を使わず、既定の学年にする。
  * 開発中（テストも）は保存の学年（古いキーの取り込みを含む）、無ければ既定の学年。判定は引数で差し替えられる。
  * e2e のビルド（VITE_E2E_SAVED_GRADE=on）だけは、本番でも保存の学年を読む。5年の教材の e2e のため。公開ビルドには設定しない
  */
@@ -85,9 +86,25 @@ export function initialGrade(
   isProduction: boolean = import.meta.env.PROD && import.meta.env.VITE_E2E_SAVED_GRADE !== "on",
   storage: Storage | null = safeStorage(),
 ): Grade {
+  try {
+    const selection = storage?.getItem(LEARNING_GRADE_KEY);
+    const grade = GRADES.find((candidate) => String(candidate) === selection);
+    if (grade !== undefined) return grade;
+  } catch {
+    // 保存を読めない場合も既定の学年で開く。
+  }
   if (isProduction) return DEFAULT_GRADE;
   migrateLegacyGrade(storage);
   return loadAccount(storage).grade;
+}
+
+/** 生徒が選んだ教材の学年。仮アカウントの学年とは別に保持する。 */
+export function saveLearningGrade(grade: Grade): void {
+  try {
+    safeStorage()?.setItem(LEARNING_GRADE_KEY, String(grade));
+  } catch {
+    // 保存できない場合も、この画面では切り替えられる。
+  }
 }
 
 /** アカウントの学年を書く。avatarId と photo は今の値を残す（avatarId が壊れていれば default）。投げない */

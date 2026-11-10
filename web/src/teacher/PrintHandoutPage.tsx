@@ -8,7 +8,7 @@ import type { FractionAddSubParams, LeverParams, Point, PrintReadResponse, ReadP
 import type { PrintHandout } from "../pages/home/types";
 import { TeacherNav } from "./TeacherNav";
 import { useApproverKey } from "./approver-key";
-import { WORKSPACE_COPY } from "./copy";
+import { HANDOUT_WITHDRAW_COPY, STUDIO_COPY, WORKSPACE_COPY } from "./copy";
 import { useTeacherSession } from "./workspace";
 import { PrintDemandPanel } from "./PrintDemandPanel";
 import "./PrintHandoutPage.css";
@@ -143,6 +143,8 @@ export function PrintHandoutPage() {
   const [shareScript, setShareScript] = useState<"loading" | "ready" | "failed">("loading");
   const headers: Record<string, string> = key.trim() ? { "x-approver-key": key } : {};
   const [listError, setListError] = useState(false);
+  // 「取り下げる」は、確認の枠を出してから送る（#374。D-11 と同じ形）
+  const [pendingWithdraw, setPendingWithdraw] = useState<string | null>(null);
   // 失敗（429・5xx・items 無し）のときは、一覧を前の値のままにして、読みこめなかったことを出す
   const refresh = () => fetch(`${apiBase}/api/v1/print/handouts`)
     .then(async (response) => {
@@ -280,6 +282,7 @@ export function PrintHandoutPage() {
     setVerified((checked) => checked.map((entry, itemIndex) => itemIndex === index ? false : entry));
   }
   async function withdraw(id: string) {
+    setPendingWithdraw(null);
     const response = await fetch(`${apiBase}/api/v1/print/handouts/${encodeURIComponent(id)}`, { method: "DELETE", headers });
     if (response.ok) await refresh(); else setMessage(inWorkspace ? "取り下げられませんでした。もう一度ためしてください。" : "取り下げられませんでした。承認キーを確かめてください。");
   }
@@ -338,7 +341,10 @@ export function PrintHandoutPage() {
         </div>
       </section>}
       {problems.length === 0 && <section className="teacher-print-list" aria-labelledby="teacher-print-list-title">
-        <h2 id="teacher-print-list-title">配った説明</h2>
+        <div className="teacher-print-list__head">
+          <h2 id="teacher-print-list-title">配った説明</h2>
+          <Button variant="quiet" className="teacher-print-head__print" onClick={() => window.print()}>{STUDIO_COPY.print}</Button>
+        </div>
         {listError && <div className="teacher-print-note teacher-print-note--message" role="alert">
           <p>配った説明を読みこめませんでした。</p>
           <Button variant="secondary" onClick={() => void refresh()}>もう一度読みこむ</Button>
@@ -352,8 +358,15 @@ export function PrintHandoutPage() {
             <div className="teacher-print-list__actions">
               {shareScript !== "failed" ? <div className="g-sharetoclassroom" data-url={url} data-size="32" aria-label="Classroom で共有" title="Classroom で共有" /> : null}
               {shareScript === "failed" ? <a className="button button--secondary" href={classroomFallbackUrl(url)} target="_blank" rel="noreferrer">Classroom で共有</a> : null}
-              <Button variant="quiet" onClick={() => void withdraw(item.id)}>取り下げる</Button>
+              <Button variant="quiet" onClick={() => setPendingWithdraw(item.id)}>{HANDOUT_WITHDRAW_COPY.withdraw}</Button>
             </div>
+            {pendingWithdraw === item.id && <div className="teacher-print-list__confirm" role="group" aria-label={HANDOUT_WITHDRAW_COPY.withdraw}>
+              <p>{HANDOUT_WITHDRAW_COPY.confirm(item.questionText)}</p>
+              <div className="teacher-print-list__actions">
+                <Button variant="secondary" onClick={() => void withdraw(item.id)}>{HANDOUT_WITHDRAW_COPY.withdraw}</Button>
+                <Button variant="text" onClick={() => setPendingWithdraw(null)}>{HANDOUT_WITHDRAW_COPY.cancel}</Button>
+              </div>
+            </div>}
           </li>;
         })}</ul>}
       </section>}

@@ -1,0 +1,15 @@
+.make-ten__groups { display: flex; flex-wrap: wrap; gap: var(--space-4); margin: var(--space-2) 0; align-items: start; }
+.make-ten__frame { display: grid; grid-template-columns: repeat(5, 2em); border: var(--stroke-2) solid var(--color-border); width: max-content; }
+.make-ten__slot { display: grid; place-items: center; width: 2em; height: 2em; border: 1px solid var(--color-border); }
+.make-ten__slot.is-moved { background: var(--color-subject-sansu); animation: grade-two-show .4s ease both; }
+.make-ten__candy { display: flex; gap: var(--space-1); min-height: 2em; align-items: center; }
+.grade-two .make-ten__piece { padding: 0; width: 2em; height: 2em; background: var(--color-subject-sansu); }
+.make-ten__piece--still { display: grid; place-items: center; width: 2em; height: 2em; border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); background: var(--color-subject-sansu); }
+.make-ten__empty { width: 2em; height: 2em; }
+.make-ten form { display: grid; gap: var(--space-1); }
+.make-ten input { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2); width: 6em; }
+.make-ten__equation { font-size: var(--text-body); font-weight: bold; }
+.make-ten__simple { display: grid; gap: var(--space-1); margin: var(--space-2) 0; }
+.make-ten__reflection { display: grid; gap: var(--space-1); margin: var(--space-2) 0; }
+.make-ten .make-ten__reflection input { width: min(100%, 22em); }
+@media (prefers-reduced-motion: reduce) { .make-ten__slot.is-moved { animation: none; } }

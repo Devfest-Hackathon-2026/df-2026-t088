@@ -1,3 +1,5 @@
+import type { Fraction } from "../../lesson/fraction";
+import { CommonDenominatorGuide } from "./CommonDenominatorGuide";
 import { useEffect, useRef, useState } from "react";
 import "./FractionWalkthrough.css";
 
@@ -14,7 +16,7 @@ const steps = [
 ];
 
 /** いつでも開ける例。学習中の答えや記録は変更しない。 */
-export function FractionWalkthrough() {
+export function FractionWalkthrough({ left, right }: { left?: Fraction; right?: Fraction } = {}) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -40,6 +42,7 @@ export function FractionWalkthrough() {
       </div>
       {step.equation && <p className="fraction-walk__equation">{step.equation}</p>}
       <div className="fraction-walk__controls"><button type="button" disabled={index === 0} onClick={() => { setPlaying(false); setIndex(index - 1); }}>もどる</button><button type="button" onClick={() => { if (index === steps.length - 1) setIndex(0); setPlaying(!playing); }}>{playing ? "一時停止" : "再生"}</button><span>{index + 1} / {steps.length}</span><button type="button" disabled={index === steps.length - 1} onClick={() => { setPlaying(false); setIndex(index + 1); }}>つぎへ</button></div>
+      {left && right && <CommonDenominatorGuide left={left} right={right} />}
     </dialog>
   </>;
 }

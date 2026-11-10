@@ -76,9 +76,13 @@ function formatValue(value: unknown): string {
   return typeof value === "string" ? value : JSON.stringify(value);
 }
 
-function sourceLabel(version: EvidenceVersion): string {
+const PLAIN_SOURCE_LABEL: Record<EvidenceSource, string> = {
+  measured: "実測", dummy: "ダミー", simulation: "シミュレーション", mock: "見本", gemini: "AI",
+};
+
+function sourceLabel(version: EvidenceVersion, plain: boolean): string {
   const source = version.generation?.source ?? (version.isFixture ? "mock" : undefined);
-  return source ? SOURCE_LABEL[source] : "未記録";
+  return source ? (plain ? PLAIN_SOURCE_LABEL : SOURCE_LABEL)[source] : "未記録";
 }
 
 function markedSource(version: EvidenceVersion): boolean {
@@ -86,7 +90,10 @@ function markedSource(version: EvidenceVersion): boolean {
   return source === "mock" || source === "dummy";
 }
 
-export function EvidencePanel({ versions = MOCK_VERSIONS }: { versions?: EvidenceVersion[] }) {
+// plain は先生の画面（SCR-T15）。版・戦略などの研究用の言葉を、先生の言葉に替える
+export function EvidencePanel({ versions = MOCK_VERSIONS, plain = false }: { versions?: EvidenceVersion[]; plain?: boolean }) {
+  const word = (research: string, teacher: string) => plain ? teacher : research;
+  const turn = (number: number | undefined) => plain ? `${number} 回目` : `版 ${number}`;
   const sortedVersions = useMemo(() => [...versions].sort((left, right) => left.number - right.number), [versions]);
   const [fromNumber, setFromNumber] = useState(() => sortedVersions[0]?.number ?? 0);
   const [toNumber, setToNumber] = useState(() => sortedVersions[1]?.number ?? sortedVersions[0]?.number ?? 0);
@@ -102,52 +109,52 @@ export function EvidencePanel({ versions = MOCK_VERSIONS }: { versions?: Evidenc
 
   return (
     <section aria-labelledby="studio-evidence-title">
-      <h2 id="studio-evidence-title">版の根拠と出どころ</h2>
-      <p role="note">見本データを含みます。学習の効果は未計測です。</p>
+      <h2 id="studio-evidence-title">{word("版の根拠と出どころ", "つくった記録")}</h2>
+      <p role="note">{word("見本データを含みます。学習の効果は未計測です。", "見本のデータを含みます。学習の効果は、まだ測っていません。")}</p>
       <dl>
-        <div><dt>生成数</dt><dd>{sortedVersions.length} 件</dd></div>
-        <div><dt>検査の通過率</dt><dd>{rate(passed, sortedVersions.length)}</dd></div>
-        <div><dt>承認率</dt><dd>{rate(approved, decided.length)}</dd></div>
-        <div><dt>生成時間 P50 / P95</dt><dd>{p50 === null || p95 === null ? "未計測" : `${p50} ms / ${p95} ms`}</dd></div>
+        <div><dt>{word("生成数", "つくった数")}</dt><dd>{sortedVersions.length} 件</dd></div>
+        <div><dt>{word("検査の通過率", "検査に通った割合")}</dt><dd>{rate(passed, sortedVersions.length)}</dd></div>
+        <div><dt>{word("承認率", "承認した割合")}</dt><dd>{rate(approved, decided.length)}</dd></div>
+        <div><dt>{word("生成時間 P50 / P95", "かかった時間（ふつう / 長いとき）")}</dt><dd>{p50 === null || p95 === null ? "未計測" : `${p50} ms / ${p95} ms`}</dd></div>
         <div><dt>学習の数字</dt><dd>未計測</dd></div>
       </dl>
 
       <div>
-        <label>元の版
+        <label>{word("元の版", "前の教材")}
           <select value={fromNumber} onChange={(event) => setFromNumber(Number(event.target.value))}>
-            {sortedVersions.map((version) => <option key={version.number} value={version.number}>版 {version.number}</option>)}
+            {sortedVersions.map((version) => <option key={version.number} value={version.number}>{turn(version.number)}</option>)}
           </select>
         </label>
-        <label>比べる版
+        <label>{word("比べる版", "比べる教材")}
           <select value={toNumber} onChange={(event) => setToNumber(Number(event.target.value))}>
-            {sortedVersions.map((version) => <option key={version.number} value={version.number}>版 {version.number}</option>)}
+            {sortedVersions.map((version) => <option key={version.number} value={version.number}>{turn(version.number)}</option>)}
           </select>
         </label>
       </div>
 
-      <h3>変更したところ</h3>
+      <h3>{word("変更したところ", "変えたところ")}</h3>
       {changes.length ? <table>
-        <thead><tr><th>項目</th><th>版 {from?.number}</th><th>版 {to?.number}</th></tr></thead>
+        <thead><tr><th>項目</th><th>{turn(from?.number)}</th><th>{turn(to?.number)}</th></tr></thead>
         <tbody>{changes.map((change) => <tr key={change.path}>
-          <th>{change.path === "strategy" ? "戦略" : change.path.endsWith(".hints[1]") ? "ヒント文" : change.path}</th>
+          <th>{change.path === "strategy" ? word("戦略", "教え方") : change.path.endsWith(".hints[1]") ? "ヒント文" : change.path}</th>
           <td>{change.path === "strategy" ? STRATEGY_LABEL[change.before as StudioLesson["strategy"]] ?? change.before : change.before}</td>
           <td>{change.path === "strategy" ? STRATEGY_LABEL[change.after as StudioLesson["strategy"]] ?? change.after : change.after}</td>
         </tr>)}</tbody>
-      </table> : <p>選んだ版の間に変更はありません。</p>}
+      </table> : <p>{word("選んだ版の間に変更はありません。", "選んだ回の間に変更はありません。")}</p>}
 
-      <h3>版ごとの記録</h3>
+      <h3>{word("版ごとの記録", "回ごとの記録")}</h3>
       <table>
-        <thead><tr><th>版</th><th>戦略</th><th>検査</th><th>承認の履歴・理由</th><th>比較相手</th><th>生成モデル・時間</th><th>データの出どころ</th></tr></thead>
+        <thead><tr><th>{word("版", "回")}</th><th>{word("戦略", "教え方")}</th><th>検査</th><th>承認の履歴・理由</th><th>{word("比較相手", "比べた相手")}</th><th>{word("生成モデル・時間", "つくった方法・時間")}</th><th>{word("データの出どころ", "データのもと")}</th></tr></thead>
         <tbody>{sortedVersions.map((version) => <tr key={version.id}>
-          <th>版 {version.number}</th>
+          <th>{turn(version.number)}</th>
           <td>{STRATEGY_LABEL[version.lesson.strategy]}</td>
           <td>{version.validation.ok ? "通過" : `未通過：${version.validation.issues.join("、")}`}</td>
           <td>{version.approvalHistory?.length
             ? version.approvalHistory.map((entry) => <p key={`${entry.at}-${entry.decision}`}>{entry.at} {DECISION_LABEL[entry.decision]}：{entry.reason}</p>)
             : version.transitions.filter((status) => ["approved", "rejected", "revoked"].includes(status)).map((status) => ({ approved: "承認", rejected: "却下", revoked: "取り消し" })[status as "approved" | "rejected" | "revoked"]).join("、") || "履歴なし"}</td>
-          <td>{version.comparedToVersion ? `版 ${version.comparedToVersion}` : version.baseVersion ? `版 ${version.baseVersion}` : "なし"}</td>
-          <td>{version.generation ? `${version.generation.model} / ${version.generation.elapsedMs} ms` : "未記録"}</td>
-          <td><span>{sourceLabel(version)}</span>{markedSource(version) && <small>（見本）</small>}</td>
+          <td>{version.comparedToVersion ? turn(version.comparedToVersion) : version.baseVersion ? turn(version.baseVersion) : "なし"}</td>
+          <td>{version.generation ? `${plain && version.generation.model === "mock" ? "見本" : version.generation.model} / ${version.generation.elapsedMs} ms` : "未記録"}</td>
+          <td><span>{sourceLabel(version, plain)}</span>{markedSource(version) && !(plain && sourceLabel(version, plain) === "見本") && <small>（見本）</small>}</td>
         </tr>)}</tbody>
       </table>
     </section>

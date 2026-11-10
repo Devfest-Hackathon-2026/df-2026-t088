@@ -45,6 +45,8 @@ export type Suggestion = {
   pattern: NamedPattern;
   replacesHintIndex: number;
   hint: string;
+  /** 承認・却下した日（日本時間の日付）。決定前は無い。承認の前後の件数の境（#519） */
+  decidedOn?: string;
   basis: { count: number };
 };
 
@@ -98,6 +100,8 @@ export type LoopStore = {
   decide(id: string, decision: "approved" | "rejected", candidateNumber?: number): string[];
   revoke(id: string): void;
   approvedHints(lessonKey: string, problem: string, pattern?: NamedPattern): ApprovedHint[];
+  /** 承認済みの案の、承認日の前日まで・翌日からの間違いの件数（#519。承認日当日は数えない）。承認済みの案が無ければ undefined。件数が少ないときに伏せるのは呼び出し側 */
+  stumblesAround(lessonKey: string, problem: string, pattern: NamedPattern): { before: number; after: number } | undefined;
   addAudit(entry: AuditInput): void;
   auditLog(): AuditEntry[];
 };
@@ -267,6 +271,7 @@ function createScopedStore(options: LoopStoreOptions, ids: StoreIds): Omit<LoopS
         }
       }
       target.status = decision;
+      target.decidedOn = japanDate(0);
       if (decision === "rejected") return [];
       const replaced = suggestions.filter((item) => item.id !== id && item.status === "approved"
         && item.pattern === target.pattern && sameTarget(item, target.lessonKey, target.problem));
@@ -281,6 +286,18 @@ function createScopedStore(options: LoopStoreOptions, ids: StoreIds): Omit<LoopS
       return suggestions
         .filter((item) => item.status === "approved" && sameTarget(item, lessonKey, problem) && (!pattern || item.pattern === pattern))
         .map(({ pattern: itemPattern, replacesHintIndex, hint }) => ({ pattern: itemPattern, replacesHintIndex, hint }));
+    },
+    stumblesAround(lessonKey, problem, pattern) {
+      const approved = suggestions.filter((item) => item.status === "approved" && item.pattern === pattern && sameTarget(item, lessonKey, problem));
+      const boundary = approved.map((item) => item.decidedOn ?? "").sort().pop();
+      if (!boundary) return undefined;
+      let before = 0;
+      let after = 0;
+      for (const item of groups().get(problemKey(lessonKey, problem)) ?? []) {
+        if (item.pattern !== pattern) continue;
+        if (item.occurredOn < boundary) before += 1; else if (item.occurredOn > boundary) after += 1;
+      }
+      return { before, after };
     },
     addAudit(entry) {
       ids.audit += 1;

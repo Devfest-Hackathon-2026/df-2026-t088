@@ -442,11 +442,10 @@ describe("マスを押す", () => {
 
   it("クリア後、学習のある章がもう無ければ、移るボタンを出さず文で伝える（D-133）", () => {
     // 学習の無い章は鍵なので、次の章として選ばれない。学習のある章を全部クリアした後は CP-221 になる
-    const expression = CHAPTERS.find((chapter) => chapter.id === "expression");
-    renderWith(withProgress("fraction", {
-      fraction: { done: fractionCount, sides: [], test: true },
-      expression: { done: expression?.items.length ?? 0, sides: [], test: true },
-    }));
+    // 平面図形は教材未登録。ほかはすべてクリア済みにして、未登録の章へ進まないことを確かめる。
+    const progress = Object.fromEntries(CHAPTERS.filter((chapter) => chapter.id !== "plane")
+      .map((chapter) => [chapter.id, { done: chapter.items.length, sides: [], test: true }]));
+    renderWith(withProgress("fraction", progress));
     expect(card().queryByRole("button")).toBeNull();
     expect(card().getByText(plainText(COPY.CP_221(SUBJECT_NAME)))).toBeTruthy();
     expect(card().queryByText(plainText(COPY.CP_229))).toBeNull();
@@ -522,11 +521,10 @@ describe("右上の音と顔（CMP-043。D-245）", () => {
 describe("分数までクリアした状態", () => {
   it("学習の無い章へは送らない（D-133）", () => {
     // 次の章の候補は学習のある章だけ。分数のあとの平面図形（鍵）へ移るボタンも、CP-229 の文も出ない
-    const expression = CHAPTERS.find((chapter) => chapter.id === "expression");
-    renderWith(withProgress("fraction", {
-      fraction: { done: fractionCount, sides: [], test: true },
-      expression: { done: expression?.items.length ?? 0, sides: [], test: true },
-    }));
+    // 平面図形は教材未登録。ほかはすべてクリア済みにして、未登録の章へ進まないことを確かめる。
+    const progress = Object.fromEntries(CHAPTERS.filter((chapter) => chapter.id !== "plane")
+      .map((chapter) => [chapter.id, { done: chapter.items.length, sides: [], test: true }]));
+    renderWith(withProgress("fraction", progress));
     expect(card().queryByRole("button", { name: /^つぎの章へ：/ })).toBeNull();
     expect(card().queryByText(plainText(COPY.CP_229))).toBeNull();
     expect(window.location.pathname).toBe("/");

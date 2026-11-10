@@ -327,6 +327,12 @@ export const MEMBERS_COPY = {
   notFound: "指定の先生が見つかりません", // CP-1194
 } as const;
 
+// 学びの輪アシスタントの、承認の前と後の間違えの件数（#519）。CP-1431〜CP-1432。評価の言葉は書かない。正本は docs/design/ui/08_copy.md
+export const LOOP_OCCURRENCE_COPY = {
+  counts: (before: number, after: number) => `承認の前 ${before} 件 → 後 ${after} 件`, // CP-1431
+  fewYet: "承認の前と後の件数は、まだ少ないので出しません", // CP-1432
+} as const;
+
 export const PROBLEM_ORDER_COPY = {
   title: "出題順を変える", // CP-1401
   lesson: "学習", // CP-1402
@@ -341,4 +347,38 @@ export const PROBLEM_ORDER_COPY = {
   move: (position: number, direction: string) => `${position}問目を${direction}`, // CP-1411
   problem: "問題", // CP-1412
   order: "並べ替え", // CP-1413
+} as const;
+
+// 教材をつくる（SCR-T15、#374）。先生の画面では、研究用の言葉（mock・版・差分・根拠と出どころ）を使わない。
+// /research/ の教材スタジオは、StudioPanel の既定（variant="research"）のまま
+export const STUDIO_COPY = {
+  title: "教材をつくる",
+  mockNote: "見本の教材です。本物の AI がつくったものではありません",
+  fallbackNote: "サーバーにつながらないため、見本の教材で続けています",
+  approverNote: "承認キーは画面の上の欄に入れてください",
+  turn: (number: number) => `${number} 回目`,
+  current: (number: number) => `いまの教材：${number} 回目`,
+  placed: (number: number) => `選んだ案を ${number} 回目の教材として置きました。承認してください`,
+  approved: (number: number) => `${number} 回目の教材を承認しました`,
+  revoked: (number: number) => `承認を取り消しました。${number} 回目の教材に戻しました`,
+  madeNext: (number: number) => `${number} 回目の教材を作りました。内容を確かめてください`,
+  state: (number: number, text: string) => `${number} 回目の状態：${text}`,
+  makeNext: (number: number) => `${number} 回目を作る`,
+  showDiff: "前との違いを見る",
+  hideDiff: "違いを閉じる",
+  diffTitle: (from: number, to: number) => `${from} 回目と ${to} 回目の違い`,
+  diffStrategy: "教え方",
+  moreTitle: "くわしい記録",
+  moreSummary: "くわしい記録（つくった履歴と検査の結果）",
+  evidenceTitle: "つくった記録",
+  evidenceNote: "見本のデータを含みます。学習の効果は、まだ測っていません。",
+  print: "印刷する",
+  strategies: { visual: "図で考える", numeric: "数で考える", misconception: "つまずきから考える" },
+} as const;
+
+// 配った説明を取り下げる前の確認（#374。D-11 の「はじめからにする」と同じ形：押すと確認の枠を出し、「取り下げる」で実行、「やめる」で閉じる）
+export const HANDOUT_WITHDRAW_COPY = {
+  confirm: (text: string) => `「${text}」を取り下げます。子どもの画面から消えます`,
+  withdraw: "取り下げる",
+  cancel: "やめる",
 } as const;

@@ -1,0 +1,71 @@
+.grade-guide { margin: var(--space-2) 0; }
+.grade-guide__body { margin-top: var(--space-2); }
+.grade-guide__body p { margin: 0 0 var(--space-2); }
+.grade-guide__scene { min-height: 76px; animation: grade-guide-enter .55s ease both; }
+.grade-guide__lines { display: grid; gap: var(--space-1); font-size: var(--text-display); white-space: pre-wrap; }
+.grade-guide__controls { display: flex; gap: var(--space-2); align-items: center; margin-top: var(--space-2); }
+.grade-guide__clock { width: 112px; height: 112px; position: relative; border: var(--stroke-2) solid var(--color-border); border-radius: 50%; }
+.grade-guide__clock span { position: absolute; font-weight: bold; }
+.clock-12 { left: 44%; top: 0; } .clock-3 { right: 5%; top: 40%; } .clock-6 { left: 47%; bottom: 0; } .clock-9 { left: 5%; top: 40%; }
+.grade-guide__clock i { position: absolute; left: 50%; top: 50%; transform-origin: left center; border-top: 3px solid var(--color-fg-strong); }
+.clock-long { width: 40%; transform: rotate(-90deg); } .clock-short { width: 26%; transform: rotate(0); }
+.clock-center { position: absolute; left: 48%; top: 48%; width: 6px; height: 6px; border-radius: 50%; background: var(--color-fg-strong); }
+.grade-guide__length { width: min(100%, 320px); display: grid; gap: var(--space-2); }
+.grade-guide__length div { display: flex; align-items: center; gap: var(--space-2); }
+.grade-guide__length span { display: inline-block; height: 24px; border: 2px solid var(--color-border); background: var(--color-subject-kokugo); width: 75%; }
+.grade-guide__length div:last-child span { width: 55%; background: var(--color-subject-ongaku); animation: grade-guide-align .8s ease both; }
+.grade-guide__measure { width: min(100%, 320px); }
+.measure-pencil { width: 100%; height: 12px; background: var(--color-fg-strong); }
+.measure-blocks { display: flex; width: 100%; }
+.measure-blocks span { flex: 1; border: 1px solid var(--color-border); background: var(--color-subject-sansu); text-align: center; }
+@keyframes grade-guide-enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes grade-guide-align { from { transform: translateX(var(--space-4)); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .grade-guide__scene, .grade-guide__length span { animation: none; } }
+
+.grade-guide__dialog { color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-4); width: min(90vw, 600px); max-height: 90vh; overflow: auto; }
+.grade-guide__dialog::backdrop { background: rgba(0, 0, 0, .45); }
+.grade-guide__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.grade-guide__header h2 { margin: 0; }
+.grade-guide__pairs { display: grid; grid-template-columns: repeat(3, 2.2em); text-align: center; font-size: var(--text-display); }
+.grade-guide__clock--0 .clock-long, .grade-guide__clock--1 .clock-short { border-top-color: var(--color-subject-sansu); border-top-width: 5px; }
+
+.grade-guide__chart { display: grid; grid-template-columns: 6em auto; align-items: center; gap: var(--space-2); }
+.grade-guide__chart div { display: grid; grid-template-columns: repeat(4, 1.7em); }
+.grade-guide__chart b { text-align: center; }
+
+.grade-guide__ten-demo { display: grid; gap: var(--space-1); }
+.grade-guide__ten { display: grid; grid-template-columns: repeat(5, 2em); width: max-content; border: var(--stroke-2) solid var(--color-border); }
+.grade-guide__ten span { text-align: center; border: 1px solid var(--color-border); background: var(--color-subject-sansu); }
+.grade-guide__ten .is-moved { background: var(--color-subject-shakai); animation: grade-guide-align .9s ease both; }
+.grade-guide__ten .is-removed { animation: grade-guide-remove 1s ease both; }
+.grade-guide__triangles { position: relative; width: 144px; height: 104px; }
+.grade-guide__triangles span { position: absolute; width: 96px; height: 96px; background: var(--color-subject-sansu); border: 1px solid var(--color-border); }
+.grade-guide__triangles span:first-child { clip-path: polygon(0 0, 0 100%, 100% 100%); left: 0; }
+.grade-guide__triangles span:last-child { clip-path: polygon(0 0, 100% 0, 100% 100%); left: 48px; }
+.grade-guide__triangles.is-joined span:last-child { animation: grade-triangle-join .9s ease both; }
+@keyframes grade-guide-remove { to { opacity: .25; transform: translateY(var(--space-2)); } }
+@keyframes grade-triangle-join { to { transform: translateX(-48px); } }
+@media (prefers-reduced-motion: reduce) { .grade-guide__ten .is-moved, .grade-guide__ten .is-removed, .grade-guide__triangles.is-joined span:last-child { animation: none; } .grade-guide__ten .is-removed { opacity: .25; } .grade-guide__triangles.is-joined span:last-child { transform: translateX(-48px); } }
+
+.grade-guide__clock-wrap { display: flex; align-items: center; gap: var(--space-4); }
+.grade-guide__mark { animation: grade-guide-mark .4s ease both; }
+@keyframes grade-guide-mark { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .grade-guide__mark { animation: none; } }
+
+.grade-guide__distribution { display: grid; gap: var(--space-2); min-height: 5em; }
+.grade-guide__candy { display: inline-block; animation: grade-guide-candy .5s ease both; }
+@keyframes grade-guide-candy { from { opacity: 0; transform: translateY(calc(-1 * var(--space-4))); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .grade-guide__candy { animation: none; } }
+
+.clock-practice { display: grid; gap: var(--space-2); }
+.clock-practice p { margin: 0; }
+.clock-practice__row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-4); }
+.clock-practice__face { width: 152px; height: 152px; border: var(--stroke-2) solid var(--color-border); border-radius: 50%; position: relative; flex: none; }
+.clock-practice__number { position: absolute; transform: translate(-50%, -50%); font-weight: bold; }
+.clock-practice__long, .clock-practice__short { position: absolute; left: 50%; top: 50%; transform-origin: left center; border-top: 3px solid var(--color-fg-strong); }
+.clock-practice__long { width: 35%; transform: rotate(-90deg); }
+.clock-practice__short { width: 24%; border-top: 5px solid var(--color-subject-sansu); transition: transform .8s ease; }
+.clock-practice__center { position: absolute; width: 8px; height: 8px; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--color-fg-strong); }
+@media (prefers-reduced-motion: reduce) { .clock-practice__short { transition: none; } }
+
+.grade-guide__clock .clock-face-number { transform: translate(-50%, -50%); font-size: .7em; line-height: 1; }

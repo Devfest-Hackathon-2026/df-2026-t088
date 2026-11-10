@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Button } from "../components/Button";
 import { RESEARCH_COPY } from "../research/copy";
+import { STUDIO_COPY } from "../teacher/copy";
 import { createConnectedStudioApi, STUDIO_MOCK_LESSON } from "./api";
 import type { StudioDiff, StudioValidationResult } from "./api";
 import type { StudioLesson } from "./lesson-ir";
@@ -74,9 +75,15 @@ function createMockApi(): StudioApi {
 
 const messageOf = (error: unknown) => error instanceof Error ? error.message : "教材を作れませんでした";
 const approvalHeaders = (key: string): Record<string, string> => key.trim() ? { "x-approver-key": key } : {};
+const strategyName = (value: unknown) => STUDIO_COPY.strategies[value as keyof typeof STUDIO_COPY.strategies] ?? String(value);
 const STATUS_TEXT: Record<StudioDecision, string> = { approved: "承認済み", rejected: "却下しました", revoked: "取り消し済み" };
 
-export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approverKey?: string }) {
+// variant="teacher" は先生の画面（SCR-T15）。研究用の言葉を先生向けに替え、くわしい記録を折りたたむ。既定は /research/ のまま
+export type StudioVariant = "research" | "teacher";
+
+export function StudioPanel({ api, approverKey = "", variant = "research" }: { api?: StudioApi; approverKey?: string; variant?: StudioVariant }) {
+  const teacher = variant === "teacher";
+  const turn = (number: number) => teacher ? STUDIO_COPY.turn(number) : `版 ${number}`;
   const mockApi = useRef<StudioApi | null>(null);
   if (!mockApi.current) mockApi.current = createMockApi();
   const connectedApi = useRef<StudioApi | null>(null);
@@ -130,7 +137,7 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
       setDiff(null);
       setShowDiff(false);
       setPreviousLesson(null);
-      setNotice(`選んだ案を版 ${next.version} として置きました。承認してください`);
+      setNotice(teacher ? STUDIO_COPY.placed(next.version) : `選んだ案を版 ${next.version} として置きました。承認してください`);
       await refreshVersions(next);
     } catch (failure) {
       setError(messageOf(failure));
@@ -170,7 +177,7 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
       const result = await client.decide(draft.draftId, next, reason.trim(), approvalHeaders(approverKey), draft.version);
       setDraft({ ...draft, version: result.version, mode: result.mode, ...(result.fallbackReason ? { fallbackReason: result.fallbackReason } : {}) });
       setDecision(result.status);
-      setNotice(result.status === "approved" ? `版 ${result.version} を承認しました` : "却下しました");
+      setNotice(result.status === "approved" ? (teacher ? STUDIO_COPY.approved(result.version) : `版 ${result.version} を承認しました`) : "却下しました");
       await refreshVersions(draft);
     } catch (failure) {
       setError(messageOf(failure));
@@ -189,7 +196,7 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
       setDraft(nextDraft);
       setDecision(null);
       setShowDiff(false);
-      setNotice(`版 ${nextDraft.version} を作りました。内容を確かめてください`);
+      setNotice(teacher ? STUDIO_COPY.madeNext(nextDraft.version) : `版 ${nextDraft.version} を作りました。内容を確かめてください`);
       await refreshVersions(nextDraft);
       if (client.diff) {
         const nextDiff = await client.diff(nextDraft.draftId, draft.version, nextDraft.version);
@@ -212,7 +219,7 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
       const result = await client.revoke(draft.draftId, reason.trim(), approvalHeaders(approverKey), draft.version);
       setDraft({ ...draft, version: result.version, lesson: result.lesson ?? previousLesson ?? draft.lesson, mode: result.mode, ...(result.fallbackReason ? { fallbackReason: result.fallbackReason } : {}) });
       setDecision(result.status);
-      setNotice(`承認を取り消しました。版 ${result.version} に戻しました`);
+      setNotice(teacher ? STUDIO_COPY.revoked(result.version) : `承認を取り消しました。版 ${result.version} に戻しました`);
       await refreshVersions(draft);
     } catch (failure) {
       setError(messageOf(failure));
@@ -222,14 +229,17 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
   };
 
   const isMock = draft?.mode === "mock" || !draft;
+  const evidence = draft ? <EvidencePanel {...(versions && versions.length > 0 ? { versions } : {})} {...(teacher ? { plain: true } : {})} /> : null;
   return (
-    <section className="studio-panel" aria-label="教材スタジオ">
-      {isMock && <p className="banner studio-panel__mock" role="note">mock（本物の Gemini ではない）</p>}
-      {isMock && <p className="banner" role="note">{RESEARCH_COPY.dummyNotice}</p>}
-      {draft?.fallbackReason && <p className="banner" role="note">サーバーに接続できないため、見本データで続けています。</p>}
+    <section className={teacher ? "studio-panel studio-panel--teacher" : "studio-panel"} aria-label="教材スタジオ">
+      {teacher
+        ? (draft?.mode === "mock" && !draft.fallbackReason && <p className="banner" role="note">{STUDIO_COPY.mockNote}</p>)
+        : isMock && <p className="banner studio-panel__mock" role="note">mock（本物の Gemini ではない）</p>}
+      {!teacher && isMock && <p className="banner" role="note">{RESEARCH_COPY.dummyNotice}</p>}
+      {draft?.fallbackReason && <p className="banner" role="note">{teacher ? STUDIO_COPY.fallbackNote : "サーバーに接続できないため、見本データで続けています。"}</p>}
 
       <ol className="studio-panel__steps" aria-label="教材をつくる流れ">
-        <li className="studio-panel__card">
+        <li className="studio-panel__card studio-panel__card--choose">
           <h2>教材を選ぶ</h2>
           <label className="field">教材
             <select value={lessonId} onChange={(event) => setLessonId(event.target.value)}>
@@ -237,43 +247,47 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
             </select>
           </label>
         </li>
-        <li className="studio-panel__card">
+        <li className="studio-panel__card studio-panel__card--write">
           <h2>先生が一文で書く</h2>
           <label className="field" htmlFor="studio-prompt">先生が一文で書く
             <input id="studio-prompt" type="text" value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="例：分母をそろえる教材を作る" />
           </label>
           <div className="actions">
-            <Button variant="primary" onClick={generate}>{draft ? "作り直す" : "教材を生成する"}</Button>
+            {/* 作り直すは警告ではないので、赤の主ボタンにしない（#374）。最初の「教材を生成する」だけ主ボタン */}
+            <Button variant={draft ? "secondary" : "primary"} onClick={generate}>{draft ? "作り直す" : "教材を生成する"}</Button>
             {client.tournament && <Button onClick={compare}>3 つの教え方を作って比べる</Button>}
           </div>
           <p className="studio-panel__status" role="status" aria-live="polite">{working ? (draft ? "作り直し中です" : "生成中です") : notice}</p>
           {error && <p className="step__notice is-error" role="alert">{error}</p>}
-          {draft && <p className="note">現在の版：版 {draft.version}</p>}
+          {draft && <p className="note">{teacher ? STUDIO_COPY.current(draft.version) : `現在の版：版 ${draft.version}`}</p>}
           {draft && !draft.validation.ok && <ul className="studio-panel__issues" aria-label="検査の理由">{draft.validation.issues.map((issue, index) => <li key={`${index}-${issue}`}>{issue}</li>)}</ul>}
         </li>
-        <li className="studio-panel__card">
-          <h2>プレビュー</h2>
+        <li className="studio-panel__card studio-panel__card--preview">
+          <div className="studio-panel__card-head">
+            <h2>プレビュー</h2>
+            {teacher && draft && <Button className="studio-panel__print" onClick={() => window.print()}>{STUDIO_COPY.print}</Button>}
+          </div>
           <div className="studio-panel__preview-slot" data-studio-preview-slot>
             <section className="studio-panel__preview" role="region" aria-label="教材プレビュー">
               {draft && <strong>{draft.lesson.objective}</strong>}
               {draft && draft.lesson.problems.length > 0
-                ? <StudioPreview lessons={[{ label: `版 ${draft.version}`, lesson: toLesson(draft.lesson) }]} />
+                ? <StudioPreview lessons={[{ label: turn(draft.version), lesson: toLesson(draft.lesson) }]} />
                 : draft ? <p>タイルの問題がありません。</p> : <p>教材を生成すると、ここにプレビューが表示されます。</p>}
             </section>
           </div>
           {/* 改訂は、承認の前に前の版との差分を見て確かめる */}
-          {draft && diff && draft.version > 1 && <Button onClick={() => setShowDiff((visible) => !visible)}>{showDiff ? "差分を閉じる" : "差分を表示"}</Button>}
-          {draft && diff && showDiff && draft.version > 1 && <section className="studio-panel__comparison" aria-label="版の差分">
-            <h3>版 {diff.from} から版 {diff.to} の差分</h3>
-            {diff.changes.length === 0 ? <p className="note">変更はありません。</p> : <ul>{diff.changes.map((change) => <li key={change.path}>{change.path}: {String(change.before)} → {String(change.after)}</li>)}</ul>}
+          {draft && diff && draft.version > 1 && <Button onClick={() => setShowDiff((visible) => !visible)}>{showDiff ? (teacher ? STUDIO_COPY.hideDiff : "差分を閉じる") : (teacher ? STUDIO_COPY.showDiff : "差分を表示")}</Button>}
+          {draft && diff && showDiff && draft.version > 1 && <section className="studio-panel__comparison" aria-label={teacher ? "前との違い" : "版の差分"}>
+            <h3>{teacher ? STUDIO_COPY.diffTitle(diff.from, diff.to) : `版 ${diff.from} から版 ${diff.to} の差分`}</h3>
+            {diff.changes.length === 0 ? <p className="note">変更はありません。</p> : <ul>{diff.changes.map((change) => <li key={change.path}>{teacher ? `${change.path === "strategy" ? STUDIO_COPY.diffStrategy : change.path}: ${strategyName(change.before)} → ${strategyName(change.after)}` : `${change.path}: ${String(change.before)} → ${String(change.after)}`}</li>)}</ul>}
           </section>}
           {alternatives && alternatives.length === 3 && <section className="studio-panel__comparison" aria-label="3案の比較">
-            <Tournament alternatives={alternatives as unknown as readonly [TournamentAlternative, TournamentAlternative, TournamentAlternative]} onSelect={(alternative) => { void adopt(alternative); }} />
+            <Tournament alternatives={alternatives as unknown as readonly [TournamentAlternative, TournamentAlternative, TournamentAlternative]} onSelect={(alternative) => { void adopt(alternative); }} {...(teacher ? { mockNote: STUDIO_COPY.mockNote } : {})} />
           </section>}
         </li>
-        {draft?.validation.ok && <li className="studio-panel__card">
+        {draft?.validation.ok && <li className="studio-panel__card studio-panel__card--approve">
           <h2>承認</h2>
-          <p className="note">承認キーは画面の上の欄に入れてください</p>
+          <p className="note">{STUDIO_COPY.approverNote}</p>
           <label className="field">理由
             <input type="text" value={reason} onChange={(event) => setReason(event.target.value)} placeholder="例：内容を確認しました" />
           </label>
@@ -282,12 +296,13 @@ export function StudioPanel({ api, approverKey = "" }: { api?: StudioApi; approv
             <Button onClick={() => decide("rejected")}>却下する</Button>
             {decision === "approved" && <Button onClick={revoke}>承認を取り消す</Button>}
           </div>
-          {decision && <p className="note">版 {draft.version} の状態：{STATUS_TEXT[decision]}</p>}
-          {decision === "approved" && client.createRevision && <Button onClick={createRevision}>版{draft.version + 1}を作る</Button>}
+          {decision && <p className="note">{teacher ? STUDIO_COPY.state(draft.version, STATUS_TEXT[decision]) : `版 ${draft.version} の状態：${STATUS_TEXT[decision]}`}</p>}
+          {decision === "approved" && client.createRevision && <Button onClick={createRevision}>{teacher ? STUDIO_COPY.makeNext(draft.version + 1) : `版${draft.version + 1}を作る`}</Button>}
         </li>}
-        {draft && <li className="studio-panel__card">
-          <h2>根拠と出どころ</h2>
-          <EvidencePanel {...(versions && versions.length > 0 ? { versions } : {})} />
+        {draft && <li className="studio-panel__card studio-panel__card--more">
+          {teacher
+            ? <details className="studio-panel__more"><summary>{STUDIO_COPY.moreSummary}</summary>{evidence}</details>
+            : <><h2>根拠と出どころ</h2>{evidence}</>}
         </li>}
       </ol>
     </section>

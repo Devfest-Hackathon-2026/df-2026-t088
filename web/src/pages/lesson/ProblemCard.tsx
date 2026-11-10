@@ -1,5 +1,8 @@
+import { answerGap } from "../../lesson/answer-gap";
+import { FractionAnswer } from "./FractionAnswer";
+import { ReduceWalkthrough } from "./ReduceWalkthrough";
 import { FractionWalkthrough } from "./FractionWalkthrough";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { LessonButton } from "./LessonButton";
 import { ANSWER_MAX_LENGTH } from "../../lesson/judge";
 import { startsWithHints } from "../../lesson/problems";
@@ -73,9 +76,22 @@ function answerLabelOf(problem: LessonProblem): string {
 function TextAnswer({ lesson, problem }: { lesson: TileLesson; problem: LessonProblem }) {
   const { session, refs } = lesson;
   const label = answerLabelOf(problem);
+  const [splitInput, setSplitInput] = useState(false);
+  const canSplit = problem.kind === "calculate" && problem.left.den !== problem.right.den;
+  if (canSplit && splitInput) {
+    return <>
+      <button type="button" className="fraction-walk__toggle" onClick={() => setSplitInput(false)}>1つの欄で入力</button>
+      <FractionAnswer label="こたえ" value={session.answerText} onChange={lesson.onAnswerValue}
+        inputRef={refs.answerRef} allowMixed disabled={session.isCorrect} />
+    </>;
+  }
   return (
     <>
-      <label className="lesson-answer__label" htmlFor="lesson-answer"><Ruby text={label} /></label>
+      <div className="lesson-fraction-input-label">
+        <label className="lesson-answer__label" htmlFor="lesson-answer"><Ruby text={label} /></label>
+        {canSplit && !session.isCorrect && <button type="button" className="fraction-walk__toggle"
+          onClick={() => setSplitInput(true)}>分子と分母で入力</button>}
+      </div>
       <input
         ref={refs.answerRef}
         id="lesson-answer"
@@ -121,7 +137,7 @@ function PairAnswer({ lesson, problem }: { lesson: TileLesson; problem: CommonPr
   );
 }
 
-function AnswerForm({ lesson, problem }: { lesson: TileLesson; problem: LessonProblem }) {
+function AnswerForm({ lesson, problem, walkthrough }: { lesson: TileLesson; problem: LessonProblem; walkthrough?: ReactNode }) {
   const t = useText();
   const { session } = lesson;
   const { game, view, isCorrect } = session;
@@ -150,12 +166,13 @@ function AnswerForm({ lesson, problem }: { lesson: TileLesson; problem: LessonPr
   return (
     <form id="lesson-answer-form" className="lesson-answer" autoComplete="off" onSubmit={lesson.onAnswer}>
       {problem.kind === "common" && <PairAnswer lesson={lesson} problem={problem} />}
-      {problem.kind !== "common" && !hidesField && <TextAnswer lesson={lesson} problem={problem} />}
+      {problem.kind !== "common" && !hidesField && <TextAnswer key={session.problemIndex} lesson={lesson} problem={problem} />}
       {/* ボタンは回答欄の下にまとめる。欄に入れてから押す順に上から並べる */}
       {(!isCorrect || helpButton) && (
         <div className="lesson-answer__buttons">
           {!isCorrect && <Button type="submit" variant={answerVariant} se={null}>{LESSON_COPY.answerButton}</Button>}
           {helpButton}
+          {walkthrough}
         </div>
       )}
     </form>
@@ -169,6 +186,12 @@ export function ProblemCard({ lesson, support }: { lesson: TileLesson; /** タ�
   const problem = currentProblem(session);
   const after = isCorrect ? afterParts(problem, game, session.answerText) : [];
   const showsHints = view === "answer" && startsWithHints(problem);
+  const answerable = canAnswer(session);
+  const hasAnswerComparison = Boolean(answerGap(session));
+  const walkthrough = !isCorrect &&
+    (problem.kind === "common" || (problem.kind === "calculate" && problem.left.den !== problem.right.den))
+    ? <FractionWalkthrough key={session.problemIndex} left={problem.left} right={problem.right} />
+    : undefined;
 
   return (
     <section className="lesson-card" ref={refs.cardRef} aria-labelledby="lesson-problem-heading">
@@ -177,14 +200,23 @@ export function ProblemCard({ lesson, support }: { lesson: TileLesson; /** タ�
         <>
           {/* 767px 以下は、この塊を題の下に固定する（D-238）。768px 以上は何も変わらない */}
           <div className="lesson-problem"><ProblemStatement lesson={lesson} problem={problem} /></div>
-          {canAnswer(session) && <AnswerForm lesson={lesson} problem={problem} />}
+          {answerable && <AnswerForm lesson={lesson} problem={problem} walkthrough={hasAnswerComparison ? undefined : walkthrough} />}
         </>
       )}
       <p className="lesson-message" role="status">{message ? <span key={lesson.answerTry} className="lesson-message-text"><Ruby text={MESSAGES[message]} /></span> : ""}</p>
-      <AnswerCompare session={session} />
+      <AnswerCompare session={session} walkthrough={hasAnswerComparison ? walkthrough : undefined} />
       {after.length > 0 && <p className="lesson-after"><InlineParts parts={after} /></p>}
       {support}
-      {!isCorrect && ((problem.kind === "calculate" && problem.left.den !== problem.right.den) || problem.kind === "common") && <FractionWalkthrough />}
+      {problem.kind === "compare" && session.view === "answer" && !isCorrect && session.shownHints > 0 && <div className="fraction-compare" aria-label="1を等分した図" role="group">
+        {[problem.left, problem.right].map((fraction, row) => <div className="fraction-compare__row" key={row}>
+          <p>{fraction.num}/{fraction.den}：1を{fraction.den}つに分けたうちの{fraction.num}つ分</p>
+          <div className="fraction-compare__bar" role="img" aria-label={`1を${fraction.den}等分したうち${fraction.num}つ分`}>
+            {Array.from({ length: fraction.den }, (_, i) => <span key={i} className={i < fraction.num ? "is-filled" : ""}>{i + 1}</span>)}
+          </div>
+        </div>)}
+      </div>}
+      {!isCorrect && problem.kind === "reduce" && <ReduceWalkthrough key={session.problemIndex} />}
+      {!answerable && !hasAnswerComparison && walkthrough}
       {showsHints && <HintList session={session} />}
       {showsHints && notice && <p className="lesson-notice" role="status"><InlineParts parts={noticeParts(notice, game)} /></p>}
       {view === "review" && !isCorrect && <Button className="lesson-tiles-button" onClick={lesson.onReturnToTiles}>{LESSON_COPY.tilesButton}</Button>}

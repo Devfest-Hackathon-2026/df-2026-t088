@@ -224,13 +224,19 @@
   gap: var(--space-2);
 }
 
+.teacher-print-list__confirm { display: grid; gap: var(--space-1); margin-top: var(--space-1); padding: var(--space-2); border: var(--stroke-2) solid var(--color-border-strong); border-radius: var(--radius-hand); }
+.teacher-print-list__confirm p { margin: 0; color: var(--color-fg-strong); overflow-wrap: anywhere; }
+
 @media (min-width: 768px) {
   /* 1275×665 の 1 画面に収める（R-61）。上下の余白と段の間をすこし詰める */
   .teacher-today--print { gap: var(--space-2); padding: var(--space-4) var(--space-4) 0; }
 
   .teacher-print-head { grid-template-columns: auto minmax(0, 28rem); align-items: center; justify-content: space-between; }
 
-  .teacher-print-capture { max-width: 32rem; }
+  /* PC では「写真から選ぶ」（ファイルを開く）を先に出す。「プリントを撮る」はスマホ向けで、PC では何を押すのか分かりにくい（#374）。スマホ（767px 以下）は撮るが先のまま */
+  .teacher-print-capture { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 40rem; }
+  .teacher-print-capture p { grid-column: 1 / -1; }
+  .teacher-print-capture__library { order: -1; }
 
   .teacher-print-actions { position: static; margin: 0; padding: 0; border-top: 0; background: transparent; }
   .teacher-print-actions .button { flex: 0 0 auto; }
@@ -303,3 +309,27 @@
   font-weight: var(--text-title-weight);
 }
 .teacher-print-review__fraction .teacher-print-note { flex: 1 1 100%; }
+
+.teacher-print-list__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); min-width: 0; }
+
+/* 印刷（#374）：A4 縦。画面の操作は紙に要らないので消し、1 画面に収めるための高さの固定を外して全部流す */
+@page { size: A4 portrait; margin: 12mm; }
+@media print {
+  .teacher-nav-row,
+  .teacher-print-head__print,
+  .teacher-print-steps,
+  .teacher-print-capture,
+  .teacher-print-lasso,
+  .teacher-print-actions,
+  .teacher-print-review__confirm,
+  .teacher-print-list__actions,
+  .teacher-print-list__confirm,
+  .explain__controls,
+  .explain__retake,
+  .print-demand { display: none !important; }
+  .teacher-today--print,
+  .teacher-today--reviewing { display: block !important; height: auto !important; min-height: 0 !important; overflow: visible !important; padding: 0 !important; color: var(--color-fg); background: var(--color-bg); }
+  .teacher-print-review,
+  .teacher-print-review__details { display: block !important; height: auto !important; overflow: visible !important; }
+  .teacher-print-problem { break-inside: avoid; }
+}

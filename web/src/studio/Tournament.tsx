@@ -23,6 +23,8 @@ export type TournamentAlternative = {
 export interface TournamentProps {
   alternatives: readonly [TournamentAlternative, TournamentAlternative, TournamentAlternative];
   onSelect: (alternative: TournamentAlternative) => void;
+  /** 見本の案があるときの注意の文。先生の画面では、研究用の言葉でない文に替える */
+  mockNote?: string;
 }
 
 const STRATEGY_LABELS: Record<StudioStrategy, string> = {
@@ -42,7 +44,7 @@ const CHECK_LABELS: readonly [keyof TournamentChecks | "elapsedMs", string][] = 
 const RATINGS = ["1（見直したい）", "2（よい）", "3（とてもよい）"] as const;
 
 /** 教材まるごとの3案を比較し、検査を通った案を親画面へ渡す */
-export function Tournament({ alternatives, onSelect }: TournamentProps) {
+export function Tournament({ alternatives, onSelect, mockNote }: TournamentProps) {
   const previewLessons = alternatives.flatMap((alternative) => alternative.lesson
     ? [{ label: STRATEGY_LABELS[alternative.strategy], lesson: toLesson(alternative.lesson) }]
     : []);
@@ -57,7 +59,7 @@ export function Tournament({ alternatives, onSelect }: TournamentProps) {
         )}
       </div>
 
-      <AutomatedComparison alternatives={alternatives} />
+      <AutomatedComparison alternatives={alternatives} {...(mockNote ? { mockNote } : {})} />
       <TeacherEvaluation alternatives={alternatives} />
 
       <section aria-labelledby="tournament-effect-heading">
@@ -71,7 +73,7 @@ export function Tournament({ alternatives, onSelect }: TournamentProps) {
   );
 }
 
-function AutomatedComparison({ alternatives }: Pick<TournamentProps, "alternatives">) {
+function AutomatedComparison({ alternatives, mockNote = "mock（本物の Gemini ではない）" }: Pick<TournamentProps, "alternatives" | "mockNote">) {
   return (
     <section aria-labelledby="tournament-checks-heading">
       <h3 id="tournament-checks-heading">自動の検査</h3>
@@ -93,7 +95,7 @@ function AutomatedComparison({ alternatives }: Pick<TournamentProps, "alternativ
           </tbody>
         </table>
       </div>
-      {alternatives.some((alternative) => alternative.source === "mock") && <p>mock（本物の Gemini ではない）</p>}
+      {alternatives.some((alternative) => alternative.source === "mock") && <p>{mockNote}</p>}
     </section>
   );
 }

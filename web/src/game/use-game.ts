@@ -1,3 +1,5 @@
+import { findGradeOne, hasGradeOne } from "../lesson/grade-one";
+import { findGradeTwo, hasGradeTwo } from "../lesson/grade-two";
 import { findUpperMath, hasUpperMath } from "../lesson/upper-math";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { COPY } from "../copy";
@@ -29,7 +31,7 @@ import {
 import type { HasLessons, LessonTarget } from "./logic";
 import { loadState, saveState } from "./storage";
 
-const hasLessons = (chapterId: string) => hasFractionLessons(chapterId) || hasUpperMath(chapterId);
+const hasLessons = (chapterId: string) => hasFractionLessons(chapterId) || hasUpperMath(chapterId) || hasGradeOne(chapterId) || hasGradeTwo(chapterId);
 
 export interface ToastMessage {
   /** 同じ文でも出し直せるように、出すたびに変える */
@@ -269,7 +271,7 @@ export function useGame() {
       chapter,
       chapterProgress: progressOf(state, chapter),
       /** このマスの学習を作ってあるか */
-      hasLesson: (target: LessonTarget) => (findLesson(chapter.id, target) ?? findUpperMath(chapter.id, target)) !== undefined,
+      hasLesson: (target: LessonTarget) => (findLesson(chapter.id, target) ?? findUpperMath(chapter.id, target) ?? findGradeOne(chapter.id, target) ?? findGradeTwo(chapter.id, target)) !== undefined,
       /** 指定した章に学習が1つでもあるか */
       hasLessonsInChapter: (chapterId: string) => hasLessons(chapterId),
       progressOf: (target: Chapter) => progressOf(state, target),

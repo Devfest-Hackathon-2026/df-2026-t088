@@ -1,0 +1,19 @@
+.grade-one__diagram { display: grid; gap: var(--space-3); margin: var(--space-4) 0; }
+.grade-one__line { font-size: var(--text-display); }
+.grade-one__buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.grade-one button:not(.lesson-button) { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2) var(--space-4); cursor: pointer; }
+.grade-one__hint { margin: var(--space-2) 0; }
+.grade-one__hint summary { cursor: pointer; font-weight: bold; }
+.grade-one__operation { display: flex; flex-wrap: wrap; gap: var(--space-2); font-size: var(--text-display); margin: var(--space-3) 0; }
+.grade-one__operation .is-removed { opacity: .3; text-decoration: line-through; transition: opacity .8s ease; }
+.grade-one__operation.is-joined span:first-child { animation: grade-one-join-left .8s ease both; }
+.grade-one__operation.is-joined span:last-child { animation: grade-one-join-right .8s ease both; }
+.grade-one__operation-formula { font-size: var(--text-title); font-weight: bold; }
+@keyframes grade-one-join-left { from { transform: translateX(calc(-1 * var(--space-3))); } to { transform: translateX(0); } }
+@keyframes grade-one-join-right { from { transform: translateX(var(--space-3)); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .grade-one__operation.is-joined span { animation: none; } .grade-one__operation .is-removed { transition: none; } }
+
+.grade-one__answer { display: grid; gap: var(--space-2); }
+.grade-one__answer input { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2); width: min(100%, 14em); min-width: 0; }
+.grade-one__answer label { font-weight: bold; }
+.grade-one__answer p { margin: 0; }

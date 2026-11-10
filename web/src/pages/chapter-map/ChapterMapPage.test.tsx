@@ -131,7 +131,7 @@ describe("学年で章の数が変わる（FR-002、R-18）", () => {
   });
 
   it("問題のある章が無い学年は、どの章も鍵になる（D-133。PG-004 は退避中だが isChapterOpen を共有する）", () => {
-    localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ avatarId: "default", grade: 4 }));
+    localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ avatarId: "default", grade: 3 }));
     localStorage.setItem("sugoroku-home-v2", JSON.stringify(SEEN));
     render(<GradeProvider><Harness /></GradeProvider>);
     expect(cards().every((card) => card.hasAttribute("disabled"))).toBe(true);

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { DEFAULT_GRADE, initialGrade, saveAccountGrade } from "./account";
+import { DEFAULT_GRADE, initialGrade, saveAccountGrade, saveLearningGrade } from "./account";
 import type { Grade } from "./data/kanji-grades";
 import { displayText } from "./ruby-text";
 
@@ -10,9 +10,15 @@ export { DEFAULT_GRADE };
 interface GradeValue {
   grade: Grade;
   setGrade: (grade: Grade) => void;
+  setLearningGrade: (grade: Grade) => void;
 }
 
 const GradeContext = createContext<GradeValue | null>(null);
+
+/** 教材確認の学年は、子どもの保存済み設定から独立させる。 */
+export function PreviewGradeProvider({ grade, children }: { grade: Grade; children: ReactNode }) {
+  return <GradeContext.Provider value={{ grade, setGrade: () => {}, setLearningGrade: () => {} }}>{children}</GradeContext.Provider>;
+}
 
 export function GradeProvider({ children }: { children: ReactNode }) {
   const [grade, setGradeState] = useState<Grade>(() => initialGrade());
@@ -20,7 +26,11 @@ export function GradeProvider({ children }: { children: ReactNode }) {
     setGradeState(next);
     saveAccountGrade(next);
   }, []);
-  const value = useMemo(() => ({ grade, setGrade }), [grade, setGrade]);
+  const setLearningGrade = useCallback((next: Grade) => {
+    setGradeState(next);
+    saveLearningGrade(next);
+  }, []);
+  const value = useMemo(() => ({ grade, setGrade, setLearningGrade }), [grade, setGrade, setLearningGrade]);
   return <GradeContext.Provider value={value}>{children}</GradeContext.Provider>;
 }
 

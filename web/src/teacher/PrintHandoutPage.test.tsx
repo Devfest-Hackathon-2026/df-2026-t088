@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { PrintHandoutPage } from "./PrintHandoutPage";
 import { setApproverKey } from "./approver-key";
@@ -326,4 +326,35 @@ it("写真全体から3問を読み、型ごとの確認と編集解除を反映
   expect(posts).toHaveLength(2);
   expect(await screen.findByText("1 問を配りました。1 問は配れませんでした")).toBeTruthy();
   expect(screen.getByText("てこの問題")).toBeTruthy();
+});
+
+// #374：「取り下げる」は確認の枠を出してから送る（D-11 と同じ形）
+it("「取り下げる」を押しても、確認の枠で「取り下げる」を押すまで消さない。「やめる」で閉じる", async () => {
+  const fetchMock = withDemand(vi.fn(async (_url: RequestInfo | URL, init?: RequestInit) => init?.method === "DELETE"
+    ? new Response(null, { status: 204 })
+    : new Response(JSON.stringify({ items: [{ id: "handout-1", templateId: "rika-moon", questionText: "月の形が日によって変わるのはなぜ？", params: {}, createdAt: "2026-11-10T00:00:00.000Z" }] }), { status: 200 })));
+  vi.stubGlobal("fetch", fetchMock);
+  render(<PrintHandoutPage />);
+  fireEvent.click(await screen.findByRole("button", { name: "取り下げる" }));
+  const group = screen.getByRole("group", { name: "取り下げる" });
+  expect(group.textContent).toContain("月の形が日によって変わるのはなぜ？");
+  expect(fetchMock.mock.calls.some((call) => call[1]?.method === "DELETE")).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "やめる" }));
+  expect(screen.queryByRole("group", { name: "取り下げる" })).toBeNull();
+  expect(fetchMock.mock.calls.some((call) => call[1]?.method === "DELETE")).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "取り下げる" }));
+  const confirm = screen.getByRole("group", { name: "取り下げる" });
+  await act(async () => { fireEvent.click(within(confirm).getByRole("button", { name: "取り下げる" })); });
+  expect(fetchMock.mock.calls.filter((call) => call[1]?.method === "DELETE")).toHaveLength(1);
+  expect(String(fetchMock.mock.calls.find((call) => call[1]?.method === "DELETE")?.[0])).toBe("/api/v1/print/handouts/handout-1");
+});
+
+// #374：印刷する（window.print）
+it("「印刷する」を押すと window.print を呼ぶ", async () => {
+  const print = vi.fn();
+  vi.stubGlobal("print", print);
+  vi.stubGlobal("fetch", withDemand(vi.fn(async () => new Response(JSON.stringify({ items: [] }), { status: 200 }))));
+  render(<PrintHandoutPage />);
+  fireEvent.click(screen.getByRole("button", { name: "印刷する" }));
+  expect(print).toHaveBeenCalledTimes(1);
 });

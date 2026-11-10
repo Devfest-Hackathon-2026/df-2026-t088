@@ -47,7 +47,7 @@ function RateBar({ label, rate }: { label: string; rate: number }) {
 
 // 学びの輪（#301）。4 つの段を輪に並べ、真ん中に「いますること」を 1 つだけ出す。
 // 1 つまずきが集まる → 2 間違え方の型 → 3 先生が直し方を選ぶ → 4 次の子で効いたか → 1 に戻る
-export function LearningLoopDiagram() {
+export function LearningLoopDiagram({ reloadKey = 0 }: { reloadKey?: number } = {}) {
   const { approverKey, headers, unauthorizedText } = useLoopAccess();
   const [data, setData] = useState<LoopState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +68,7 @@ export function LearningLoopDiagram() {
         : "学びの輪を読み込めませんでした");
     });
     return () => { active = false; };
-  }, [approverKey]);
+  }, [approverKey, reloadKey]);
 
   if (error) return <section className="learning-loop" aria-labelledby="learning-loop-title"><h2 id="learning-loop-title">学びの輪</h2><p role="status">{error}</p></section>;
   if (!data) return <section className="learning-loop" aria-labelledby="learning-loop-title"><h2 id="learning-loop-title">学びの輪</h2><p role="status">読み込んでいます</p></section>;

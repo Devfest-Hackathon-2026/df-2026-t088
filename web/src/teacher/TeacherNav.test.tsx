@@ -225,7 +225,8 @@ describe("TeacherNav の「先生の管理」（D-209。TeacherGate が取った
     );
     await screen.findByRole("navigation");
     expect(screen.queryByRole("link", { name: "先生の管理" })).toBeNull();
-    expect(screen.getAllByRole("link")).toHaveLength(6);
+    expect(screen.getAllByRole("link")).toHaveLength(7);
     expect(screen.getByRole("link", { name: "出題順を変える" }).getAttribute("href")).toBe("?view=problem-order");
+    expect(screen.getByRole("link", { name: "教材をつくる" }).getAttribute("href")).toBe("?view=studio");
   });
 });

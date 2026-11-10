@@ -57,6 +57,16 @@
 .account-tabpanel[hidden] { display: none; }
 
 /* くわしく */
+.account-learning-grade { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.account-learning-grade select {
+  min-height: var(--button-min-height);
+  padding: 0 var(--space-2);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: inherit;
+}
 .account-section { display: grid; gap: var(--space-1); }
 .account-section__title { margin: 0; font-size: var(--text-small); font-weight: var(--text-strong-weight); line-height: var(--text-small-line); }
 .account-subjects { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }

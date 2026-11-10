@@ -22,6 +22,8 @@ describe("LoginPage（PG-009）", () => {
     expect(screen.getByRole("button", { name: COPY.CP_787 })).toBeTruthy();
     expect(screen.queryByRole("button", { name: /先生|せんせい/ })).toBeNull();
     expect(screen.queryByRole("link", { name: /先生|せんせい/ })).toBeNull();
+    // 見本であることを 1 行で知らせる（#572）。先生の画面への入口は置かない（D-153）
+    expect(screen.getByText(shown(COPY.CP_800))).toBeTruthy();
   });
 
   it("開いた時はどのボタンにも focus を置かない（D-153）。ロゴは読み上げない", () => {

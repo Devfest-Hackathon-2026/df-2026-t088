@@ -252,6 +252,7 @@ export function useTileLesson(lesson: LessonDefinition, startIndex: number, opti
     nudge: isNudged ? nudgeTarget : null,
     onAnswer,
     onAnswerChange,
+    onAnswerValue: (value: string) => setSession((current) => typeAnswer(current, value)),
     onPartChange,
     onChoice,
     onNumberChoice,

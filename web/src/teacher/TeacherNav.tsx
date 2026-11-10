@@ -1,12 +1,12 @@
 // 先生の画面の入口（学級のようす・課題・時間割・提出の状況）。どの画面にも同じ並びで出す
-import { ADMIN_COPY, CLASS_COPY, MEMBERS_COPY, PROBLEM_ORDER_COPY, SUBMISSIONS_COPY } from "./copy";
+import { ADMIN_COPY, CLASS_COPY, MEMBERS_COPY, PROBLEM_ORDER_COPY, STUDIO_COPY, SUBMISSIONS_COPY } from "./copy";
 import { useTeacherIsAdmin } from "./use-teacher-admin";
 import { TeacherApproverKey } from "./approver-key";
 import { TeacherWorkspaceBar } from "./WorkspaceBar";
 import { useTeacherSession } from "./workspace";
 import "./AdminPages.css";
 
-export type TeacherView = "class" | "assignments" | "timetable" | "submissions" | "print" | "problem-order";
+export type TeacherView = "class" | "assignments" | "timetable" | "submissions" | "print" | "problem-order" | "studio";
 
 const ITEMS: { view: TeacherView; href: string; label: string }[] = [
   { view: "class", href: "?", label: CLASS_COPY.title },
@@ -15,6 +15,7 @@ const ITEMS: { view: TeacherView; href: string; label: string }[] = [
   { view: "submissions", href: "?view=submissions", label: SUBMISSIONS_COPY.title },
   { view: "print", href: "?view=print", label: "プリントから説明をつくる" },
   { view: "problem-order", href: "?view=problem-order", label: PROBLEM_ORDER_COPY.title },
+  { view: "studio", href: "?view=studio", label: STUDIO_COPY.title },
 ];
 
 export function TeacherNav({ current }: { current: TeacherView }) {

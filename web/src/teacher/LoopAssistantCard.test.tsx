@@ -54,6 +54,16 @@ describe("学びの輪アシスタントカード", () => {
     ));
   });
 
+  it("承認した後に onChanged を呼び、左の輪に読み直させる。開いただけでは呼ばない（#573）", async () => {
+    const onChanged = vi.fn();
+    render(<LoopAssistantCard onChanged={onChanged} />);
+    expect(await screen.findByText("型: 分子どうし、分母どうしを計算した形")).toBeTruthy();
+    expect(onChanged).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText("理由（必須）"), { target: { value: "確かめた" } });
+    fireEvent.click(screen.getByRole("button", { name: "承認" }));
+    await waitFor(() => expect(onChanged).toHaveBeenCalledTimes(1));
+  });
+
   it("プリントのてこは、教科の id・print: のキー・数字だけの問題を出さず、読める名前で出す", async () => {
     mockedCall.mockResolvedValue({ items: [{ ...row, chapterId: "rika", lessonKey: "print:rika-lever", problem: "左2-30g-右3", pattern: "lever-same-weight", source: "demo" }] } as never);
     render(<LoopAssistantCard />);

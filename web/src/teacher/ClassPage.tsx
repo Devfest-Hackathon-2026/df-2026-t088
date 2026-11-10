@@ -28,6 +28,8 @@ function syncUrl(tab: ClassTab, period: Period, subject: SubjectId) {
 export function ClassPage({ initialTab = "stumbles", initialPeriod = "7days", initialSubject = "sansu" }: { initialTab?: ClassTab; initialPeriod?: Period; initialSubject?: SubjectId }) {
   const [tab, setTab] = useState<ClassTab>(initialTab);
   const [period, setPeriod] = useState<Period>(initialPeriod);
+  // 右のカードで承認などをしたら、左の輪も読み直す（#573）
+  const [loopReloadKey, setLoopReloadKey] = useState(0);
   const subjects = classSubjects();
   const [subject, setSubject] = useState<SubjectId>(parseSubject(initialSubject));
   const tabRefs = useRef<Record<ClassTab, HTMLButtonElement | null>>({ stumbles: null, progress: null, loop: null });
@@ -106,8 +108,8 @@ export function ClassPage({ initialTab = "stumbles", initialPeriod = "7days", in
           <ProgressPanel reloadKey={0} subjectId={subject} />
         ) : (
           <div className="class-page__loop">
-            <LearningLoopDiagram />
-            <LoopAssistantCard />
+            <LearningLoopDiagram reloadKey={loopReloadKey} />
+            <LoopAssistantCard onChanged={() => setLoopReloadKey((key) => key + 1)} />
           </div>
         )}
       </div>

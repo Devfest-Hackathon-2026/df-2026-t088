@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ACCOUNT_KEY, LEGACY_GRADE_KEY, SAMPLE_ACCOUNT_NAME, initialGrade, loadAccount, migrateLegacyGrade, saveAccountGrade } from "./account";
+import { ACCOUNT_KEY, LEGACY_GRADE_KEY, SAMPLE_ACCOUNT_NAME, initialGrade, loadAccount, migrateLegacyGrade, saveAccountGrade, saveLearningGrade } from "./account";
 
 const DEFAULT = { name: SAMPLE_ACCOUNT_NAME, avatarId: "default", grade: 6 };
 
@@ -236,4 +236,11 @@ describe("学年を書く時の写真", () => {
     saveAccountGrade(2);
     expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY) ?? "")).toEqual({ avatarId: "default", grade: 2 });
   });
+});
+
+it("公開版も生徒が選んだ教材の学年を使い、仮アカウントの学年は保つ", () => {
+  saveAccountGrade(5);
+  saveLearningGrade(2);
+  expect(initialGrade(true)).toBe(2);
+  expect(loadAccount().grade).toBe(5);
 });

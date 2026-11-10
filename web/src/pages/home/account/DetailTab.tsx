@@ -4,7 +4,8 @@ import { Meter } from "../../../components/Meter";
 import { Ruby } from "../../../components/Ruby";
 import { COPY } from "../../../copy";
 import { SUBJECTS } from "../../../data";
-import { DEFAULT_GRADE, useGrade, useText } from "../../../grade";
+import { GRADES } from "../../../data/kanji-grades";
+import { DEFAULT_GRADE, useGradeControl, useText } from "../../../grade";
 import type { Game } from "../../../game/use-game";
 import { subjectProgressRows } from "../../../game/subject-progress";
 import { currentAccount, logOut } from "../../../login";
@@ -19,7 +20,8 @@ interface DetailTabProps {
 // CMP-028 くわしくのタブ：教科のすすみ、ログイン（D-197）
 export function DetailTab({ game, showToast, active }: DetailTabProps) {
   const t = useText();
-  const grade = useGrade() ?? DEFAULT_GRADE;
+  const gradeControl = useGradeControl();
+  const grade = gradeControl?.grade ?? DEFAULT_GRADE;
   const { rows, pending } = subjectProgressRows(grade, game.state);
   const account = currentAccount();
   const [confirming, setConfirming] = useState(false);
@@ -46,6 +48,15 @@ export function DetailTab({ game, showToast, active }: DetailTabProps) {
   const question = t(account?.name ? COPY.CP_1220(account.name) : COPY.CP_1222);
   return (
     <>
+      {gradeControl && <label className="account-learning-grade">
+        <Ruby text="[学|まな]ぶ[学年|がくねん]" />
+        <select value={grade} onChange={(event) => {
+          const selection = GRADES.find((candidate) => String(candidate) === event.target.value);
+          if (selection !== undefined) gradeControl.setLearningGrade(selection);
+        }}>
+          {GRADES.map((option) => <option key={option} value={option}>{option}年</option>)}
+        </select>
+      </label>}
       <section className="account-section">
         <h3 className="account-section__title"><Ruby text={COPY.CP_1133} /></h3>
         {rows.length === 0 && pending > 0 ? <p className="account-small account-small--muted"><Ruby text={COPY.CP_1137} /></p> : null}

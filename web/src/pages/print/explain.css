@@ -13,6 +13,8 @@
 .explain__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .explain__language { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-small); color: var(--color-muted-fg); }
 .explain__language select { max-width: 12em; padding: var(--space-1) var(--space-2); color: var(--color-fg); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-hand); }
+/* 767px 以下は指で押すので、ボタンと同じ高さにする（D-235。高さ 29px だった） */
+@media (max-width: 767px) { .explain__language select { min-height: var(--button-min-height); } }
 .explain__subject {
   padding: var(--space-1) var(--space-3);
   color: var(--color-fg-strong);

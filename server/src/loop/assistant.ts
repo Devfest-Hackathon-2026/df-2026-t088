@@ -1,6 +1,6 @@
 import type { LoopStore, Suggestion } from "./store.ts";
 import { LOOP_LIMITS } from "./store.ts";
-import { NAMED_PATTERNS, patternBelongsToChapter } from "./hint-table.ts";
+import { NAMED_PATTERNS, patternBelongsToChapter, type NamedPattern } from "./hint-table.ts";
 
 export type AssistantEffectSide = { count: number; correct: number | null };
 export type AssistantEffect = {
@@ -9,7 +9,12 @@ export type AssistantEffect = {
   after: AssistantEffectSide;
   tryAlternatives: boolean;
   alternatives: Suggestion["candidates"];
+  /** 承認済みの行にだけ付く */
+  stumbles?: AssistantStumbles;
 };
+
+/** 承認の前日までと翌日からのつまずきの件数（#519）。5 件に届かない側は count を null にして伏せる */
+export type AssistantStumbles = { before: { count: number | null }; after: { count: number | null } };
 
 export type AssistantItem = {
   chapterId: string;
@@ -25,6 +30,13 @@ export type AssistantItem = {
 
 function side(count: number, correct: number): AssistantEffectSide {
   return { count, correct: count >= LOOP_LIMITS.minGroupSize ? correct / count : null };
+}
+
+function stumblesOf(store: LoopStore, lessonKey: string, problem: string, pattern: NamedPattern): AssistantStumbles | undefined {
+  const around = store.stumblesAround(lessonKey, problem, pattern);
+  if (!around) return undefined;
+  const show = (count: number) => ({ count: count >= LOOP_LIMITS.minGroupSize ? count : null });
+  return { before: show(around.before), after: show(around.after) };
 }
 
 /** 型の一覧・規則表から対象を集計し、少人数の効果は画面に出さない。 */
@@ -52,15 +64,17 @@ export function buildAssistantItems(store: LoopStore, suggestions: Map<string, S
         ? candidates.filter((candidate) => candidate.passed && candidate.number !== suggestion?.selectedCandidateNumber)
         : [];
       const hasApproved = records.some((record) => record.lessonKey === summary.lessonKey && record.problem.replace(/\s+/g, "") === summary.problem.replace(/\s+/g, "") && record.source === "dummy");
+      const status = suggestion?.status ?? (approved ? "approved" : "unavailable");
+      const stumbles = status === "approved" ? stumblesOf(store, summary.lessonKey, summary.problem, pattern) : undefined;
       items.push({
         chapterId: summary.chapterId,
         lessonKey: summary.lessonKey,
         problem: summary.problem,
         pattern,
         count,
-        status: suggestion?.status ?? (approved ? "approved" : "unavailable"),
+        status,
         ...(suggestion ? { suggestion: { id: suggestion.id, candidates: suggestion.candidates.filter((candidate) => candidate.passed), ...(suggestion.selectedCandidateNumber === undefined ? {} : { selectedCandidateNumber: suggestion.selectedCandidateNumber }) } } : {}),
-        effect: { status: compared ? "compared" : "undetermined", before, after, tryAlternatives, alternatives },
+        effect: { status: compared ? "compared" : "undetermined", before, after, tryAlternatives, alternatives, ...(stumbles ? { stumbles } : {}) },
         source: hasApproved ? "dummy" : "demo",
       });
     }

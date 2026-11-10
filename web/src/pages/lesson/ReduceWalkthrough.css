@@ -1,0 +1,13 @@
+.reduce-guide__panel { margin-top: var(--space-2); padding: var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); }
+.reduce-guide__panel h3 { margin: 0; }
+.reduce-guide__panel button { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-1) var(--space-2); cursor: pointer; }
+.reduce-guide__panel button:disabled { opacity: .5; cursor: default; }
+.reduce-guide__pizza { display: flex; width: min(100%, 320px); }
+.reduce-guide__pizza span { flex: 1; min-width: 0; text-align: center; padding: var(--space-2) 0; border: 1px solid var(--color-border); background: var(--color-bg); transition: border-color 1.2s ease; }
+.reduce-guide__pizza span.is-filled { background: var(--color-subject-rika); }
+.reduce-guide__pizza.is-grouped span:nth-child(1), .reduce-guide__pizza.is-grouped span:nth-child(3) { border-right-color: transparent; }
+.reduce-guide__pizza.is-grouped span:nth-child(2), .reduce-guide__pizza.is-grouped span:nth-child(4) { border-left-color: transparent; }
+.reduce-guide__groups { display: flex; width: min(100%, 320px); text-align: center; }
+.reduce-guide__groups span { flex: 1; }
+.reduce-guide__formula { font-weight: bold; }
+@media (prefers-reduced-motion: reduce) { .reduce-guide__pizza span { transition: none; } }

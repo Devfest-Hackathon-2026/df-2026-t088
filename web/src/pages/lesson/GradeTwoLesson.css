@@ -1,0 +1,91 @@
+.grade-two__figures { display: grid; gap: var(--space-1); margin: var(--space-3) 0; font-size: var(--text-body); line-height: var(--text-body-line); white-space: pre-wrap; overflow-wrap: anywhere; }
+.grade-two__hint { margin: var(--space-2) 0; }
+.grade-two__hint-body { margin: var(--space-2) 0; }
+.grade-two__hint-body p { margin: 0; }
+.grade-two__scene { animation: grade-two-show .5s ease both; }
+.grade-two__controls { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
+.grade-two__answer { display: grid; gap: var(--space-2); }
+.grade-two__answer input { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2); width: min(100%, 14em); min-width: 0; }
+.grade-two__answer label { font-weight: bold; }
+.grade-two__answer p { margin: 0; }
+.fraction-basics { width: min(100%, 24em); margin: var(--space-3) 0; }
+.fraction-basics p { margin: var(--space-1) 0; text-align: center; }
+.fraction-basics__bar { display: flex; height: 3em; border: var(--stroke-2) solid var(--color-border); }
+.fraction-basics__bar span { flex: 1 1 0; border-right: 1px solid var(--color-border); }
+.fraction-basics__bar span:last-child { border-right: 0; }
+.fraction-basics__bar .is-whole, .fraction-basics__bar .is-selected { background: var(--color-subject-sansu); }
+.fraction-basics__formula { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-2) 0; font-weight: bold; }
+.fraction-basics__stack { display: inline-grid; min-width: 1.7em; text-align: center; line-height: 1.2; font-size: var(--text-title); }
+.fraction-basics__stack > span:first-child { border-bottom: var(--stroke-2) solid var(--color-border); }
+.multiplication-basics__formula { font-size: var(--text-title); font-weight: bold; }
+.grade-two button:not(.lesson-button) { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2) var(--space-4); cursor: pointer; }
+.grade-two button:disabled { opacity: .5; cursor: default; }
+.grade-two__ruler { width: min(100%, 320px); margin: var(--space-4) 0; }
+.grade-two__pencil { width: 87.5%; height: 28px; background: var(--color-subject-sansu); border: var(--stroke-2) solid var(--color-border); text-align: center; }
+.grade-two__ticks { position: relative; height: 2em; border-top: var(--stroke-2) solid var(--color-border); }
+.grade-two__ticks span { position: absolute; transform: translateX(-50%); border-left: 1px solid var(--color-border); padding-top: var(--space-1); }
+.column-add { margin: var(--space-2) 0; }
+.column-add__table { border-collapse: collapse; table-layout: fixed; width: min(100%, 24em); text-align: center; }
+.column-add__table th, .column-add__table td { border: 1px solid var(--color-border); padding: var(--space-1) var(--space-2); }
+.column-add__table thead th { font-size: var(--text-body); white-space: nowrap; }
+.column-add__table thead td { border: 0; width: 6em; }
+.column-add__table tbody th { font-size: var(--text-body); font-weight: normal; }
+.column-add__table tbody td { font-size: var(--text-title); font-variant-numeric: tabular-nums; }
+.column-add__table td.is-focused { background: var(--color-subject-sansu); }
+.column-add__carry td { font-weight: bold; }
+.column-add__result td { border-top: var(--stroke-2) solid var(--color-border); }
+.column-add__guide { margin-top: var(--space-2); }
+.column-add__guide p { margin: 0 0 var(--space-2); }
+.grade-two__diagram-scroll { max-width: 100%; overflow-x: auto; margin: var(--space-3) 0; }
+.grade-two__place-table, .grade-two__picture-table { border-collapse: collapse; text-align: center; }
+.grade-two__place-table th, .grade-two__place-table td, .grade-two__picture-table th, .grade-two__picture-table td { border: 1px solid var(--color-border); padding: var(--space-2); }
+.grade-two__place-table th { min-width: 6em; white-space: nowrap; }
+.grade-two__calculation td { font-size: var(--text-title); font-variant-numeric: tabular-nums; }
+.grade-two__place-pieces { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); max-width: 8em; }
+.grade-two__place-pieces span { display: inline-grid; place-items: center; min-width: 1.8em; min-height: 1.8em; border: 1px solid var(--color-border); border-radius: var(--radius-slot); background: var(--color-subject-sansu); }
+.grade-two__group-list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0; }
+.grade-two__group { border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2); }
+.grade-two__group.is-focused { background: var(--color-subject-sansu); }
+.grade-two__groups p { margin: var(--space-1) 0; }
+.grade-two__group-items { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-1); }
+.grade-two__diagram-caption { margin: 0 0 var(--space-1); }
+.grade-two__picture-table th { text-align: left; white-space: nowrap; }
+.grade-two__picture-table td { width: 2em; height: 2em; }
+.grade-two__fraction { width: min(100%, 25em); margin: var(--space-3) 0; }
+.grade-two__fraction p { margin: var(--space-1) 0; }
+.grade-two__fraction-bar { display: flex; border: var(--stroke-2) solid var(--color-border); }
+.grade-two__fraction-bar span { flex: 1 1 0; min-width: 0; min-height: 3em; display: grid; place-items: center; border-right: 1px solid var(--color-border); }
+.grade-two__fraction-bar span:last-child { border-right: 0; }
+.grade-two__fraction-bar .is-selected { background: var(--color-subject-sansu); }
+.grade-two__clock { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: var(--space-2) 0; }
+.grade-two__clock svg { width: 10em; height: 10em; display: block; }
+.grade-two__clock svg text { fill: currentColor; font-size: 18px; }
+.grade-two__clock p { max-width: 25em; margin: var(--space-1) 0; }
+.grade-two__minute-hand { stroke: var(--color-border); stroke-width: 5; stroke-linecap: round; transition: transform .6s ease; }
+.grade-two__polygon { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: var(--space-2) 0; }
+.grade-two__polygon svg { display: block; width: 10em; height: 9em; }
+.grade-two__polygon line { stroke: var(--color-border); stroke-width: 3; }
+.grade-two__polygon line.is-focused { stroke: var(--color-focus-ring); stroke-width: 8; }
+.grade-two__polygon p { margin: var(--space-1) 0; }
+.array-compare { margin: var(--space-2) 0; }
+.array-compare__figures { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.array-compare__card { border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2); text-align: center; }
+.array-compare__card p, .array-compare > p { margin: var(--space-1) 0; }
+.array-compare__card svg { display: block; width: 8em; height: 8em; fill: var(--color-border); }
+.array-compare__turn { transition: transform .7s ease; }
+.array-compare > .grade-two__controls { margin-top: var(--space-2); }
+@media (prefers-reduced-motion: reduce) { .array-compare__turn { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .grade-two__minute-hand { transition: none; } }
+@keyframes grade-two-show { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .grade-two__scene { animation: none; } }
+
+.grade-two__bundles { display: grid; gap: var(--space-2); margin: var(--space-2) 0; }
+.grade-two__bundles p { margin: 0; }
+.grade-two__bundle-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.grade-two__bundle { border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-1) var(--space-2); background: var(--color-bg); transition: background-color .5s ease; }
+.grade-two__bundle.is-counted { background: var(--color-subject-sansu); }
+.grade-two__bundle-name { display: block; font-weight: bold; }
+.grade-two__subtotal { display: block; margin-top: var(--space-1); font-weight: bold; animation: grade-two-show .5s ease both; }
+.grade-two__dots { display: grid; grid-template-columns: repeat(5, 1em); line-height: 1.15; }
+.grade-two__singles { display: flex; gap: var(--space-1); align-items: center; }
+@media (prefers-reduced-motion: reduce) { .grade-two__bundle { transition: none; } .grade-two__subtotal { animation: none; } }

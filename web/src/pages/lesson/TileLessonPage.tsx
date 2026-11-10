@@ -1,3 +1,7 @@
+import { GradeOneLesson } from "./GradeOneLesson";
+import { GradeTwoLesson } from "./GradeTwoLesson";
+import { findGradeOne, gradeOneSummary } from "../../lesson/grade-one";
+import { findGradeTwo, gradeTwoSummary } from "../../lesson/grade-two";
 import { findUpperMath, upperMathSummary } from "../../lesson/upper-math";
 import { UpperMathLesson } from "./UpperMathLesson";
 import { FractionIntro } from "./FractionIntro";
@@ -98,7 +102,9 @@ export function TileLessonPage({ game, lessonKey }: TileLessonPageProps) {
   const [introDone, setIntroDone] = useState<string | null>(null);
   const lesson = target ? findLesson(chapter.id, target) : undefined;
   const upper = target && !lesson ? findUpperMath(chapter.id, target) : undefined;
-  const isOpen = target !== null && (lesson !== undefined || upper !== undefined) && canStart(chapter, progress, target);
+  const gradeOne = target && !lesson ? findGradeOne(chapter.id, target) : undefined;
+  const gradeTwo = target && !lesson ? findGradeTwo(chapter.id, target) : undefined;
+  const isOpen = target !== null && (lesson !== undefined || upper !== undefined || gradeOne !== undefined || gradeTwo !== undefined) && canStart(chapter, progress, target);
 
   // 履歴から、開いていない章や鍵のマスの学習へ来た時は盤面へ送る。クリアしても進まない学習を見せない
   useEffect(() => {
@@ -119,6 +125,10 @@ export function TileLessonPage({ game, lessonKey }: TileLessonPageProps) {
   if (upper) return <UpperMathLesson key={`${chapter.id}-${lessonKey}`} practice={upper}
     summary={target.kind === "test" ? upperMathSummary(chapter.id) : undefined}
     onExit={backToBoard} onFinish={handleFinish} />;
+  if (gradeOne) return <GradeOneLesson key={`${chapter.id}-${lessonKey}`} topic={gradeOne}
+    topics={target.kind === "test" ? gradeOneSummary(chapter.id) : undefined} onExit={backToBoard} onFinish={handleFinish} />;
+  if (gradeTwo) return <GradeTwoLesson key={`${chapter.id}-${lessonKey}`} practice={gradeTwo.practice}
+    summary={target.kind === "test" ? gradeTwoSummary(chapter.id) : undefined} onExit={backToBoard} onFinish={handleFinish} />;
   if (!lesson) return null;
 
   // 図解のある学習は、1問目から始める時だけ先に図解を見せる。途中から続ける時は問題から

@@ -51,6 +51,16 @@ describe("学びの輪の図", () => {
     expect(screen.getByRole("button", { name: "直し方を選ぶ" })).toBeTruthy();
   });
 
+  it("reloadKey が変わると読み直し、承認した後の段に変わる（#573）", async () => {
+    respond([item("sum-both", 12, "pending")], 12);
+    const { rerender } = render(<LearningLoopDiagram reloadKey={0} />);
+    expect(await screen.findByText("選ぶのを待つ型 1 つ")).toBeTruthy();
+    respond([item("sum-both", 12, "approved")], 12);
+    rerender(<LearningLoopDiagram reloadKey={1} />);
+    expect(await screen.findByText("選んだ直し方 1 つ")).toBeTruthy();
+    expect(screen.queryByText("選ぶのを待つ型 1 つ")).toBeNull();
+  });
+
   it("選ぶ前と後が 5 件ずつそろうと、正答の割合を棒で比べる。そろわなければ比べない", async () => {
     respond([item("sum-num-only", 9, "approved", { ...none, status: "compared", before: { count: 5, correct: 0.4 }, after: { count: 5, correct: 0.8 } })], 9);
     const { unmount } = render(<LearningLoopDiagram />);

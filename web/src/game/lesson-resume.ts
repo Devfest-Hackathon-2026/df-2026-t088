@@ -5,6 +5,9 @@ import type { LessonDefinition } from "../lesson/problems";
 // 進みと経験値には数えないので GameState には入れない。読めなくても1問目から始めるだけで、学習は止めない
 const RESUME_KEY = "sugoroku-lesson-resume";
 
+// 学習を終えた回数。数の入れ替えの種になる（D-254）。途中で読み直しただけでは増えないので、同じ問題が続く
+const ATTEMPT_KEY = "sugoroku-lesson-attempt";
+
 type ResumeValue = string | number;
 type LessonResume = Record<string, ResumeValue>;
 
@@ -85,16 +88,45 @@ export function saveResume(lesson: LessonDefinition | ResumeTarget | string, pro
   writeAll({ ...withoutLegacy(readAll(), target), [nameOf(target)]: target.problems[problemIndex]?.id ?? problemIndex });
 }
 
-/** 学習を終えた時は、その学習の分だけ消す。planId と古い key の両方 */
+function readAttempts(): Record<string, number> {
+  try {
+    const value: unknown = JSON.parse(localStorage.getItem(ATTEMPT_KEY) ?? "{}");
+    return typeof value === "object" && value !== null && !Array.isArray(value) ? value as Record<string, number> : {};
+  } catch {
+    return {};
+  }
+}
+
+/** その学習を終えた回数。読めない・記録が無い時は 0（出題表のまま） */
+export function loadAttempt(planId: string): number {
+  const value = readAttempts()[planId];
+  return typeof value === "number" && Number.isSafeInteger(value) && value > 0 ? value : 0;
+}
+
+function bumpAttempt(planId: string): void {
+  try {
+    localStorage.setItem(ATTEMPT_KEY, JSON.stringify({ ...readAttempts(), [planId]: loadAttempt(planId) + 1 }));
+  } catch {
+    // 保存できなければ 0 回目のまま動く
+  }
+}
+
+/** 学習を終えた時は、その学習の分だけ消す。planId と古い key の両方。出題表のある学習は、終えた回数を 1 増やす */
 export function clearResume(lesson: LessonDefinition | ResumeTarget | string): void {
   const target = typeof lesson === "string" ? keyOnly(lesson, 0) : lesson;
   const { [nameOf(target)]: _name, ...rest } = withoutLegacy(readAll(), target);
   writeAll(rest);
+  if (target.planId !== undefined) bumpAttempt(target.planId);
 }
 
-/** はじめからにする時に、全部の学習の分を消す */
+/** はじめからにする時に、全部の学習の分を消す。終えた回数も 0 に戻す */
 export function clearAllResume(): void {
   writeAll({});
+  try {
+    localStorage.removeItem(ATTEMPT_KEY);
+  } catch {
+    // 消せなくても、次に学習を開くと別の数になるだけ
+  }
 }
 
 function keyOnly(key: string, problemCount: number): ResumeTarget {

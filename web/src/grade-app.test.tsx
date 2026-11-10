@@ -9,6 +9,7 @@ import { MIDWAY_STATE } from "./game/test-state";
 import { displayText } from "./ruby-text";
 import { COPY } from "./copy";
 import { LOGIN_KEY } from "./login";
+import * as gradeOne from "./lesson/grade-one";
 import * as upperMath from "./lesson/upper-math";
 
 const SEEN: GameState = { ...MIDWAY_STATE, introSeen: true, sansuSelected: true };
@@ -61,9 +62,10 @@ describe("学年で漢字を出し分ける（D-91）", () => {
   });
 
   it("学年1では、鍵の章札の読み上げの名前と、押した時の知らせにも 1年の字のほかの漢字が出ない（D-133）", () => {
-    // 1年の章は問題が無く鍵なので盤面へは入れない。鍵の札と CP-550 のトーストで確かめる
-    openPage("1", "/sansu");
     const first = chaptersOf(1, "sansu")[0]!;
+    const hasGradeOne = gradeOne.hasGradeOne;
+    vi.spyOn(gradeOne, "hasGradeOne").mockImplementation((id) => id !== first.id && hasGradeOne(id));
+    openPage("1", "/sansu");
     const card = screen.getByRole("button", { name: displayText(COPY.CP_207(first.title), 1) });
     expect(card.getAttribute("aria-disabled")).toBe("true");
     fireEvent.click(card);

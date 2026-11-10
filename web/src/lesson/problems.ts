@@ -9,6 +9,7 @@ import type { NumberProblem } from "./number-problem";
 export const TILE_LESSON_SIDE_ID = "fraction-t2";
 
 interface ProblemBase {
+  hintsOnly?: boolean;
   /** 出題表から作った問題の id（`関数名(数,…)`）。固定で作った問題には無い */
   id?: string;
   /** タイル置き場の中身。空ならタイルを使わず、「分かんない」でヒントを見せる */
@@ -95,7 +96,7 @@ export interface LessonDefinition {
   problems: LessonProblem[];
 }
 
-export const hasTiles = (problem: LessonProblem): boolean => problem.pieces.length > 0;
+export const hasTiles = (problem: LessonProblem): boolean => !("hintsOnly" in problem && problem.hintsOnly) && problem.pieces.length > 0;
 
 /** 「分かんない」で、タイルより先にヒントを開く問題か */
 export const startsWithHints = (problem: LessonProblem): boolean => !hasTiles(problem) || problem.hintsBeforeTiles !== undefined;

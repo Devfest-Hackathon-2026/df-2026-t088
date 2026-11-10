@@ -68,27 +68,47 @@ function ConceptGuide({ concept, onDone, onExit }: { concept: Concept; onDone: (
   </section></main>;
 }
 
-function InverseSharing({ total }: { total: number }) {
-  const [split, setSplit] = useState(false);
-  return <div className="upper__inverse">
-    <p aria-live="polite">{split ? `2人で分けると、1人分は${total / 2}こ。人数は2倍、1人分は半分です。` : `1人なら${total}こ全部が1人分です。2人だと1人分はどうなるかな？`}</p>
-    <div className={`upper__inverse-bar ${split ? "is-split" : ""}`} aria-hidden="true"><span /><span /></div>
-    <p>全部のあめは{total}このまま</p>
-    <button type="button" onClick={() => setSplit(!split)}>{split ? "1人分に戻す" : "2人で分ける"}</button>
-  </div>;
+function InverseArrows({ values, step, reverse = false }: { values: number[]; step: number; reverse?: boolean }) {
+  const pairs: [number, number][] = step < 1 ? [[1, 2]] : [[1, 3], [2, 4]];
+  const visiblePairs = pairs.filter(([from, to]) => values.includes(from) && values.includes(to));
+  return <tr className="upper__arrow-row">
+    <th scope="row">{reverse ? "1人分の変化" : "人数の変化"}</th>
+    <td colSpan={values.length}>
+      {visiblePairs.map(([from, to]) => {
+        const factor = to / from;
+        const change = reverse ? `÷${factor}` : `×${factor}`;
+        const start = 50 + values.indexOf(from) * 100;
+        const end = 50 + values.indexOf(to) * 100;
+        const middle = (start + end) / 2;
+        return <svg key={from} viewBox={`0 0 ${values.length * 100} 48`} preserveAspectRatio="none"
+          role="img" aria-label={`${from}人と${to}人を比べると${change}`}>
+          <path d={`M ${start + 3} 38 Q ${middle} 0 ${end - 4} 38`} />
+          <polygon points={`${end - 9},32 ${end + 1},32 ${end - 4},42`} />
+          <text x={middle} y="15" textAnchor="middle">{change}</text>
+        </svg>;
+      })}
+    </td>
+  </tr>;
 }
 
 function Diagram({ visual, step }: { visual: UpperVisual; step: number }) {
   if (visual.kind === "function-table" && visual.operation === "divide") {
+    const targetPeople = visual.xs[visual.ys.indexOf(null)];
     return <div className="upper__table-scroll">
       <table className="upper__function-table" aria-label="人数と1人分の対応を示す表">
+        <colgroup><col className="upper__function-header" />{visual.xs.map((_, i) => <col key={i} />)}</colgroup>
         <tbody>
+          {step >= 0 && <InverseArrows values={visual.xs} step={step} />}
           <tr><th scope="row">{visual.xLabel}</th>{visual.xs.map((value, i) => <td key={i}>{value}</td>)}</tr>
+          {step >= 0 && <InverseArrows values={visual.xs} step={step} reverse />}
           <tr><th scope="row">{visual.yLabel}</th>{visual.ys.map((value, i) => <td key={i}>{value ?? "？"}</td>)}</tr>
         </tbody>
       </table>
-      {step >= 0 && <InverseSharing key={visual.factor} total={visual.factor} />}
-      {step >= 1 && <p><mark>人数 × 1人分 ＝ 全部の{visual.factor}こ</mark></p>}
+      {step >= 1 && <>
+        <p><mark>人数 × 1人分 ＝ 全部の{visual.factor}こ</mark></p>
+        <p>人数を x 人とすると、1人分は {visual.factor} ÷ x で求められます。</p>
+        {targetPeople !== undefined && <p>{targetPeople}人で分けるときは、x に {targetPeople} を入れて、<strong>{visual.factor} ÷ {targetPeople}</strong> を計算しよう。</p>}
+      </>}
     </div>;
   }
   if (visual.kind === "six") return <GradeSixDiagram visual={visual} step={step} />;
@@ -97,7 +117,9 @@ function Diagram({ visual, step }: { visual: UpperVisual; step: number }) {
   if (visual.kind === "volume") {
     const { width, height, depth, unit } = visual;
     const x = 28 + height * 9, y = 110, w = width * 20, h = depth * 20, dx = height * 9, dy = height * 6;
-    return <div className="upper__volume"><p>横 {width}{unit}・奥行き {height}{unit}・高さ {depth}{unit}</p><svg viewBox={`0 ${Math.min(0, y-h-dy-8)} ${Math.max(180, x+w+dx+12)} ${Math.max(135, h+dy+30)}`} role="img" aria-label={`横${width}${unit}、奥行き${height}${unit}、高さ${depth}${unit}の箱`}><polygon points={`${x},${y-h} ${x+dx},${y-h-dy} ${x+w+dx},${y-h-dy} ${x+w},${y-h}`} className="upper__box-top" /><polygon points={`${x+w},${y-h} ${x+w+dx},${y-h-dy} ${x+w+dx},${y-dy} ${x+w},${y}`} className="upper__box-side" /><polygon points={`${x},${y-h} ${x+w},${y-h} ${x+w},${y} ${x},${y}`} className="upper__box-front" /></svg>{step >= 0 && <div className="upper__layers"><p>1辺が1{unit}の立方体で考えます</p><div className="upper__layer-list">{Array.from({ length: step >= 1 ? depth : 1 }, (_, layer) => <div key={layer}><small>{layer + 1}段目</small><div className="upper__grid" role="img" aria-label={`横${width}こ、奥行き${height}この1段`} style={{ gridTemplateColumns: `repeat(${width}, 1.1em)` }}>{Array.from({ length: width * height }, (_, i) => <span key={i} className="is-unit" />)}</div></div>)}</div></div>}</div>;
+    return <div className="upper__volume"><p>横 {width}{unit}・奥行き {height}{unit}・高さ {depth}{unit}</p><svg viewBox={`0 ${Math.min(0, y-h-dy-8)} ${Math.max(180, x+w+dx+12)} ${Math.max(135, h+dy+30)}`} role="img" aria-label={`横${width}${unit}、奥行き${height}${unit}、高さ${depth}${unit}の箱`}><polygon points={`${x},${y-h} ${x+dx},${y-h-dy} ${x+w+dx},${y-h-dy} ${x+w},${y-h}`} className="upper__box-top" /><polygon points={`${x+w},${y-h} ${x+w+dx},${y-h-dy} ${x+w+dx},${y-dy} ${x+w},${y}`} className="upper__box-side" /><polygon points={`${x},${y-h} ${x+w},${y-h} ${x+w},${y} ${x},${y}`} className="upper__box-front" /></svg>{step >= 0 && <div className="upper__layers"><p><strong>底面積（長方形）＝ 横 × 奥行き</strong></p>
+      <p>この箱の底面積は {width} × {height} で求められます。</p>
+      {step >= 1 && <p><strong>体積 ＝ 底面積 × 高さ</strong>。求めた底面積に {depth} をかけよう。</p>}<div className="upper__layer-list">{Array.from({ length: step >= 1 ? depth : 1 }, (_, layer) => <div key={layer}><small>{layer + 1}段目</small><div className="upper__grid" role="img" aria-label={`横${width}こ、奥行き${height}この1段`} style={{ gridTemplateColumns: `repeat(${width}, 1.1em)` }}>{Array.from({ length: width * height }, (_, i) => <span key={i} className="is-unit" />)}</div></div>)}</div></div>}</div>;
   }
   if (visual.kind === "bars") {
     const max = Math.max(...visual.values);
@@ -108,15 +130,18 @@ function Diagram({ visual, step }: { visual: UpperVisual; step: number }) {
   if (visual.kind === "prism") {
     const triangle = visual.shape === "triangle";
     return <div className="upper__prism">
-      <div><p>底面積 {visual.baseArea}cm²・高さ {visual.height}cm</p>
+      <div><p>{visual.baseDimensions ?? `底面積 ${visual.baseArea}cm²`}・柱の高さ {visual.height}cm</p>
         <svg viewBox="0 0 220 145" role="img" aria-label={triangle ? "三角柱の底面と高さ" : "円柱の底面と高さ"}>
           {triangle ? <><polygon points="40,35 125,35 125,105 40,105" className="upper__box-front" /><polygon points="40,35 80,12 125,35" className="upper__box-top" /><polygon points="40,105 80,82 125,105" className="upper__prism-base" /><line x1="80" y1="12" x2="80" y2="82" className="upper__prism-back" /></> : <><path d="M35 35 L35 105 Q90 135 145 105 L145 35" className="upper__box-front" /><ellipse cx="90" cy="105" rx="55" ry="18" className="upper__prism-base" /><ellipse cx="90" cy="35" rx="55" ry="18" className="upper__box-top" /></>}
           <path d="M159 35h12 m-6 0v70 m-6 0h12" className="upper__sector-measure" />
           <text x="174" y="75">{visual.height}cm</text>
-          <text x="36" y="139">底面積 {visual.baseArea}cm²</text>
+          <text x="36" y="139">{visual.baseDimensions ? "色のついた面が底面" : `底面積 ${visual.baseArea}cm²`}</text>
         </svg>
       </div>
       {step >= 0 && <div className="upper__prism-stack">
+        <p><strong>底面積（{triangle ? "三角形" : "円"}）＝ {triangle ? "底辺 × 底面の三角形の高さ ÷ 2" : "半径 × 半径 × 3.14"}</strong></p>
+        {step === 0 && !visual.baseDimensions && <p>この問題では、底面積は {visual.baseArea}cm² と分かっています。</p>}
+        {step >= 1 && <p><strong>体積 ＝ 底面積 × 柱の高さ</strong>。求めた底面積に {visual.height} をかけよう。</p>}
         <p>{step === 0 ? "まず、厚さ1cmの1段を考えよう。" : "同じ1段を、高さの分だけ重ねよう。"}</p>
         <svg viewBox="0 0 220 145" role="img" aria-label={step === 0 ? "厚さ1cmの1段" : `厚さ1cmの層が${visual.height}段`}>
           {Array.from({ length: step >= 1 ? visual.height : 1 }, (_, i) => <g key={i} transform={`translate(0,${104 - i * 15})`}>
@@ -189,7 +214,7 @@ function Diagram({ visual, step }: { visual: UpperVisual; step: number }) {
   if (visual.kind === "circle-parts") return <div className="upper__circle-parts"><svg viewBox="0 0 180 145" role="img" aria-label={step >= 1 ? "円周と直径を示す図" : "円の中心から端までの半径を示す図"}><circle cx="80" cy="72" r="48" className={step >= 1 ? "upper__circle is-circumference" : "upper__circle"} /><circle cx="80" cy="72" r="3" fill="currentColor" />{step >= 1 ? <><line x1="32" y1="72" x2="128" y2="72" className="upper__parts-line" /><text x="65" y="67">直径</text><text x="132" y="39">円周</text></> : <><line x1="80" y1="72" x2="128" y2="72" className="upper__parts-line" /><text x="87" y="67">半径</text></>}</svg></div>;
   const max = Math.max(...visual.values);
   const divisor = gcd(...visual.values);
-  return <div className="upper__ratios" aria-label="2つの量を比べる図">{visual.values.map((value, i) => <div key={i} className="upper__ratio-row"><span>{visual.labels[i]} {value}{visual.unit}{visual.showBase && i === 0 && step >= 0 && <strong>（もとにする量＝1）</strong>}</span><div className="upper__ratio-track"><div className="upper__ratio-fill" style={{ width: `${value / max * 100}%` }}>{step >= 1 && Array.from({ length: value / divisor }, (_, n) => <span key={n} />)}</div></div></div>)}{step >= 1 && <p>同じ大きさの区切りは {divisor}{visual.unit} ずつ</p>}</div>;
+  return <div className="upper__ratios" aria-label="2つの量を比べる図">{visual.unit === "mL" && <p><strong>1 L ＝ 1000 mL</strong>。この問題では、ジュースも水も mL で表されています。</p>}{visual.values.map((value, i) => <div key={i} className="upper__ratio-row"><span>{visual.labels[i]} {value}{visual.unit}{visual.showBase && i === 0 && step >= 0 && <strong>（もとにする量＝1）</strong>}</span><div className="upper__ratio-track"><div className="upper__ratio-fill" style={{ width: `${value / max * 100}%` }}>{step >= 1 && Array.from({ length: value / divisor }, (_, n) => <span key={n} />)}</div></div></div>)}{step >= 1 && <p>同じ大きさの区切りは {divisor}{visual.unit} ずつ。{divisor}{visual.unit} を1つ分として、両方の帯の区切りを数えよう。</p>}</div>;
 }
 
 export function UpperMathLesson({ practice, summary, onExit, onFinish }: { practice: UpperQuestion; summary?: readonly UpperQuestion[]; onExit: () => void; onFinish: () => void }) {
@@ -197,16 +222,21 @@ export function UpperMathLesson({ practice, summary, onExit, onFinish }: { pract
   const [step, setStep] = useState(-1);
   const [answer, setAnswer] = useState("");
   const [solved, setSolved] = useState(false);
+  const [baseSolved, setBaseSolved] = useState(false);
   const [message, setMessage] = useState("");
   const questions = summary ?? [practice, ...(practice.followUps ?? [])];
   const question = questions[index];
   const visual = question.visual;
+  const baseArea = summary ? undefined : visual.kind === "volume" ? visual.width * visual.height
+    : visual.kind === "prism" && visual.baseDimensions ? visual.baseArea : undefined;
+  const areaUnit = visual.kind === "volume" ? `${visual.unit}²` : "cm²";
+  const needsBase = baseArea !== undefined && !baseSolved;
   const concept = conceptFor(question);
   const hasIntro = question.title === "偶数と奇数" || concept !== undefined;
   const [introFinished, setIntroFinished] = useState(true);
 
   const finish = () => {
-    if (index + 1 < questions.length) { setIndex(index + 1); setStep(-1); setAnswer(""); setSolved(false); setMessage(""); }
+    if (index + 1 < questions.length) { setIndex(index + 1); setStep(-1); setAnswer(""); setSolved(false); setBaseSolved(false); setMessage(""); }
     else onFinish();
   };
   if (!introFinished && question.title === "偶数と奇数") return <ParityGuide onDone={() => setIntroFinished(true)} onExit={onExit} />;
@@ -228,7 +258,19 @@ export function UpperMathLesson({ practice, summary, onExit, onFinish }: { pract
     <p>{index + 1} / {questions.length} 問</p>
     <p>{question.problem}</p><Diagram visual={visual} step={step} />
 
-    {!solved ? <form className="upper__answer" onSubmit={(event) => { event.preventDefault(); if (!answer.trim()) setMessage("答えを入力しましょう。"); else if (isUpperAnswerCorrect(answer, question)) { setSolved(true); setMessage(""); } else setMessage(question.retry); }}>{question.answerFormat === "fraction" ? <><p>答え{question.unit && `（${question.unit}）`}</p><FractionAnswer key={index} label="答え" value={answer} onChange={setAnswer} allowMixed /></> : <><label htmlFor="upper-answer">答え{question.unit && `（${question.unit}）`}</label><input id="upper-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} autoComplete="off" maxLength={32} /></>}<button type="submit">答える</button><p role="status">{message}</p></form> : <><p role="status">{question.explanation}</p><button type="button" onClick={finish}>{index + 1 < questions.length ? "つぎの問題へ" : "ばんめんにもどる"}</button></>}
+    {baseSolved && <p>底面積は {baseArea}{areaUnit}。次は体積を求めよう。</p>}
+    {needsBase ? <form className="upper__answer" onSubmit={(event) => {
+      event.preventDefault();
+      if (isUpperAnswerCorrect(answer, {...question, answer: String(baseArea), unit: areaUnit})) {
+        setBaseSolved(true);
+        setAnswer("");
+        setMessage("");
+      } else setMessage(answer.trim() ? "底面の形と、面積の公式を確かめよう。" : "底面積を入力しましょう。");
+    }}>
+      <label htmlFor="upper-base-answer">底面積（{areaUnit}）</label>
+      <input id="upper-base-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} inputMode="decimal" />
+      <button type="submit">底面積を答える</button><p role="status">{message}</p>
+    </form> : !solved ? <form className="upper__answer" onSubmit={(event) => { event.preventDefault(); if (!answer.trim()) setMessage("答えを入力しましょう。"); else if (isUpperAnswerCorrect(answer, question)) { setSolved(true); setMessage(""); } else setMessage(question.retry); }}>{question.answerFormat === "fraction" ? <><p>答え{question.unit && `（${question.unit}）`}</p><FractionAnswer key={index} label="答え" value={answer} onChange={setAnswer} allowMixed /></> : <><label htmlFor="upper-answer">答え{question.unit && `（${question.unit}）`}</label><input id="upper-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} autoComplete="off" maxLength={32} /></>}<button type="submit">答える</button><p role="status">{message}</p></form> : <><p role="status">{question.explanation}</p><button type="button" onClick={finish}>{index + 1 < questions.length ? "つぎの問題へ" : "ばんめんにもどる"}</button></>}
     {!summary && guide}
   </section></main>;
 }

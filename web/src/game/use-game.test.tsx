@@ -274,7 +274,9 @@ describe("useGame", () => {
     localStorage.setItem("sugoroku-home-v2", JSON.stringify(SAMPLE_STATE));
     const { result } = renderHook(() => useGame(), { wrapper: GradeProvider });
     expect(CHAPTERS.every((chapter) => result.current.isChapterOpen(chapter) === result.current.hasLessonsInChapter(chapter.id))).toBe(true);
-    expect(CHAPTERS.filter((chapter) => result.current.isChapterOpen(chapter)).map((chapter) => chapter.id)).toEqual(["integer", "decimal", "fraction", "expression"]);
+    const available = CHAPTERS.filter((chapter) => result.current.isChapterOpen(chapter)).map((chapter) => chapter.id);
+    expect(available).toEqual(expect.arrayContaining(["integer", "decimal", "fraction", "expression"]));
+    expect(available).not.toContain("plane");
   });
 
   it("寄り道の2回目は経験値もトーストも出ない（D-21）", async () => {
