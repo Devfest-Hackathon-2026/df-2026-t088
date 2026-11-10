@@ -1,0 +1,21 @@
+/* 進みのマス（CMP-036）。色・大きさはトークンだけ */
+.progress-cell { display: flex; flex-direction: column; gap: 2px; width: 100%; min-width: 0; }
+.progress-cell__num {
+  font-size: var(--text-small);
+  line-height: var(--text-small-line);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--text-small-weight);
+  color: var(--color-fg);
+}
+.progress-cell__num--full { font-weight: 800; color: var(--color-fg-strong); }
+.progress-cell__bar {
+  box-sizing: border-box;
+  display: block;
+  height: var(--progress-bar-height);
+  border: var(--stroke-2) solid var(--color-border);
+  box-sizing: content-box;
+  overflow: hidden;
+}
+.progress-cell__fill { display: block; height: 100%; background: var(--color-done); }
+/* 学級の表（SCR-T10）は数字を出さず、太い棒だけ（D-182）。全部終えた章は線も塗りと同じ濃さにして、ひと目で分かるようにする */
+.progress-cell--bar-only .progress-cell__bar { height: var(--progress-bar-height-table); }

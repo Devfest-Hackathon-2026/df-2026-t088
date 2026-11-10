@@ -1,0 +1,285 @@
+.island-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: 100vh;
+  /* 上は上の帯、下は右下の「高原へ行く」の分を空ける（D-149、D-150） */
+  padding: calc(var(--space-4) + var(--button-min-height) + var(--space-4)) var(--space-4) calc(var(--space-4) + var(--button-min-height) + var(--space-4));
+  overflow-x: clip;
+}
+
+/* 5教科を同じ大きさの五角形に並べる。島は 2 列か 3 列を使い、手前の2島が狭い画面でも重ならないようにする（D-63） */
+.island-map__field {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  max-width: 900px;
+  min-height: 460px;
+}
+
+/* 高原の4教科（平面の地図） */
+.island-map__highland {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 900px;
+}
+
+/* 場所を移るボタン。右下の隅に固定し、3D のカメラが動いても位置を変えない（D-150） */
+.island-map__gate {
+  position: fixed;
+  right: var(--space-4);
+  /* 右下の開発用の学年ボタン（DebugGrade、高さ 32px）の上に出す。島は右にあるので、場所は右のまま縦だけずらす */
+  bottom: calc(var(--space-2) + 32px + var(--space-2));
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+.island-map__gate-arrow { flex: none; }
+.island-map__gate.is-moving { opacity: 0; pointer-events: none; }
+
+.island-paths {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.island-paths path {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: var(--stroke-3);
+  stroke-dasharray: 2 10;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.island {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-1);
+  width: var(--island-size);
+  height: var(--island-size);
+  padding: var(--space-2);
+  border-radius: var(--radius-blob);
+  background: var(--island-color);
+  color: var(--color-fg-strong);
+  font-family: var(--font-hand);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+.island:active { transform: scale(0.97); }
+
+.island--open {
+  border: var(--stroke-4) solid var(--color-border-strong);
+  /* 外側の縁。押せる島を目立たせる */
+  outline: var(--space-2) solid var(--color-now);
+}
+.island--open:focus-visible { outline-color: var(--color-focus-ring); }
+.island--locked {
+  border: var(--stroke-2) dashed var(--color-border-strong);
+}
+.island--kokugo { grid-column: 3 / span 2; grid-row: 1; }
+.island--sansu { grid-column: 1 / span 2; grid-row: 2; }
+.island--rika { grid-column: 5 / span 2; grid-row: 2; }
+.island--shakai { grid-column: 1 / span 3; grid-row: 3; }
+.island--eigo { grid-column: 4 / span 3; grid-row: 3; }
+/* 生活は1・2年だけ。理科・社会・英語が出ないので、五角形の下の段の中央に立つ */
+.island--seikatsu { grid-column: 2 / span 4; grid-row: 3; }
+
+.island__lock { width: 28px; height: 28px; }
+.island__name { font-size: var(--text-title); line-height: 1; }
+.island__level { font-size: var(--text-body); font-weight: var(--text-strong-weight); }
+/* アバターは丸の中に入らないので、3D と同じように島の上に立たせる */
+.island__avatar {
+  position: absolute;
+  bottom: calc(100% + var(--space-2));
+  display: block;
+}
+
+/* 算数を押した時、アバターが1回跳ねる（MOT-005） */
+.island.is-hopping .island__avatar { animation: island-hop var(--duration-hop) var(--ease-in-out) 1; }
+@keyframes island-hop { 50% { transform: translateY(-14px) rotate(4deg); } }
+
+/* hover の傾きはマウスの端末だけ */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .island:hover { transform: translateY(-2px) rotate(-1.5deg); }
+}
+@media (hover: hover) {
+  .island:active { transform: scale(0.97); }
+}
+
+@media (max-width: 600px) {
+  .island-map { padding-inline: var(--space-4); }
+  .island-map__field {
+    row-gap: var(--space-6);
+    min-height: 0;
+  }
+  /* 2 列の幅が島より狭いので、左右の島を端にそろえてはみ出さないようにする */
+  .island--sansu { justify-self: start; }
+  .island--rika { justify-self: end; }
+}
+
+/* 上の帯（D-149）。左に「← ホーム」だけ。音と顔は右上の CMP-043（--z-corner = 4、D-245）。学年のえらびは子どもの画面に出さない（D-144）。1行で、どの幅でも並びを変えない。
+   帯そのものは3Dの操作をふさがないので、押せるのは中のボタンだけ */
+.island-map__bar {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--space-4);
+  /* 右上の音と顔（CMP-043）の分を空ける（D-245、D-250） */
+  right: var(--corner-reserve);
+  z-index: var(--z-over-loading);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.island-map__bar > * { pointer-events: auto; flex: none; }
+/* 767px 以下は帯の間を詰める */
+@media (max-width: 767px) {
+  .island-map__bar { gap: var(--space-1); }
+}
+
+/* 3D のジオラマ（CMP-011）。canvas を背後に敷き、見出しは HTML のまま上に重ねる */
+.island-map--diorama {
+  position: relative;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.diorama-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.diorama-layer__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 付箋（CMP-004）。位置は style.transform を毎フレーム直接書くので、押した時の縮みは個別の transform 系プロパティで動かす */
+.diorama-layer__tags { transition: opacity var(--duration-normal) var(--ease-out); }
+.diorama-layer__tags.is-hidden { opacity: 0; pointer-events: none; }
+
+.island-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-1);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-hand);
+  background: var(--island-color);
+  color: var(--color-fg-strong);
+  font-family: var(--font-hand);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    scale var(--duration-fast) var(--ease-out),
+    rotate var(--duration-fast) var(--ease-out),
+    translate var(--duration-fast) var(--ease-out);
+}
+/* 付箋は hover で島と一緒に浮く（D-84）。下の端を指していると、浮いた付箋がカーソルから逃げ、
+   外れて沈むとまた戻る。押した時と離した時で下の物が替わるとクリックが消えるので、
+   浮く分（全景で約 8px、MOT-010 で寄っても 11px ほど）より広く、当たり判定だけを下へ伸ばす */
+.island-tag::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 calc(-1 * var(--space-4));
+}
+.island-tag:active { scale: 0.97; }
+.island-tag--open {
+  border: var(--stroke-4) solid var(--color-border-strong);
+  outline: var(--space-1) solid var(--color-now);
+}
+.island-tag--open:focus-visible { outline-color: var(--color-focus-ring); }
+.island-tag--locked { border: var(--stroke-2) dashed var(--color-border-strong); }
+.island-tag.is-moving { opacity: 0; pointer-events: none; }
+.island-tag__lock { width: 20px; height: 20px; }
+.island-tag__name { font-size: var(--text-title); line-height: 1; }
+.island-tag__level { font-size: var(--text-small); font-weight: var(--text-small-weight); line-height: 1; }
+
+/* 付箋は hover で傾けない。島が浮くと、付箋も島と一緒に浮く（D-84） */
+
+/* アバターは算数の付箋の上に立つ。位置と大きさは style.transform で与える */
+.diorama-layer__avatar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: block;
+  margin-top: calc(-1 * var(--tag-min-height) - var(--space-1));
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  transition: translate var(--duration-fast) var(--ease-out);
+}
+/* 寄る間は付箋が消えるので、算数の島の上へ降りる */
+.diorama-layer__avatar.is-moving { translate: 0 calc(var(--tag-min-height) + var(--space-1)); }
+
+/* 狭い画面：付箋どうしが重ならないよう、横一列に詰める */
+@media (max-width: 600px) {
+  .island-tag {
+    grid-auto-flow: column;
+    align-items: center;
+    padding-inline: var(--space-2);
+  }
+  .island-tag__name { font-size: var(--text-body); }
+}
+
+/* MOT-009：算数の島の位置から紙が広がる */
+.island-map__paper {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  animation: island-paper var(--duration-paper) var(--ease-out) both;
+}
+@keyframes island-paper {
+  from { transform: scale(0.2); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* 767px 以下と高さ 599px 以下（D-239(5)）。「高原へ行く」は島と重ねない。
+   平面の地図は、ボタンを島の置き場の下に流し込む（固定のままだと、縦に動いた島の上に重なる）。
+   3D は1画面に収まるので、canvas の下を空けて、島と付箋の置き場をボタンの上に寄せる。
+   canvas の大きさが変わると、3D は ResizeObserver で作り直す（カメラの計算は diorama/ のまま） */
+@media (max-width: 767px), (max-height: 599px) {
+  .island-map:not(.island-map--diorama) { padding-bottom: var(--space-4); }
+  .island-map:not(.island-map--diorama) .island-map__gate {
+    position: static;
+    align-self: flex-end;
+    z-index: auto;
+  }
+  .island-map .diorama-layer__canvas {
+    bottom: calc(var(--space-2) + 32px + var(--space-2) + var(--button-min-height) + var(--space-2));
+  }
+  /* 3D の付箋（教科の札）は押せる高さにする。付箋の上に立つアバターの位置も、この値に合わせて動く */
+  .island-map { --tag-min-height: var(--button-min-height); }
+}

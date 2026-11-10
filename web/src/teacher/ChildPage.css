@@ -1,0 +1,61 @@
+/* 一人の子の進み（SCR-T04）。768px 以上は1画面に収める（D-126）。上の並びと見出しは動かさず、札の列とマスの一覧の中だけ縦に動かす */
+.child-page {
+  box-sizing: border-box;
+  padding: 1rem;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  min-height: 100vh;
+}
+.child-page p { margin: var(--space-1) 0; }
+.child-page__back { color: var(--color-fg-strong); font-weight: 800; }
+.child-page__heading { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+.child-page h1 { margin: var(--space-2) 0; font-size: 1.5rem; }
+.child-page__studied { font-variant-numeric: tabular-nums; }
+.child-page__norecord { margin-right: var(--space-4); font-weight: 800; color: var(--color-fg-strong); }
+.child-page__body { display: flex; gap: var(--space-6); min-height: 0; }
+.child-page__cards {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(var(--teacher-chapter-card-cols), 1fr);
+  grid-auto-rows: var(--teacher-chapter-card-height);
+  gap: var(--space-2);
+  align-content: start;
+  width: 40rem;
+  max-width: 60%;
+  min-height: 0;
+}
+.child-page__card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: var(--space-1) var(--space-2);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot); /* 上の並び（手描きの枠）と形を分ける（D-191） */
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.child-page__card[aria-pressed="true"] { background: var(--color-now); border-color: var(--color-border-strong); }
+.child-page__card:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 0; }
+.child-page__card-title, .child-page__card-next { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.child-page__card-next { font-size: var(--text-small); }
+.child-page__squares { flex: 1; min-width: 0; min-height: 0; }
+.child-page__squares h2 { margin: var(--space-2) 0; font-size: 1.25rem; }
+.child-page__squares ul { margin: 0; padding: 0; list-style: none; }
+.child-page__square { position: relative; display: flex; align-items: center; gap: var(--space-2); min-height: var(--teacher-row-height); border-bottom: var(--stroke-2) solid var(--color-border); }
+.child-page__mark { flex: none; min-width: 2.5rem; font-weight: 800; color: var(--color-fg-strong); }
+.child-page__vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* 768px 未満は、札の列を横の幅いっぱいにして縦に積む（幅 40rem のままだと、狭い画面で横にはみ出す） */
+@media (max-width: 767px) {
+  .child-page__body { flex-direction: column; }
+  .child-page__cards { width: 100%; max-width: 100%; }
+}
+@media (min-width: 768px) {
+  .child-page { display: flex; flex-direction: column; height: 100vh; }
+  .child-page__body { flex: 1; }
+  .child-page__cards, .child-page__squares { overflow-y: auto; }
+}

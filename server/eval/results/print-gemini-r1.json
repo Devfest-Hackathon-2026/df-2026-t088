@@ -1,0 +1,554 @@
+{
+  "source": "gemini",
+  "summary": {
+    "total": 60,
+    "templateScored": 48,
+    "templateCorrect": 47,
+    "templateAccuracy": 0.9791666666666666,
+    "numberScored": 39,
+    "numberCorrect": 39,
+    "numberAccuracy": 1,
+    "unsupportedScored": 12,
+    "unsupportedCorrect": 12,
+    "unsupportedRecall": 1,
+    "durationMedianMs": 1436.52,
+    "durationP95Ms": 2795.45
+  },
+  "byVersion": {
+    "normal": {
+      "total": 15,
+      "templateScored": 12,
+      "templateCorrect": 11,
+      "templateAccuracy": 0.9166666666666666,
+      "numberScored": 9,
+      "numberCorrect": 9,
+      "numberAccuracy": 1,
+      "unsupportedScored": 3,
+      "unsupportedCorrect": 3,
+      "unsupportedRecall": 1,
+      "durationMedianMs": 1335.04,
+      "durationP95Ms": 2405.53
+    },
+    "dark": {
+      "total": 15,
+      "templateScored": 12,
+      "templateCorrect": 12,
+      "templateAccuracy": 1,
+      "numberScored": 10,
+      "numberCorrect": 10,
+      "numberAccuracy": 1,
+      "unsupportedScored": 3,
+      "unsupportedCorrect": 3,
+      "unsupportedRecall": 1,
+      "durationMedianMs": 1378.69,
+      "durationP95Ms": 2795.45
+    },
+    "tilted": {
+      "total": 15,
+      "templateScored": 12,
+      "templateCorrect": 12,
+      "templateAccuracy": 1,
+      "numberScored": 10,
+      "numberCorrect": 10,
+      "numberAccuracy": 1,
+      "unsupportedScored": 3,
+      "unsupportedCorrect": 3,
+      "unsupportedRecall": 1,
+      "durationMedianMs": 1457.85,
+      "durationP95Ms": 7555.34
+    },
+    "shadow": {
+      "total": 15,
+      "templateScored": 12,
+      "templateCorrect": 12,
+      "templateAccuracy": 1,
+      "numberScored": 10,
+      "numberCorrect": 10,
+      "numberAccuracy": 1,
+      "unsupportedScored": 3,
+      "unsupportedCorrect": 3,
+      "unsupportedRecall": 1,
+      "durationMedianMs": 1505.86,
+      "durationP95Ms": 3598.66
+    }
+  },
+  "results": [
+    {
+      "id": "lever-01",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 2795.45,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-01",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1246.3,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-01",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1804.42,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-01",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1365.25,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-02",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1472.89,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-02",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1181.4,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-02",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1604.16,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-02",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1126.76,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-03",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1291.18,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-03",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1208.97,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-03",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1775.45,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-03",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1533.17,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-04",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1645.57,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-04",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": false,
+      "elapsedMs": 436.36,
+      "error": true
+    },
+    {
+      "id": "lever-04",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1505.86,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-04",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1385.61,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-05",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1713.4,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-05",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 2405.53,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-05",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1297.15,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-05",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1627.94,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-06",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1415.19,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-06",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1718.31,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-06",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1412,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-06",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1130.22,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-07",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1187.98,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-07",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1581.55,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-07",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1491.08,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-07",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1092.48,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-08",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1685.1,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-08",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1944.15,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-08",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1571.43,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-08",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1666.05,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-09",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1329.45,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-09",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1111.69,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-09",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1790.8,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-09",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 7555.34,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-10",
+      "version": "dark",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1691.92,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-10",
+      "version": "normal",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1239.8,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-10",
+      "version": "shadow",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 1312,
+      "numberCorrect": true
+    },
+    {
+      "id": "lever-10",
+      "version": "tilted",
+      "expectedTemplateId": "rika-lever",
+      "templateCorrect": true,
+      "elapsedMs": 3671.9,
+      "numberCorrect": true
+    },
+    {
+      "id": "moon-01",
+      "version": "dark",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 972.12
+    },
+    {
+      "id": "moon-01",
+      "version": "normal",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 1074.74
+    },
+    {
+      "id": "moon-01",
+      "version": "shadow",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 3598.66
+    },
+    {
+      "id": "moon-01",
+      "version": "tilted",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 1527.89
+    },
+    {
+      "id": "moon-02",
+      "version": "dark",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 1074.35
+    },
+    {
+      "id": "moon-02",
+      "version": "normal",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 1612.55
+    },
+    {
+      "id": "moon-02",
+      "version": "shadow",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 1154.26
+    },
+    {
+      "id": "moon-02",
+      "version": "tilted",
+      "expectedTemplateId": "rika-moon",
+      "templateCorrect": true,
+      "elapsedMs": 1457.85
+    },
+    {
+      "id": "unsupported-01",
+      "version": "dark",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1126.09,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-01",
+      "version": "normal",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1335.04,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-01",
+      "version": "shadow",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1302.72,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-01",
+      "version": "tilted",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1680,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-02",
+      "version": "dark",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 980.9,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-02",
+      "version": "normal",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1593.9,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-02",
+      "version": "shadow",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1074.68,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-02",
+      "version": "tilted",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1108.6,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-03",
+      "version": "dark",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1378.69,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-03",
+      "version": "normal",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1652.72,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-03",
+      "version": "shadow",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 1543.69,
+      "droppedCorrect": true
+    },
+    {
+      "id": "unsupported-03",
+      "version": "tilted",
+      "expectedTemplateId": null,
+      "templateCorrect": false,
+      "elapsedMs": 894.29,
+      "droppedCorrect": true
+    }
+  ],
+  "evaluatedAt": "2026-11-09T16:37:26.136Z",
+  "ai": {
+    "mode": "vertex",
+    "model": "gemini-3.5-flash-lite"
+  }
+}

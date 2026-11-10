@@ -1,0 +1,52 @@
+/* 付箋のように開くパネル。dialog は最前面に出るので z-index を持たない */
+.panel {
+  width: min(var(--panel-width), calc(100vw - 2 * var(--space-4)));
+  padding: var(--space-6);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+.panel--levelup { text-align: center; }
+
+/* 引き出し（CMP-015）：右の端に付き、全高で開く */
+.panel--drawer,
+.panel--account {
+  inset: 0 0 0 auto;
+  width: min(var(--drawer-width), 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  border-width: 0 0 0 var(--stroke-3);
+  border-radius: 0;
+}
+
+/* CMP-028：幅だけ `--account-drawer-width`。767px 以下は全幅 */
+.panel--account { width: min(var(--account-drawer-width), 100vw); }
+
+.panel--drawer[open],
+.panel--account[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  animation: drawer-in var(--duration-normal) var(--ease-out);
+}
+
+@media (max-width: 767px) {
+  .panel--drawer, .panel--account { width: 100vw; border-left-width: 0; }
+}
+
+.panel::backdrop { background: var(--color-scrim); }
+
+.panel[open] { animation: panel-in var(--duration-normal) var(--ease-out); }
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px) rotate(-1deg); }
+}
+
+/* MOT-022：右から 24px 動きながら現れる */
+@keyframes drawer-in {
+  from { opacity: 0; transform: translateX(24px); }
+}

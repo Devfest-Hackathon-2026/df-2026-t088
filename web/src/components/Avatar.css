@@ -1,0 +1,10 @@
+.avatar {
+  color: var(--color-fg-strong);
+  /* 絵の比率（80 x 96）を保つ */
+  aspect-ratio: 80 / 96;
+}
+.avatar--side { height: var(--avatar-size-side); width: auto; }
+.avatar--drawer { height: var(--avatar-size-drawer); width: auto; }
+.avatar--mirror { height: var(--avatar-size-mirror); width: auto; }
+.avatar--levelup { height: var(--avatar-size-levelup); width: auto; }
+.avatar--walker { width: var(--walker-width); height: auto; }

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ludo.study</title>
+<meta name="description" content="ludo.studyは、小学5年生の算数をすごろくで1マスずつ進める学習アプリです。">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Yomogi&display=swap" media="print" onload="this.media='all'">
+<style>
+/* 起動のローディング CMP-012。アプリの CSS より先に出すので値を書き写す（正本は docs/design/ui/03_tokens.md） */
+body {
+  margin: 0;
+  background-color: #fafaf5;
+  background-image:
+    linear-gradient(#dfe7f1 1px, transparent 1px),
+    linear-gradient(90deg, #dfe7f1 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+#loading {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  /* 紙で覆い、残す 500ms の間に 3D を透かさない（D-53） */
+  background: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #3a4a6b;
+  font-family: "Yomogi", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.7;
+  pointer-events: none;
+  opacity: 0;
+  animation: loading-in 1ms linear 300ms forwards;
+}
+#loading[hidden] { display: none; }
+#loading.is-leaving { animation: loading-out 180ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+#loading p { margin: 0; }
+/* 色は --color-pencil-line と鉛筆の部品の primitive。絵とキーフレームは scripts/gen-loading-art.mjs が作る */
+.loading-art { position: relative; width: 200px; height: 240px; color: #4a4c52; }
+.loading-art svg { display: block; }
+.loading-art .pen path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 2; stroke-dashoffset: 1; opacity: 0; }
+.loading-art .pen .ghost { stroke-width: 1.1; stroke-opacity: 0.45; }
+.loading-art .pen .dot { stroke-width: 2.6; }
+/* 方眼の色の粒を lighten で線の上に重ねて、黒鉛のかすれにする。紙と方眼は変わらない。動かさないので描き直しの負荷にならない */
+.loading-art .loading-grain { position: absolute; inset: 0; mix-blend-mode: lighten; will-change: transform; }
+/* 鉛筆は1本ずつなぞらず、描いている部位のそばへ移り、そこで「かきかき、かきかき、ひと休み」と小さく動く（MOT-015） */
+.loading-pencil {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 96px;
+  height: 96px;
+  transform-origin: 70% 10%;
+}
+@keyframes pencil-scribble {
+  0%, 60%, 100% { transform: translate(0, 0) rotate(0deg); }
+  15%, 45% { transform: translate(-5px, 4px) rotate(-3deg); }
+  30% { transform: translate(1px, -1px) rotate(1deg); }
+  80% { transform: translate(2px, -4px) rotate(1.5deg); }
+}
+@keyframes loading-in { to { opacity: 1; } }
+@keyframes loading-out { from { opacity: 1; } to { opacity: 0; } }
+/* loading-art:css */
+/* 描く 5000ms + 止める 800ms = 周期 5800ms。割合は線の長さに比例 */
+#loading .pen { animation: pen-fade 5800ms linear 300ms infinite; }
+#loading .loading-pencil { animation: pencil-move 5800ms ease-in-out 300ms infinite, pencil-scribble 1200ms ease-in-out 300ms infinite; }
+@keyframes pencil-move {
+  0%, 15.3851% { translate: 103.2px -28px; }
+  18.5587%, 25.2484% { translate: 104.2px -45px; }
+  28.4219%, 32.9002% { translate: 103.4px -19.7px; }
+  36.0738%, 49.3670% { translate: 104.7px 20.4px; }
+  52.5406%, 63.4400% { translate: 112.9px 20.8px; }
+  66.6135%, 71.2389% { translate: 104px 89.4px; }
+  74.4124%, 78.6744% { translate: 104px 115.7px; }
+  81.8480%, 86.2069% { translate: 104px 133.6px; }
+  90.0000% { translate: 104px 133.6px; }
+  100% { translate: 103.2px -28px; }
+}
+#loading .s0 { animation: s0 5800ms linear 300ms infinite; }
+#loading .s1 { animation: s1 5800ms linear 300ms infinite; }
+#loading .s2 { animation: s2 5800ms linear 300ms infinite; }
+#loading .s3 { animation: s3 5800ms linear 300ms infinite; }
+#loading .s4 { animation: s4 5800ms linear 300ms infinite; }
+#loading .s5 { animation: s5 5800ms linear 300ms infinite; }
+#loading .s6 { animation: s6 5800ms linear 300ms infinite; }
+#loading .s7 { animation: s7 5800ms linear 300ms infinite; }
+#loading .s8 { animation: s8 5800ms linear 300ms infinite; }
+#loading .s9 { animation: s9 5800ms linear 300ms infinite; }
+#loading .s10 { animation: s10 5800ms linear 300ms infinite; }
+#loading .s11 { animation: s11 5800ms linear 300ms infinite; }
+#loading .s12 { animation: s12 5800ms linear 300ms infinite; }
+#loading .s13 { animation: s13 5800ms linear 300ms infinite; }
+#loading .s14 { animation: s14 5800ms linear 300ms infinite; }
+#loading .s15 { animation: s15 5800ms linear 300ms infinite; }
+#loading .s16 { animation: s16 5800ms linear 300ms infinite; }
+#loading .s17 { animation: s17 5800ms linear 300ms infinite; }
+#loading .s18 { animation: s18 5800ms linear 300ms infinite; }
+#loading .s19 { animation: s19 5800ms linear 300ms infinite; }
+#loading .s20 { animation: s20 5800ms linear 300ms infinite; }
+#loading .s21 { animation: s21 5800ms linear 300ms infinite; }
+#loading .s22 { animation: s22 5800ms linear 300ms infinite; }
+#loading .s23 { animation: s23 5800ms linear 300ms infinite; }
+#loading .s24 { animation: s24 5800ms linear 300ms infinite; }
+#loading .s25 { animation: s25 5800ms linear 300ms infinite; }
+#loading .s26 { animation: s26 5800ms linear 300ms infinite; }
+#loading .s27 { animation: s27 5800ms linear 300ms infinite; }
+@keyframes pen-fade { 0%, 96.5517% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes s0 { 0%, 2.0000% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 2.0010% { opacity: 1; } 12.2614%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s1 { 0%, 12.9350% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 12.9360% { opacity: 1; } 13.8482%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s2 { 0%, 14.5218% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 14.5228% { opacity: 1; } 15.3851%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s3 { 0%, 16.0587% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 16.0597% { opacity: 1; } 21.4358%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s4 { 0%, 22.1093% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 22.1103% { opacity: 1; } 25.2484%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s5 { 0%, 25.9219% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 25.9229% { opacity: 1; } 26.3960%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s6 { 0%, 27.0696% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 27.0706% { opacity: 1; } 27.5437%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s7 { 0%, 28.2172% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 28.2182% { opacity: 1; } 28.7453%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s8 { 0%, 29.4188% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 29.4198% { opacity: 1; } 29.9413%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s9 { 0%, 30.6149% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 30.6159% { opacity: 1; } 31.0321%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s10 { 0%, 31.7057% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 31.7067% { opacity: 1; } 32.9002%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s11 { 0%, 33.5738% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 33.5748% { opacity: 1; } 33.9022%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s12 { 0%, 34.5757% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 34.5767% { opacity: 1; } 34.9063%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s13 { 0%, 35.5798% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 35.5808% { opacity: 1; } 36.5634%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s14 { 0%, 37.2369% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 37.2379% { opacity: 1; } 49.3670%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s15 { 0%, 50.0406% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 50.0416% { opacity: 1; } 51.3896%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s16 { 0%, 52.0632% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 52.0642% { opacity: 1; } 53.2842%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s17 { 0%, 53.9578% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 53.9588% { opacity: 1; } 56.0695%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s18 { 0%, 56.7431% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 56.7441% { opacity: 1; } 58.1749%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s19 { 0%, 58.8484% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 58.8494% { opacity: 1; } 60.3895%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s20 { 0%, 61.0630% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 61.0640% { opacity: 1; } 63.4400%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s21 { 0%, 64.1135% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 64.1145% { opacity: 1; } 71.2389%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s22 { 0%, 71.9124% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 71.9134% { opacity: 1; } 73.0993%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s23 { 0%, 73.7728% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 73.7738% { opacity: 1; } 74.9824%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s24 { 0%, 75.6559% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 75.6569% { opacity: 1; } 76.8255%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s25 { 0%, 77.4990% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 77.5000% { opacity: 1; } 78.6744%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s26 { 0%, 79.3480% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 79.3490% { opacity: 1; } 82.4178%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes s27 { 0%, 83.0913% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); } 83.0923% { opacity: 1; } 86.2069%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+/* loading-art:css-end */
+@media (prefers-reduced-motion: reduce) {
+  /* base.css が動きを全部止めるので、出す遅れだけ残す。これが無いと opacity: 0 のまま見えない */
+  #loading { animation: loading-in 1ms linear 300ms forwards !important; }
+  #loading .pen, #loading .pen path {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  #loading .loading-pencil { animation: none; display: none; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>performance.mark("loading-start")</script>
+<div id="loading" role="status">
+  <div class="loading-art">
+    <svg viewBox="0 0 200 240" width="200" aria-hidden="true">
+      <g class="pen">
+        <!-- loading-art:strokes -->
+        <path class="s0" pathLength="1" d="M82.6 36.8C84 36.2 88.4 33.8 91.4 32.9C94.3 32 97.1 31.4 100.3 31.4C103.4 31.3 107.2 31.3 110.3 32.4C113.3 33.4 116 35.7 118.4 37.6C120.7 39.6 122.6 41.7 124.4 44.3C126.2 46.9 128.4 49.8 129.3 53C130.2 56.3 129.8 60.5 129.6 63.7C129.3 66.9 128.9 69.4 127.9 72.4C127 75.4 125.8 78.9 123.9 81.5C122 84.1 119.3 86.3 116.5 88.1C113.7 89.9 110 91.6 107 92.4C104 93.2 101.4 93.4 98.3 93C95.2 92.7 91.4 91.6 88.4 90.3C85.5 89 82.8 87.2 80.5 85.1C78.2 83 76 80.2 74.4 77.5C72.8 74.8 71.7 71.7 71 68.7C70.4 65.7 70.1 62.6 70.3 59.4C70.6 56.2 71.5 52.4 72.7 49.5C73.9 46.5 75.6 44 77.7 41.6C79.8 39.2 82.5 36.7 85.2 35.1C87.9 33.4 91.2 32.1 94.2 31.4C97.2 30.8 101.8 31.3 103.3 31.3"/>
+        <path class="s0 ghost" pathLength="1" d="M81.7 37.4C83.1 36.7 87.2 34.1 90.3 33.2C93.4 32.3 97 31.9 100.3 31.9C103.6 31.9 107.1 32.2 110.1 33.2C113 34.2 115.7 35.7 118 37.7C120.2 39.6 122 42.1 123.7 44.9C125.5 47.6 127.3 51.2 128.4 54.4C129.4 57.5 130.2 60.6 130.2 63.8C130.1 66.9 129.2 70.2 128.1 73.2C127 76.2 125.5 79.3 123.6 81.7C121.7 84 119.4 85.5 116.6 87.2C113.7 88.9 109.5 90.8 106.5 91.7C103.5 92.6 101.6 92.8 98.7 92.7C95.8 92.6 92.1 92 89 90.8C85.9 89.6 82.7 87.4 80.2 85.4C77.7 83.3 75.5 81.1 74 78.4C72.5 75.8 71.9 72.7 71.1 69.5C70.3 66.3 69 62.8 69.1 59.3C69.3 55.9 70.5 51.7 71.8 48.8C73.1 45.9 74.8 44.1 77.1 41.9C79.5 39.7 83.3 37.2 86.1 35.6C88.9 33.9 90.8 32.7 93.9 32.1C97 31.5 102.8 31.9 104.6 31.8"/>
+        <path class="s1" pathLength="1" d="M70.1 59.9C69.2 60.4 65.7 61.1 65 62.8C64.3 64.6 65.1 68.7 66.1 70.2C67 71.8 70 71.9 70.8 72.3"/>
+        <path class="s1 ghost" pathLength="1" d="M70.3 60.1C69.3 60.5 65 60.5 64.1 62.1C63.3 63.7 64 68.1 65.2 69.7C66.4 71.2 70.1 70.9 71.1 71.2"/>
+        <path class="s2" pathLength="1" d="M129.9 60.5C130.7 60.9 133.8 61.6 134.5 63.1C135.2 64.7 135.1 68.3 134.2 69.8C133.3 71.3 130 71.8 129.1 72.2"/>
+        <path class="s2 ghost" pathLength="1" d="M129.5 60.2C130.5 60.5 134.9 60.2 135.7 62C136.5 63.8 135.6 69.4 134.3 70.9C133.1 72.5 129.2 71.3 128.2 71.4"/>
+        <path class="s3" pathLength="1" d="M70 55.9C70.1 53.6 69.5 44.3 71.1 41.9C72.6 39.5 77.6 43.4 79.4 41.4C81.1 39.5 79.7 31.9 81.8 30.5C83.9 29 89.1 33.7 91.9 32.9C94.8 32.1 96.2 25.6 98.9 25.6C101.7 25.5 105.4 31.6 108.5 32.5C111.6 33.3 115.4 29.2 117.7 30.6C120.1 32.1 120.3 39.3 122.4 41.4C124.6 43.6 129 41.1 130.5 43.7C131.9 46.4 131.2 55.2 131.3 57.5"/>
+        <path class="s3 ghost" pathLength="1" d="M69.4 56.7C69.5 54.2 68.7 44.3 70.1 41.8C71.6 39.3 75.9 43.6 78 41.7C80.2 39.8 80.7 31.9 83 30.4C85.3 28.8 89.1 33.2 91.9 32.6C94.6 32 96.9 27.1 99.6 27C102.3 26.8 105 31.2 108.2 31.8C111.3 32.3 116.2 28.8 118.5 30.3C120.8 31.9 120.1 38.7 122.1 40.9C124 43.2 128.8 41.1 130.2 43.8C131.5 46.5 130.2 54.8 130.2 57"/>
+        <path class="s4" pathLength="1" d="M70.5 54C72.9 52.9 80 48 84.9 47.5C89.8 47.1 95 51.6 99.9 51.4C104.9 51.2 109.9 45.4 114.9 46.1C119.8 46.8 127.1 54.1 129.5 55.6"/>
+        <path class="s4 ghost" pathLength="1" d="M70.7 54.4C73 53.1 79.2 47.5 84.2 47C89.1 46.5 95.4 51.4 100.7 51.4C105.9 51.3 110.6 46 115.5 46.6C120.4 47.3 127.7 54 130.1 55.4"/>
+        <path class="s5 dot" pathLength="1" d="M86 65C86.3 65.5 87.7 67.4 87.5 68C87.3 68.6 85.3 69 85 68.5C84.8 68 85.8 65.6 86 65"/>
+        <path class="s6 dot" pathLength="1" d="M113 65C113.3 65.5 114.7 67.4 114.5 68C114.3 68.6 112.3 69 112 68.5C111.8 68 112.8 65.6 113 65"/>
+        <path class="s7" pathLength="1" d="M81.4 59.4C82.1 59 83.9 56.9 85.5 56.8C87.2 56.6 90.3 58.3 91.2 58.6"/>
+        <path class="s7 ghost" pathLength="1" d="M81.9 58.2C82.5 57.9 83.6 56.5 85.1 56.5C86.6 56.5 90.1 57.8 91.1 58.1"/>
+        <path class="s8" pathLength="1" d="M108.4 59.3C109.1 58.9 111.1 56.8 112.6 56.8C114.2 56.9 117 59 117.8 59.5"/>
+        <path class="s8 ghost" pathLength="1" d="M108.8 59.4C109.5 59.1 111.8 57.6 113.2 57.5C114.6 57.4 116.5 58.6 117.2 58.8"/>
+        <path class="s9" pathLength="1" d="M99.5 69.6C99.3 70.5 98 74.3 98.2 75.3C98.5 76.4 100.3 75.8 100.7 75.9"/>
+        <path class="s9 ghost" pathLength="1" d="M100.6 69.7C100.1 70.6 97.8 74.3 97.9 75.2C98.1 76 100.8 75 101.4 74.9"/>
+        <path class="s10" pathLength="1" d="M88.6 79.6C89.7 80.4 93.4 83.7 95.3 84.7C97.3 85.7 98.1 86.5 100.5 85.6C102.9 84.8 108.1 80.7 109.6 79.7"/>
+        <path class="s10 ghost" pathLength="1" d="M89.5 79.3C90.3 80.3 92.2 84.2 94.3 85.4C96.3 86.7 99.1 87.9 101.9 87C104.7 86.2 109.4 81.6 110.9 80.5"/>
+        <path class="s11" pathLength="1" d="M94.5 92.5C94.5 93.7 94.5 98.2 94.5 99.3"/>
+        <path class="s11 ghost" pathLength="1" d="M93.1 92.4C93.1 93.4 93 97.1 92.9 98.1"/>
+        <path class="s12" pathLength="1" d="M105.7 91.8C105.8 92.9 106.4 97.5 106.5 98.6"/>
+        <path class="s12 ghost" pathLength="1" d="M106.3 91.1C106.2 92.6 105.9 98.5 105.8 100"/>
+        <path class="s13" pathLength="1" d="M91.6 98.5C93.1 99.4 97.8 104.2 100.5 104.2C103.2 104.2 106.8 99.4 108 98.5"/>
+        <path class="s13 ghost" pathLength="1" d="M92.9 98.5C94 99.4 97.2 103.6 99.8 103.7C102.5 103.7 107.2 99.6 108.7 98.8"/>
+        <path class="s14" pathLength="1" d="M91.7 99.3L79.7 102.4L64.1 120.5L75.3 126.6L83.7 114.5L84.5 155.6L116.4 156.1L115.5 114.6L141 98.5L133 88.1L119.6 100.7L107.5 99.3"/>
+        <path class="s14 ghost" pathLength="1" d="M92.7 99.1L80.6 102L63.3 119.8L74 127.6L83.9 114.9L84.4 155.3L117 156.4L115 115.7L140.4 97.3L132.2 88.1L120.6 100.1L107.6 99.9"/>
+        <path class="s15" pathLength="1" d="M66.5 121.9C65.5 124.5 61.5 133.4 60.2 137.9C58.8 142.3 58.7 146.8 58.4 148.5"/>
+        <path class="s15 ghost" pathLength="1" d="M67 123.1C65.7 125.7 60.7 134.1 59 138.6C57.4 143 57.6 147.9 57.3 149.8"/>
+        <path class="s16" pathLength="1" d="M72.9 126.5C72.2 128.8 69.5 136.4 68.5 140.5C67.4 144.6 67.1 149.3 66.9 151.1"/>
+        <path class="s16 ghost" pathLength="1" d="M73.4 126.4C72.7 128.9 70.5 137.1 69.3 141.1C68.1 145.2 66.8 149.1 66.3 150.7"/>
+        <path class="s17" pathLength="1" d="M65.5 147.5C65.8 147.7 66.3 148.2 66.8 148.7C67.3 149.2 68.1 150.1 68.4 150.6C68.7 151.1 68.8 151.2 68.8 151.9C68.8 152.5 68.7 153.8 68.4 154.5C68.2 155.1 67.7 155.3 67.3 155.9C66.9 156.5 66.5 157.6 66.1 158C65.6 158.5 65.2 158.3 64.6 158.5C64 158.7 63.2 159.1 62.7 159.3C62.1 159.5 62 159.8 61.4 159.7C60.9 159.6 60 158.9 59.4 158.5C58.9 158.2 58.5 158.1 58.1 157.7C57.6 157.2 57.3 156.4 56.9 155.9C56.5 155.3 55.7 154.9 55.6 154.4C55.4 153.9 55.9 153.3 56 152.8C56 152.3 56 151.8 56.1 151.3C56.3 150.7 56.5 150.1 56.8 149.5C57.1 148.9 57.3 147.9 57.8 147.6C58.3 147.2 59.2 147.6 59.8 147.3C60.5 147.1 61 146.3 61.7 146.1C62.3 146 63 146.2 63.7 146.4C64.5 146.6 65.5 146.9 66 147.4C66.5 147.9 66.5 149 66.5 149.3"/>
+        <path class="s17 ghost" pathLength="1" d="M64.5 147.8C65 148 67 149 67.6 149.3C68.2 149.6 67.7 149 67.9 149.4C68.1 149.7 68.8 150.8 68.9 151.5C69 152.2 68.6 152.9 68.5 153.7C68.4 154.4 68.9 155.4 68.5 156C68.1 156.5 66.7 156.6 66.1 157.2C65.5 157.8 65.3 159.2 64.8 159.7C64.3 160.1 63.5 159.9 63 160C62.5 160 62.3 160 61.8 159.9C61.3 159.8 60.8 159.9 60.1 159.5C59.4 159.1 58.3 157.9 57.6 157.5C56.9 157.2 56.1 157.7 56 157.2C55.8 156.7 56.7 155.5 56.7 154.7C56.8 153.8 56.5 152.7 56.3 152.1C56 151.6 55.2 151.7 55.2 151.2C55.2 150.7 55.7 149.7 56.1 149.1C56.6 148.4 57.5 147.4 57.9 147.1C58.4 146.8 58.1 147.4 58.9 147.3C59.8 147.2 62.1 146.4 63 146.4C63.9 146.4 64.2 147.1 64.5 147.4C64.8 147.7 64.6 147.9 64.9 148.2C65.1 148.5 65.9 149 66.1 149.2"/>
+        <path class="s18" pathLength="1" d="M134.6 90.2C136.5 88.1 143.2 81.4 146 77.4C148.9 73.4 150.7 68 151.6 66.1"/>
+        <path class="s18 ghost" pathLength="1" d="M135.5 91.1C137.3 88.6 143.8 80.3 146.5 76C149.2 71.8 150.7 67.3 151.5 65.6"/>
+        <path class="s19" pathLength="1" d="M139.8 97.2C141.8 95.1 148.7 88.4 152 84.2C155.3 80 158.2 74.2 159.5 72.2"/>
+        <path class="s19 ghost" pathLength="1" d="M140.1 97.8C142.2 95.4 149.7 87.7 152.9 83.3C156.2 79 158.4 73.4 159.5 71.4"/>
+        <path class="s20" pathLength="1" d="M153.5 70.4C153.2 70.2 152.4 69.6 152 69.2C151.6 68.9 151.3 68.8 150.9 68.2C150.5 67.6 149.7 66.3 149.6 65.5C149.4 64.7 150 64.1 150.1 63.4C150.1 62.7 149.9 62 150 61.3C150.1 60.6 150.3 60 150.7 59.3C151.1 58.7 151.9 57.9 152.5 57.6C153.1 57.2 153.6 57.4 154.3 57.2C155.1 57.1 156 56.7 156.9 56.7C157.7 56.6 158.7 56.8 159.4 57C160.1 57.3 160.4 57.7 161.1 58.1C161.7 58.5 162.5 59.1 163 59.5C163.5 60 163.8 60.4 164 60.9C164.2 61.5 164.3 62.1 164.4 62.9C164.5 63.6 164.7 64.9 164.5 65.6C164.4 66.4 163.8 66.6 163.4 67.2C162.9 67.9 162.3 68.8 161.9 69.5C161.4 70.1 161.2 70.7 160.7 71C160.1 71.4 159.3 71.4 158.5 71.4C157.6 71.4 156.3 71.1 155.6 70.9C154.9 70.7 154.8 70.6 154.2 70.3C153.6 69.9 152.2 69.2 151.8 69"/>
+        <path class="s20 ghost" pathLength="1" d="M153.9 71.3C153.5 70.9 152.3 69.4 151.7 68.8C151 68.1 150.4 67.8 149.9 67.5C149.5 67.1 148.9 67.5 148.8 66.8C148.8 66 149.6 63.7 149.8 63C150.1 62.2 150.1 62.9 150.5 62.3C150.8 61.6 151.6 59.4 152 58.8C152.3 58.2 152.4 59.2 152.7 58.9C153 58.5 153 57.2 153.6 56.9C154.2 56.5 155.4 56.9 156.3 56.8C157.3 56.7 158.5 56 159.4 56.2C160.2 56.3 161 57 161.4 57.7C161.8 58.3 161.8 59.4 162.1 60.1C162.4 60.7 162.6 60.9 163.1 61.3C163.7 61.7 165.3 61.8 165.5 62.7C165.8 63.6 164.9 65.7 164.4 66.5C163.9 67.2 163 66.6 162.6 67.1C162.2 67.5 162.5 68.4 162 69.2C161.5 69.9 160.4 71.1 159.6 71.5C158.8 72 157.9 71.8 157.2 71.7C156.5 71.6 155.8 71 155.3 70.7C154.8 70.5 154.9 70.5 154.3 70.4C153.7 70.2 152.2 70 151.8 69.9"/>
+        <path class="s21" pathLength="1" d="M84.5 156.2L79.8 189.5L97 191.2L99.5 168.2L102.6 191.1L119.6 189.8L115.6 156.2"/>
+        <path class="s21 ghost" pathLength="1" d="M83.1 156.2L79.8 190.2L97.9 191L100 169L103.1 189.9L119.9 189.5L117 157"/>
+        <path class="s22" pathLength="1" d="M84.9 191C85.1 193.2 86.3 200.1 86.3 204.2C86.4 208.2 85.4 213.6 85.2 215.5"/>
+        <path class="s22 ghost" pathLength="1" d="M84.8 191.3C85.2 193.2 87.1 199.1 86.9 203.1C86.8 207.1 84.4 213.3 83.9 215.4"/>
+        <path class="s23" pathLength="1" d="M95.5 190.7C95.6 192.9 96.2 199.8 96.1 203.9C96 208.1 95.1 213.8 94.8 215.8"/>
+        <path class="s23 ghost" pathLength="1" d="M95.9 190.6C95.8 192.8 95.1 199.9 95 204.2C94.9 208.5 95.2 214.4 95.2 216.5"/>
+        <path class="s24" pathLength="1" d="M103.8 191.5C103.8 193.6 103.3 200.4 103.6 204.4C103.8 208.4 105.1 213.7 105.4 215.6"/>
+        <path class="s24 ghost" pathLength="1" d="M103.6 190.4C103.6 192.5 103.3 199 103.5 203.3C103.7 207.6 104.6 214 104.8 216.1"/>
+        <path class="s25" pathLength="1" d="M114.9 191.3C114.6 193.5 113.6 200.4 113.6 204.4C113.6 208.5 114.8 213.7 115.1 215.5"/>
+        <path class="s25 ghost" pathLength="1" d="M114.9 191.7C114.8 193.6 114.4 198.8 114.4 203C114.3 207.1 114.6 214.3 114.7 216.6"/>
+        <path class="s26" pathLength="1" d="M95.5 215.9C93.6 215.8 87.3 214.6 84 215.3C80.6 215.9 77.2 217.9 75.6 219.8C74 221.7 72.8 225.2 74.4 226.8C76.1 228.3 81.9 229.1 85.6 229.2C89.3 229.4 94.9 229.9 96.5 227.6C98.1 225.4 95.5 217.8 95.3 215.9"/>
+        <path class="s26 ghost" pathLength="1" d="M94.8 215.1C92.9 214.9 86.6 213.4 83.5 214.1C80.4 214.7 77.7 216.9 76.1 219.1C74.5 221.3 72.5 225.6 74.1 227.3C75.6 229.1 81.6 229.6 85.3 229.6C89 229.6 94.9 229.6 96.5 227.2C98 224.8 94.8 217.4 94.4 215.4"/>
+        <path class="s27" pathLength="1" d="M104.6 216.4C106.4 216.1 112.5 214 115.7 214.7C119 215.3 122.4 218.2 124.1 220.2C125.9 222.3 127.9 225.5 126.3 227C124.6 228.6 118 229.3 114.2 229.5C110.5 229.6 105.1 230.1 103.7 227.9C102.2 225.7 105.2 218.3 105.5 216.3"/>
+        <path class="s27 ghost" pathLength="1" d="M105.3 216.2C106.9 215.9 111.9 213.7 115.1 214.4C118.4 215.2 123 218.4 124.8 220.7C126.6 223 127.9 226.8 125.9 228C124 229.2 116.8 228.1 113.2 228C109.5 227.8 105.6 229 104.1 227.1C102.6 225.3 104.2 218.6 104.2 216.8"/>
+        <!-- loading-art:strokes-end -->
+      </g>
+    </svg>
+    <svg class="loading-grain" viewBox="0 0 200 240" width="200" aria-hidden="true">
+      <filter id="loading-grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7"/>
+        <feColorMatrix values="0 0 0 0 0.875  0 0 0 0 0.906  0 0 0 0 0.945  3.4 0 0 0 -1.5"/>
+      </filter>
+      <rect width="200" height="240" filter="url(#loading-grain)"/>
+    </svg>
+    <svg class="loading-pencil" viewBox="0 0 96 96" aria-hidden="true">
+      <g transform="translate(4 92) rotate(40)">
+        <path d="M-6.5-22V-96H-2V-22z" fill="#ffe066"/>
+        <path d="M-2-22V-96H2.5V-22z" fill="#ffe066"/>
+        <path d="M2.5-22V-96H6.5V-22z" fill="#ffbf6b"/>
+        <path d="M-6.5-22-2-19 2.5-22 6.5-20-1.2-3z" fill="#f3e3bf"/>
+        <path d="M-2.4-8 0 0 2.2-8C1-7-1-7-2.4-8z" fill="#4a4c52"/>
+        <path d="M-6.5-96H6.5V-104H-6.5z" fill="#566480"/>
+        <path d="M-6.5-104H6.5V-114C6.5-119-6.5-119-6.5-114z" fill="#ff8f8f"/>
+      </g>
+    </svg>
+  </div>
+  <p>じゅんびしています</p>
+</div>
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "id": "unsupported-01",
+  "version": "shadow",
+  "expected": {
+    "templateId": null
+  }
+}

@@ -1,0 +1,93 @@
+/* 学びの輪（#301）。4 つの段を輪に並べ、真ん中に「いますること」を置く。狭い幅では縦に並べる */
+.learning-loop {
+  flex: none;
+  padding: var(--space-3) var(--space-4);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+  background: var(--color-foam);
+  color: var(--color-fg);
+}
+.learning-loop__heading { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.learning-loop h2 { margin: 0; color: var(--color-fg-strong); font-family: var(--font-hand); font-size: var(--text-body); }
+.learning-loop__badge { padding: var(--space-1) var(--space-2); border-radius: var(--radius-slot); background: var(--color-now); color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+.learning-loop__period { margin-left: auto; font-size: 14px; }
+
+.learning-loop__ring {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+/* 段の並びは読み上げでは 1→2→3→4 の順。画面では輪の位置に置く */
+.learning-loop__stages { display: contents; margin: 0; padding: 0; list-style: none; }
+.learning-loop__stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-slot);
+  background: var(--color-tissue);
+  color: var(--color-fg-strong);
+}
+.learning-loop__stage--1 { grid-column: 2; grid-row: 1; text-align: center; }
+.learning-loop__stage--2 { grid-column: 3; grid-row: 2; }
+.learning-loop__stage--3 { grid-column: 2; grid-row: 3; text-align: center; }
+.learning-loop__stage--4 { grid-column: 1; grid-row: 2; }
+.learning-loop__stage.is-now { border-width: var(--stroke-3); background: var(--color-now); }
+.learning-loop__stage-title { font-size: 14px; font-weight: var(--text-strong-weight); }
+.learning-loop__stage strong { overflow-wrap: anywhere; font-size: var(--text-small); }
+.learning-loop__big { font-size: var(--text-body); }
+.learning-loop__note { color: var(--color-fg); font-size: 13px; }
+
+.learning-loop__patterns { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.learning-loop__patterns li { display: flex; justify-content: space-between; gap: var(--space-2); }
+.learning-loop__patterns strong { flex: none; white-space: nowrap; }
+.learning-loop__patterns span { min-width: 0; overflow-wrap: anywhere; color: var(--color-fg); }
+
+.learning-loop__rate { display: grid; grid-template-columns: 4.5em minmax(0, 1fr) 3em; align-items: center; gap: var(--space-1); font-size: 13px; }
+.learning-loop__rate strong { font-size: 14px; text-align: right; }
+.learning-loop__bar { height: 12px; border: 1.5px solid var(--color-border-strong); border-radius: var(--radius-slot); background: var(--color-foam); overflow: hidden; }
+.learning-loop__bar span { display: block; height: 100%; background: var(--color-done); }
+
+/* 輪の矢印。段の後ろに敷き、1→2→3→4→1 の向きに回す */
+.learning-loop__arrows { position: absolute; inset: 0; z-index: 0; color: var(--color-fg-strong); pointer-events: none; }
+.learning-loop__arrows svg { width: 100%; height: 100%; overflow: visible; }
+.learning-loop__arrows path { fill: none; stroke: currentColor; vector-effect: non-scaling-stroke; stroke-width: 2px; }
+/* 向きの印。線の角（段と段のあいだ）に置き、1→2→3→4→1 の向きを見せる */
+.learning-loop__turn { position: absolute; display: grid; place-items: center; width: 28px; height: 28px; border: var(--stroke-2) solid var(--color-border-strong); border-radius: 50%; background: var(--color-foam); font-weight: var(--text-strong-weight); transform: translate(-50%, -50%); }
+.learning-loop__turn--1 { left: 80%; top: 13%; }
+.learning-loop__turn--2 { left: 80%; top: 87%; }
+.learning-loop__turn--3 { left: 20%; top: 87%; }
+.learning-loop__turn--4 { left: 20%; top: 13%; }
+
+.learning-loop__now { position: relative; z-index: 1; grid-column: 2; grid-row: 2; display: grid; place-content: center; justify-items: center; gap: var(--space-1); padding: var(--space-2); text-align: center; }
+.learning-loop__now strong { color: var(--color-fg-strong); font-size: var(--text-small); }
+.learning-loop__now p { margin: 0; font-size: 14px; }
+.learning-loop__now-button { min-height: 44px; padding: var(--space-1) var(--space-4); font-size: var(--text-small); }
+.learning-loop__now-button:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 0; }
+
+@media (max-width: 600px) {
+  .learning-loop__ring { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .learning-loop__stage--1, .learning-loop__stage--2, .learning-loop__stage--3, .learning-loop__stage--4, .learning-loop__now { grid-column: 1; grid-row: auto; text-align: left; }
+  .learning-loop__now { order: -1; justify-items: start; text-align: left; }
+  .learning-loop__arrows { display: none; }
+  .learning-loop__stage:not(:last-child)::after { position: absolute; bottom: calc(-1 * var(--space-3) - 2px); left: 50%; color: var(--color-fg-strong); content: "↓"; font-weight: var(--text-strong-weight); }
+}
+/* 768px 以上は1画面に収める（D-126）。見出し・説明・「詳しく」を1行に並べ、札の中の題と数も1行に並べて、図の高さを詰める。札の文は減らさない */
+@media (min-width: 768px) {
+  .learning-loop { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 0 var(--space-3); padding: var(--space-2) var(--space-3); }
+  .learning-loop__heading { grid-column: 1; }
+  .learning-loop__ring { grid-column: 1 / -1; }
+  .learning-loop__lead { grid-column: 2; margin: 0; }
+  .learning-loop__research { grid-column: 3; grid-row: 1; float: none; margin-top: 0; }
+  .learning-loop__points { grid-column: 1 / -1; margin-top: var(--space-2); }
+  .learning-loop__point { padding: var(--space-1) var(--space-2); }
+  .learning-loop__point button { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-2); min-height: 0; }
+  .learning-loop__next, .learning-loop__detail { margin-top: var(--space-1); font-size: var(--text-small); line-height: var(--text-small-line); }
+}

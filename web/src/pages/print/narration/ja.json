@@ -1,0 +1,11 @@
+{
+  "verification": { "checkedBy": null, "checkedAt": null },
+  "segments": {
+    "lever-left": "左の", "lever-mark": "の目もりに", "lever-right": "右の", "lever-hang": "つるしてみよう",
+    "lever-mark-within": "の目もりの", "lever-weight": "おもりを", "lever-one": "ひとつ", "lever-out": "外へ", "lever-shift": "ずらしてみよう",
+    "moon-full": "月をまわして、満月にしてみよう", "moon-half": "半月になる所までまわしてみよう", "moon-new": "新月になる所までまわしてみよう",
+    "number-1": "1", "number-2": "2", "number-3": "3", "number-4": "4", "number-5": "5", "number-6": "6",
+    "weight-10": "10グラム", "weight-20": "20グラム", "weight-30": "30グラム", "weight-40": "40グラム", "weight-50": "50グラム",
+    "weight-60": "60グラム", "weight-70": "70グラム", "weight-80": "80グラム", "weight-90": "90グラム", "weight-100": "100グラム"
+  }
+}

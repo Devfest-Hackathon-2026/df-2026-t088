@@ -1,0 +1,30 @@
+/* 学級のようす「詰まっている問題」の表（SCR-T10）。表の枠だけが縦に動く（D-126） */
+.stumbles { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.stumbles__scroll { flex: 0 1 auto; min-height: 0; overflow: auto; border: var(--stroke-2) solid var(--color-border); }
+.stumbles__table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
+.stumbles__table th, .stumbles__table td {
+  height: var(--teacher-row-height);
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  border-top: var(--stroke-2) solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.stumbles__table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-top: 0;
+  background: var(--color-bg);
+  color: var(--color-muted-fg);
+  box-shadow: 0 var(--stroke-2) 0 var(--color-border);
+}
+/* 行全体を1つのリンクにする（D-177）。問題の式は1行で、はみ出す分は「…」 */
+.stumbles__row { position: relative; }
+.stumbles__problem { max-width: 24rem; overflow: hidden; text-overflow: ellipsis; font-weight: var(--text-strong-weight); }
+.stumbles__problem a { color: var(--color-fg-strong); text-decoration: none; }
+.stumbles__problem a::after { content: ""; position: absolute; inset: 0; }
+.stumbles__row:hover { background: var(--color-now); }
+.stumbles__problem a:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--stroke-3)); }
+.stumbles__count { font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }

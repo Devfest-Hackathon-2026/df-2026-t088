@@ -1,0 +1,57 @@
+.loop-assistant {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 0;
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+}
+.loop-assistant__heading,
+.loop-assistant__summary,
+.loop-assistant__decision {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.loop-assistant__heading { justify-content: space-between; }
+.loop-assistant__heading h2 { margin: 0; font-size: var(--text-title); }
+.loop-assistant button,
+.loop-assistant select,
+.loop-assistant input { min-height: 36px; font: inherit; }
+.loop-assistant button { padding: 0 var(--space-3); }
+.loop-assistant__items { display: flex; flex-direction: column; gap: var(--space-1); }
+.loop-assistant__item { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-1) var(--space-2); padding: var(--space-2); border-top: var(--stroke-2) solid var(--color-border); }
+.loop-assistant__summary { font-size: var(--text-small); }
+.loop-assistant__badge { padding: 0 var(--space-1); border: var(--stroke-2) solid var(--color-border-strong); border-radius: var(--radius-slot); }
+.loop-assistant__decision label { display: flex; align-items: center; gap: var(--space-2); flex: 1; min-width: 16rem; }
+.loop-assistant__decision select { flex: 1; min-width: 0; }
+/* 直し方の案は 1 行を全部使う。ほかと並べると選ぶ欄が 140px ほどになり、案の文が読めなかった（#535） */
+.loop-assistant__decision .loop-assistant__choice { flex: 1 1 100%; flex-direction: column; align-items: stretch; gap: 2px; }
+.loop-assistant__decision .loop-assistant__choice select { flex: none; width: 100%; }
+.loop-assistant__reason { white-space: nowrap; }
+.loop-assistant__reason input { flex: 1; min-width: 0; }
+.loop-assistant__effect,
+.loop-assistant__note,
+.loop-assistant p { margin: 0; font-size: var(--text-small); }
+.loop-assistant__effect button { margin-left: var(--space-2); }
+.loop-assistant__key { display: flex; align-items: center; gap: var(--space-2); }
+.loop-assistant__key input { max-width: 18rem; }
+@media (max-width: 767px) {
+  .loop-assistant__item { grid-template-columns: minmax(0, 1fr); }
+  .loop-assistant__decision label { min-width: 100%; align-items: stretch; flex-direction: column; }
+}
+/* 768px 以上は1画面に収める（D-126）。カードは縦に積み（見出し・一覧・注）、一覧の中だけ縦に動かす。型・案・承認・却下は折り返して全部見せる（#484） */
+@media (min-width: 768px) {
+  .loop-assistant { overflow: hidden; }
+  .loop-assistant__heading { justify-content: flex-start; gap: var(--space-3); }
+  .loop-assistant__heading h2 { font-size: var(--text-body); line-height: var(--text-body-line); }
+  .loop-assistant__items { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+  .loop-assistant__item { min-width: 0; }
+  .loop-assistant__summary > span { min-width: 0; overflow-wrap: anywhere; }
+  .loop-assistant__decision label { min-width: 12rem; }
+  .loop-assistant__note { flex: none; }
+}

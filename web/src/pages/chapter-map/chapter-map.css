@@ -1,0 +1,265 @@
+/* PG-004 章をえらぶ。見本は docs/design/ui/preview/chapter-map/fuda.html。値は tokens.css の名前で書く */
+
+.cm-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  color: var(--color-fg);
+}
+
+/* SEC-004-01 上の帯：ここだけ紙の色で塗り、下に線を引く。右は右上の音と顔（CMP-043、D-245）の分を空ける */
+.cm-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--corner-reserve) var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border-bottom: var(--stroke-3) solid var(--color-border-strong);
+}
+
+.cm-bar__title {
+  flex: 1;
+  margin: 0;
+  font: var(--text-title-weight) var(--text-title) / var(--text-title-line) var(--font-hand);
+  color: var(--color-fg-strong);
+}
+
+.cm-bar__map { flex: none; white-space: nowrap; }
+
+.cm-body {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+/* SEC-004-02 分野の色の見本。押せない */
+.cm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-small);
+  line-height: var(--text-small-line);
+}
+
+.cm-legend li { display: flex; align-items: center; gap: var(--space-2); }
+
+.cm-legend__swatch {
+  flex: none;
+  width: var(--space-7);
+  height: var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--space-2);
+}
+
+.cm-legend__swatch--number { background: var(--color-domain-number); }
+.cm-legend__swatch--shape { background: var(--color-domain-shape); }
+.cm-legend__swatch--change { background: var(--color-domain-change); }
+.cm-legend__swatch--data { background: var(--color-domain-data); }
+
+/* SEC-004-03 章の地図：スタートからゴールまで1本の道。札と旗は行（--row）と割合（--fx）で道の上に置く（D-109）。
+   --cm-pad は行の端の半円が地図の中に収まる余白（半円の半径＋道の半幅＋縁取り。左右の余白へ少し出してよい） */
+.cm-map {
+  --cm-row: var(--chapter-row-height);
+  --cm-road: var(--chapter-road-width);
+  --cm-pad: calc(var(--cm-row) / 2 + var(--cm-road) / 2 + var(--stroke-4) - var(--space-3));
+  position: relative;
+  height: calc(var(--rows) * var(--cm-row));
+}
+
+.cm-list { margin: 0; padding: 0; list-style: none; }
+
+.cm-item,
+.cm-flag {
+  position: absolute;
+  left: calc(var(--cm-pad) + (100% - 2 * var(--cm-pad)) * var(--fx));
+  top: calc((var(--row) + 0.5) * var(--cm-row));
+  transform: translate(-50%, -50%);
+}
+
+/* 札の置き場の幅は、行の幅を1行の数で割った分から少し引く。狭い幅で札どうしが重ならないようにする */
+.cm-item {
+  display: flex;
+  justify-content: center;
+  width: calc((100% - 2 * var(--cm-pad)) / var(--columns) - var(--space-2));
+}
+
+/* CMP-007 道：札の下に敷く。読み上げない。帯を縁取りで挟み、まん中に点線を引く */
+.cm-road {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cm-road path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.cm-road__edge { stroke: var(--color-border-strong); stroke-width: calc(var(--cm-road) + 2 * var(--stroke-4)); }
+.cm-road__fill { stroke: var(--color-sand); stroke-width: var(--cm-road); }
+.cm-road__dash { stroke: var(--color-border); stroke-width: var(--stroke-2); stroke-dasharray: 4 12; }
+
+/* CP-283 と CP-285 の札。押せない。章の札と同じ高さ・太字・影にし、道の端の丸みを札の中に隠す（D-111） */
+.cm-flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--chapter-card-min-height);
+  padding: var(--space-2) var(--space-5);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+  box-shadow: 0 var(--space-1) 0 var(--color-border-strong);
+  color: var(--color-fg-strong);
+  font-size: var(--text-body);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+  white-space: nowrap;
+}
+
+.cm-flag__star { display: inline-flex; width: var(--space-6); height: var(--space-6); }
+.cm-flag__star svg { width: 100%; height: 100%; }
+
+/* CMP-017 章の札 */
+.cm-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: min(var(--chapter-card-width), 100%);
+  min-height: var(--chapter-card-min-height);
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+  box-shadow: 0 var(--space-1) 0 var(--color-border-strong);
+  transform: rotate(var(--tilt, 0deg));
+  color: var(--color-fg-strong);
+  font: inherit;
+  font-size: var(--text-body);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+  text-align: center;
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+
+
+.cm-card.is-now { background: var(--color-now); }
+
+.cm-card__name { display: inline; }
+
+.cm-card__check {
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  margin-right: var(--space-1);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-done);
+  vertical-align: middle;
+}
+
+.cm-card__check svg { width: 70%; height: 70%; }
+
+.cm-card__lock { display: inline-block; width: var(--space-4); height: var(--space-4); margin-right: var(--space-1); vertical-align: middle; }
+.cm-card__lock svg { width: 100%; height: 100%; }
+
+.cm-card__progress {
+  font-size: var(--text-small);
+  font-weight: var(--text-body-weight);
+  color: var(--color-fg);
+}
+
+/* CMP-017 章の番号：左上の角に半分はみ出させて重ねる。分野の色の面。鍵の章でも同じ色（D-109） */
+.cm-card__badge {
+  position: absolute;
+  top: calc(var(--chapter-badge-size) / -2);
+  left: calc(var(--chapter-badge-size) / -2);
+  display: grid;
+  place-items: center;
+  width: var(--chapter-badge-size);
+  height: var(--chapter-badge-size);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: var(--text-title-weight) var(--text-body) / 1 var(--font-hand);
+}
+
+.cm-card--number .cm-card__badge { background: var(--color-domain-number); }
+.cm-card--shape .cm-card__badge { background: var(--color-domain-shape); }
+.cm-card--change .cm-card__badge { background: var(--color-domain-change); }
+.cm-card--data .cm-card__badge { background: var(--color-domain-data); }
+
+/* 鍵の章：面を方眼の色にして、枠と文字を弱め、影を消す（D-96、D-109） */
+.cm-card.is-locked {
+  box-shadow: none;
+  border-color: var(--color-muted-fg);
+  background: var(--color-grid);
+  color: var(--color-muted-fg);
+  font-weight: var(--text-body-weight);
+  cursor: not-allowed;
+}
+
+/* 札の上の辺のまん中。歩くアバターを立てる位置の印。左上の番号の丸と隣の札に重ならない（D-111） */
+.cm-card__anchor { position: absolute; top: 0; left: 50%; width: 0; height: 0; }
+
+/* hover の動きはマウスの端末だけ（MOT-001）。鍵の札は動かさない */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cm-card:not(.is-locked):hover { transform: translateY(-2px) rotate(var(--tilt, 0deg)); }
+}
+
+.cm-card:not(.is-locked):active { transform: rotate(var(--tilt, 0deg)) scale(0.97); }
+
+/* 歩くアバター：今の章の札の上のまん中に立つ。印の中心から、足元が上の辺に来るよう寄せる */
+.cm-map .walker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--walker-width-road);
+  z-index: var(--z-walker);
+  pointer-events: none;
+}
+
+.cm-walker .walker-anchor { transform: translate(-50%, -58%); }
+.cm-walker .avatar--walker { width: var(--walker-width-road); }
+
+/* MOT-023：盤面の紙が押した札の位置から広がる。transform-origin は TSX で札の中心に置く */
+.cm-paper {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-over-loading);
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  animation: cm-paper var(--duration-paper) var(--ease-out) both;
+}
+
+@keyframes cm-paper {
+  from { transform: scale(0.2); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* 767px 以下：札と行を狭め、上の帯を1行に保つ */
+@media (max-width: 767px) {
+  .cm-bar { gap: var(--space-2); padding: var(--space-2) var(--corner-reserve) var(--space-2) var(--space-3); }
+  .cm-bar__title { font-size: var(--text-body); line-height: var(--text-small-line); }
+  .cm-bar__map { padding-inline: var(--space-3); font-size: var(--text-small); }
+  .cm-map { --cm-row: var(--chapter-row-height-narrow); --cm-road: var(--chapter-road-width-narrow); }
+  .cm-flag { font-size: var(--text-small); padding: var(--space-1) var(--space-4); }
+  .cm-card { width: min(var(--chapter-card-width-narrow), 100%); font-size: var(--text-small); }
+}

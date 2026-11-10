@@ -1,0 +1,370 @@
+/* PG-002 盤面。見本は docs/design/ui/preview/board-path/fusen.html。値は tokens.css の名前で書く */
+
+.board-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* MOT-005。transform を使うと固定のカードの基準が変わるので、opacity だけで出す */
+  animation: board-enter var(--duration-normal) var(--ease-out);
+}
+
+@keyframes board-enter {
+  from { opacity: 0; }
+}
+
+/* SEC-002-01 上の帯：ここだけ紙の色で塗り、下に線を引く。右は右上の音と顔（CMP-043、D-245）の分を空ける */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--corner-reserve) var(--space-2) var(--space-7);
+  background: var(--color-bg);
+  border-bottom: var(--stroke-3) solid var(--color-border-strong);
+}
+
+/* 章の名前と進み。長い名前は名前だけを省略し、進みは残す */
+.top-title {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: var(--space-3);
+  min-width: 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+
+.top-title-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.top-title-progress {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: var(--text-small-weight);
+  line-height: var(--text-small-line);
+  white-space: nowrap;
+  color: var(--color-fg);
+}
+
+.top-chapters { flex: none; white-space: nowrap; }
+
+/* 盤面とカード */
+.board-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  /* 固定したカードが道を隠さないよう、カードの高さ分の余白を下に取る */
+  padding: var(--space-2) var(--space-4) calc(var(--card-height, 0px) + var(--space-6));
+}
+
+/* 768px 以上は画面を左右に分ける（D-112）。上の帯の残りを .board-body にし、左の盤面も右の説明もスクロールしない。
+   右の欄は説明のカードを上下左右の中央に置く */
+@media (min-width: 768px) {
+  .board-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .board-body {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    max-width: none;
+    grid-template-columns: var(--board-pane-ratio) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+/* 768px 以上で高さ 599px 以下（横向きのスマホなど）は左右2段のまま、ページごと縦に動かす（D-237）。盤面の枠の大きさは左の欄の幅だけで決める */
+@media (min-width: 768px) and (max-height: 599px) {
+  .board-page { display: block; height: auto; min-height: 100vh; min-height: 100dvh; }
+  .board-body { overflow: visible; grid-template-rows: auto; }
+  .road-wrap { container-type: inline-size; }
+  .road-field { --board-unit: clamp(0.85px, calc(100cqw / var(--board-box-w)), 1.8px); }
+}
+
+/* CMP-007 道、CMP-006 マス：1行4マスまでのS字（D-112、D-113）。本線と章のテストを道の順に、偶数行は左から右、奇数行は右から左へ並べる。
+   --col / --row は Road.tsx が付ける。1行のマスの数（--board-cols）と枠の大きさはマスの数で変わる（D-113） */
+.road-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+/* 768px 以上は欄の幅と高さに枠を収める。cqw / cqh は欄の子孫でしか効かないので、単位とその倍数は .road-field で定義し直す */
+@media (min-width: 768px) {
+  .road-wrap { container-type: size; }
+}
+
+/* 盤面の枠。大きさは Road.tsx が列と行の数から決めた --board-box-w × --board-box-h（単位なしの数）に --board-unit を掛けた値（D-113）。
+   マスの少ない章ほど枠が小さいので、欄に収める倍率が上がって大きく出る。中の部品はこの名前のまま読む。
+   単位と倍数は枠の数を読むため、tokens.css の値をここで定義し直す */
+.road-field {
+  --board-unit: clamp(0.7px, calc((100vw - 2 * var(--space-4)) / var(--board-box-w)), 1px);
+  --cell-size-wide: calc(54 * var(--board-unit));
+  --cell-size-test-wide: calc(64 * var(--board-unit));
+  --cell-size-side-wide: calc(42 * var(--board-unit));
+  --board-col-step-wide: calc(96 * var(--board-unit));
+  --board-step-wide: calc(136 * var(--board-unit));
+  --board-road-width-wide: calc(34 * var(--board-unit));
+  --board-box-width-wide: calc(var(--board-box-w) * var(--board-unit));
+  --board-box-height-wide: calc(var(--board-box-h) * var(--board-unit));
+  --walker-width-road-wide: calc(46 * var(--board-unit));
+  --cell-text-wide: calc(30 * var(--board-unit));
+  --cell-text-side-wide: calc(16 * var(--board-unit));
+  --cell-size: var(--cell-size-wide);
+  --cell-size-test: var(--cell-size-test-wide);
+  --cell-size-side: var(--cell-size-side-wide);
+  --board-col-step: var(--board-col-step-wide);
+  --board-step: var(--board-step-wide);
+  --board-road-width: var(--board-road-width-wide);
+  --board-box-width: var(--board-box-width-wide);
+  --board-box-height: var(--board-box-height-wide);
+  --walker-width-road: var(--walker-width-road-wide);
+  position: relative;
+  width: var(--board-box-width);
+  height: var(--board-box-height);
+}
+
+/* 768px 以上は欄の幅と高さに枠を収める。cqw / cqh は欄の子孫でしか効かない */
+@media (min-width: 768px) {
+  .road-field {
+    --board-unit: clamp(0.85px, min(100cqw / var(--board-box-w), 100cqh / var(--board-box-h)), 1.8px);
+  }
+}
+
+/* 道の置き場。行の数 × 行の間隔の高さで、上下の中央に置く（上の行のアバターの分、3.5 単位だけ下へ）。--rows は Road.tsx が枠に付ける */
+.road-lane {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: calc((var(--board-box-height) - var(--rows) * var(--board-step)) / 2 + 3.5 * var(--board-unit));
+  height: calc(var(--rows) * var(--board-step));
+}
+
+/* 線は枠と同じ縦横比の SVG（座標は枠の px）。手描きの揺れは Road.tsx が線の座標に付ける */
+.road-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.road-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.road-edge { stroke: var(--color-border-strong); stroke-width: calc(var(--board-road-width) + var(--stroke-3) * 2); }
+.road-band { stroke: var(--color-sand); stroke-width: var(--board-road-width); }
+.road-dash { stroke: var(--color-border); stroke-width: var(--stroke-2); stroke-dasharray: 4 12; }
+/* 通った区間は、まん中の点線を実線にして色を変える */
+.road-done { stroke: var(--color-done); stroke-width: var(--stroke-4); }
+/* 寄り道へ下りる点線。丸い端の長さ0の線を並べて点にする */
+.road-side { stroke: var(--color-border); stroke-width: var(--stroke-2); stroke-dasharray: 0 4; }
+
+/* マスの置き場は大きさの無い点。中心を --col / --row に置き（x は Road.tsx が付ける左の余白 --board-pad-left から）、丸や四角は中心から左上へ戻して重ねる */
+.node {
+  position: absolute;
+  left: calc(var(--board-pad-left) * var(--board-unit) + var(--col) * var(--board-col-step));
+  top: calc((var(--row) + 0.5) * var(--board-step));
+  width: 0;
+  height: 0;
+  /* 寄り道の点線を、マスの背面に回せるよう重なりの単位にする */
+  isolation: isolate;
+}
+
+.cell {
+  --size: var(--cell-size);
+  position: absolute;
+  left: calc(var(--size) / -2);
+  top: calc(var(--size) / -2);
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-blob);
+  background: var(--color-bg);
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  line-height: 1;
+  color: var(--color-fg-strong);
+  scroll-margin-top: var(--space-7);
+  scroll-margin-bottom: var(--space-7);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.cell--done { background: var(--color-done); }
+.cell--now { background: var(--color-now); }
+
+/* 今ここ：外に輪を重ねる。フォーカスの輪（outline）とは別にする */
+.cell--now::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--space-1) + var(--stroke-3) * 2));
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-blob);
+  pointer-events: none;
+}
+
+/* 章のテスト：星。クリア後は花丸 */
+.cell--test { --size: var(--cell-size-test); }
+.cell--test svg { width: 62%; height: 62%; }
+.cell--test.cell--done { background: var(--color-bg); }
+
+/* 寄り道：四角に「寄」。開いている間は破線、終えたら実線で塗る */
+.cell--side {
+  --size: var(--cell-size-side);
+  border-width: var(--stroke-2);
+  border-style: dashed;
+  border-radius: var(--radius-slot);
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: var(--text-strong-weight);
+}
+
+.cell--side.is-done { border-style: solid; background: var(--color-done); }
+
+/* 押せる範囲は 44px 四方以上にする。見た目より狭いマスは、広い透明な面を外へ重ねる */
+.cell::before {
+  content: "";
+  position: absolute;
+  inset: min(0px, calc((var(--size) - var(--button-min-height)) / 2));
+}
+
+/* 寄り道：分かれるマスの真下、行の間隔の半分下（行と行の間）。点線は Road.tsx が道の SVG に描く */
+.side { position: absolute; left: 0; top: 0; }
+.side .cell { left: calc(var(--size) / -2); top: calc(var(--board-step) / 2 - var(--size) / 2); }
+
+
+/* マスの文字は盤面と一緒に大きさが変わる（D-112）。元の指定より後ろに置く */
+.cell { font-size: var(--cell-text-wide); }
+.cell--side { font-size: var(--cell-text-side-wide); }
+
+/* hover の動きはマウスの端末だけ（MOT-002） */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cell:hover { transform: rotate(-4deg) scale(1.05); }
+}
+
+.cell:active { transform: scale(0.95); }
+
+/* 歩くアバター：盤面の枠の左上を原点に、Walker が x と y の両方を transform で動かす。
+   次のマスへは今の transform の transition で動く（MOT-003）。行の端の半円には沿わない */
+.walker {
+  --shift: 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--walker-width-road);
+  z-index: var(--z-walker);
+  pointer-events: none;
+}
+
+.walker.is-walking { transition: transform var(--duration-walk) var(--ease-in-out); }
+/* 印の中心の上にアバターの足元を合わせ、マスの上に立たせる。真上のマスに寄り道がある時は、内側へ列の間隔の半分ずらす。寄り道に立つ時は寄り道の上 */
+.walker-anchor { transform: translate(calc(-50% + var(--shift)), calc(-100% - var(--cell-size) / 2 - var(--space-1))); }
+.walker--shift-right { --shift: calc(var(--board-col-step) / 2); }
+.walker--shift-left { --shift: calc(var(--board-col-step) / -2); }
+.walker--side .walker-anchor { transform: translate(-50%, calc(-100% - var(--cell-size-side) / 2 - var(--space-1))); }
+.walker .avatar--walker { width: var(--walker-width-road); }
+.walker.is-walking .avatar { animation: hop var(--duration-hop) var(--ease-in-out) 2; }
+@keyframes hop { 50% { transform: translateY(calc(-1 * var(--space-3))) rotate(4deg); } }
+
+/* CMP-014 今のマスのカード。768px 以上は右半分の上下左右の中央に大きく置き、767px 以下は画面の下に固定する */
+.card-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: var(--space-6) var(--space-7);
+  overflow-y: auto;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--card-width-wide);
+  margin-block: auto;
+  /* 長い本文は本文だけを縦に送り、ボタンは常に見える所に置く（NFR-005） */
+  max-height: 100%;
+  padding: var(--space-6);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+}
+
+.card-body { display: grid; gap: var(--space-3); min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.card > :not(.card-body) { flex-shrink: 0; }
+.card-eyebrow { font-size: var(--text-small); color: var(--color-muted-fg); }
+.card h2 { font-size: var(--text-display); line-height: var(--text-display-line); }
+.card-primary { width: 100%; }
+
+@media (max-width: 767px) {
+  .card-slot {
+    display: block;
+    padding: 0;
+    overflow: visible;
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-walker);
+  }
+
+  .card { gap: var(--space-2); max-width: none; max-height: var(--card-max-height-narrow); margin-block: 0; padding: var(--space-4); border-width: var(--stroke-3) 0 0; border-radius: 0; }
+  .card h2 { font-size: var(--text-title); line-height: var(--text-title-line); }
+  .cell {
+    scroll-margin-bottom: calc(var(--card-height, 0px) + var(--space-4));
+  }
+
+  .top-bar { padding: var(--space-2) var(--corner-reserve) var(--space-2) var(--space-4); }
+}
+
+/* 狭い画面：見出しを --text-body、ボタンの文字を --text-small にして1行に保つ（PG-004 と同じ決まり） */
+@media (max-width: 767px) {
+  .top-bar { gap: var(--space-2); }
+  /* 名前と進みを横に並べると名前が1文字ほどしか残らないので、上の帯は1行のまま、名前の下に進みを置く */
+  .top-title { flex-direction: column; align-items: flex-start; gap: 0; font-size: var(--text-body); line-height: var(--text-body-line); }
+  .top-title-name { max-width: 100%; }
+  .top-title-progress { font-size: var(--text-small); }
+  .top-chapters { font-size: var(--text-small); padding-inline: var(--space-3); }
+}
+
+/* 767px 以下：1行3マスのS字（D-237）。枠の倍率は3列の枠が画面の幅に入る範囲で決め、マスと寄り道は押せる大きさ（--button-min-height）以上にする。
+   盤面はページごと縦に動き、カードは下に固定（上の .board-body の下の余白がカードの高さ分） */
+@media (max-width: 767px) {
+  .road-field {
+    --board-unit: clamp(0.6px, calc((100vw - 2 * var(--space-4)) / var(--board-box-w)), 1px);
+    --cell-size: max(var(--cell-size-wide), var(--button-min-height));
+    --cell-size-test: max(var(--cell-size-test-wide), var(--button-min-height));
+    --cell-size-side: max(var(--cell-size-side-wide), var(--button-min-height));
+  }
+}
+
+/* 767px 以下：上の帯は1行のまま。音と顔は右上へ移ったので2行目へ折り返さない（D-245。D-239 の(1)は廃止）。ボタンは --button-min-height 以上 */
+@media (max-width: 767px) {
+  .top-title { flex: 1 1 10em; }
+  .top-chapters { min-height: var(--button-min-height); }
+}
+
+/* 767px 以下で高さ 599px 以下（200% に拡大した 683×384 など）：下に固定すると本文が 2 行ほどしか見えず、道も半分隠れる。固定をやめて道の下に続け、ページごと縦に動かす（D-252）。
+   カードは本文を切らず全部出し、「学習をはじめる」まで動かして届く。道の下の余白はカードの高さ分でなく普通の余白に戻す */
+@media (max-width: 767px) and (max-height: 599px) {
+  .card-slot { position: static; }
+  .card { max-height: none; }
+  .card-body { overflow-y: visible; }
+  .board-body { padding-bottom: var(--space-6); }
+  .cell { scroll-margin-bottom: var(--space-7); }
+}

@@ -1,0 +1,12 @@
+/* 単元の問題の一覧（SCR-T11）。上は動かさず、表の中だけ縦に動かす（D-126）。表の見た目は StumblesPanel.css を使い回す */
+.unit-page {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+.unit-page__back { margin: var(--space-2) 0 0; }
+.unit-page__title { margin: var(--space-2) 0 var(--space-3); font-size: var(--text-h2, 1.25rem); }

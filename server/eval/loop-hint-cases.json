@@ -1,0 +1,8 @@
+[
+  { "pattern": "sum-both", "operator": "+", "problem": "1/3+1/4" },
+  { "pattern": "sum-num-only", "operator": "+", "problem": "1/3+1/4" },
+  { "pattern": "same-den-sum", "operator": "+", "problem": "1/3+1/4" },
+  { "pattern": "sum-both", "operator": "-", "problem": "3/4-1/3" },
+  { "pattern": "sum-num-only", "operator": "-", "problem": "3/4-1/3" },
+  { "pattern": "same-den-sum", "operator": "-", "problem": "3/4-1/3" }
+]

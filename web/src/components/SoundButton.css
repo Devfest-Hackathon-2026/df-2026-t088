@@ -1,0 +1,206 @@
+/* CMP-016 音のボタン（D-241）。帯の中で場所を取るのは丸だけ。開くと札（消す・出すボタンと大きさのバー、D-203）が丸から伸びて上に重なる。
+   線と丸みは顔のボタン（CMP-015）と同じ。--sound-width は札の幅（丸＋--space-1＋バー 96px＋--space-3） */
+.sound-control {
+  --sound-height: var(--face-size);
+  --sound-width: calc(var(--sound-height) + var(--space-1) + 96px + var(--space-3));
+  position: relative;
+  flex: none;
+  width: var(--sound-height);
+  height: var(--sound-height);
+  color: var(--color-fg-strong);
+}
+
+.sound-control[data-open="true"] { z-index: 1; }
+
+/* 上の帯では「← ホーム」（quiet）と高さを揃えて 44px にする（D-149） */
+.sound-control--bar { --sound-height: calc(var(--button-min-height) - var(--space-2)); }
+
+/* 札の形（MOT-031）。ふだんは clip-path で丸の幅だけを見せ、開くと札全体へ広げる。伸びる向きは丸のある端の反対側 */
+.sound-control__skin {
+  --sound-round: calc(var(--sound-height) / 2);
+  position: absolute;
+  top: 0;
+  width: var(--sound-width);
+  height: var(--sound-height);
+  box-sizing: border-box;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--sound-round);
+  background: var(--color-bg);
+  pointer-events: none;
+  transition: clip-path var(--duration-normal) var(--ease-out);
+}
+
+.sound-control[data-grow="left"] .sound-control__skin {
+  right: 0;
+  transform-origin: right center;
+  clip-path: inset(0 0 0 calc(100% - var(--sound-height)) round var(--sound-round));
+}
+
+.sound-control:is([data-grow="right"], [data-grow="right-wide"]) .sound-control__skin {
+  left: 0;
+  transform-origin: left center;
+  clip-path: inset(0 calc(100% - var(--sound-height)) 0 0 round var(--sound-round));
+}
+
+/* 開く：行き過ぎてから戻る広がりと、縦のつぶれ（開く時だけ。途中で閉じたら打ち切って 1 に戻る） */
+.sound-control[data-open="true"] .sound-control__skin {
+  clip-path: inset(0 0 0 0 round var(--sound-round));
+  transition: clip-path var(--duration-goo) var(--ease-goo);
+  animation: sound-squash var(--duration-goo) linear;
+}
+
+@keyframes sound-squash {
+  0% { transform: scaleY(1); }
+  30% { transform: scaleY(0.84); }
+  65% { transform: scaleY(1.06); }
+  100% { transform: scaleY(1); }
+}
+
+/* キーボードのフォーカスで開いた時は動かさず、すぐ開いた形にする */
+.sound-control[data-instant="true"] .sound-control__skin { transition: none; animation: none; }
+
+.sound-button {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: var(--sound-height);
+  height: var(--sound-height);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* 閉じている時の丸の線。札の線は clip-path で切られて丸の片側にしか残らないので、丸の線はボタンが描く。開くと札の線に任せて消す */
+.sound-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.sound-control[data-open="true"] .sound-button::after { opacity: 0; }
+
+.sound-control[data-grow="left"] .sound-button { right: 0; }
+.sound-control:is([data-grow="right"], [data-grow="right-wide"]) .sound-button { left: 0; }
+
+.sound-button svg { width: 60%; height: 60%; }
+
+.sound-button[data-muted="true"],
+.sound-control[data-muted="true"] .sound-control__range { color: var(--color-muted-fg); }
+
+/* 押した反応は CMP-001 と同じ */
+.sound-button:active { transform: translateY(1px); }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .sound-button:hover { transform: translateY(-2px) rotate(-0.5deg); }
+}
+
+/* 大きさのバー。つまみは札の線と同じ色、塗りは今の大きさまで */
+.sound-control__range {
+  --sound-track: 8px;
+  --sound-thumb: 20px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width: 96px;
+  height: var(--sound-height);
+  margin: 0;
+  background: transparent;
+  color: var(--color-fg-strong);
+  cursor: pointer;
+  appearance: none;
+  /* 閉じている間は見えず、Tab も届かない（inert も付けてある）。閉じる時はバーを 80ms で消し、開く時は 140ms 遅れて 160ms で出す */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 80ms linear, visibility 0s linear 80ms;
+}
+
+.sound-control[data-grow="left"] .sound-control__range { right: calc(var(--sound-height) + var(--space-1)); }
+.sound-control:is([data-grow="right"], [data-grow="right-wide"]) .sound-control__range { left: calc(var(--sound-height) + var(--space-1)); }
+
+.sound-control[data-open="true"] .sound-control__range {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 160ms linear 140ms, visibility 0s;
+}
+
+.sound-control[data-open="true"][data-instant="true"] .sound-control__range { transition: none; }
+
+/* 溝の線は border ではなく内側の影で描く。border だとつまみが線の内側から並び、0 でもつまみの左に溝の端が残る */
+.sound-control__range::-webkit-slider-runnable-track {
+  height: var(--sound-track);
+  box-shadow: inset 0 0 0 var(--stroke-2) currentColor;
+  border-radius: calc(var(--sound-track) / 2);
+  /* 塗りの端は、つまみの真ん中にそろえる（端の近くでつまみの外へはみ出さない） */
+  --sound-fill-end: calc(var(--sound-thumb) / 2 + (100% - var(--sound-thumb)) * var(--sound-level, 0.5));
+  background: linear-gradient(to right, currentColor var(--sound-fill-end), transparent var(--sound-fill-end));
+}
+
+/* 0（消してある）の時は塗りを描かない。端の丸みに細い線が残らないようにする */
+.sound-control__range[data-empty="true"]::-webkit-slider-runnable-track { background: transparent; }
+.sound-control__range[data-empty="true"]::-moz-range-progress { background: transparent; }
+
+.sound-control__range::-webkit-slider-thumb {
+  width: var(--sound-thumb);
+  height: var(--sound-thumb);
+  box-sizing: border-box;
+  margin-top: calc((var(--sound-track) - var(--sound-thumb)) / 2);
+  border: var(--stroke-2) solid currentColor;
+  border-radius: 50%;
+  background: var(--color-bg);
+  appearance: none;
+}
+
+.sound-control__range::-moz-range-track {
+  height: var(--sound-track);
+  box-shadow: inset 0 0 0 var(--stroke-2) currentColor;
+  border-radius: calc(var(--sound-track) / 2);
+  background: transparent;
+}
+
+.sound-control__range::-moz-range-progress {
+  height: var(--sound-track);
+  border-radius: calc(var(--sound-track) / 2);
+  background: currentColor;
+}
+
+.sound-control__range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--sound-thumb);
+  height: var(--sound-thumb);
+  border: var(--stroke-2) solid currentColor;
+  border-radius: 50%;
+  background: var(--color-bg);
+}
+
+/* 767px 以下は指で押せるよう、丸を --button-min-height（52px）にする（D-235、D-239(1)）。
+   right-wide（PG-006）は、767px 以下では丸が帯の右端に来て右に場所が無いので、左へ伸ばす（D-241） */
+@media (max-width: 767px) {
+  .sound-control--bar { --sound-height: var(--button-min-height); }
+  .sound-control[data-grow="right-wide"] .sound-control__skin {
+    left: auto;
+    right: 0;
+    transform-origin: right center;
+    clip-path: inset(0 0 0 calc(100% - var(--sound-height)) round var(--sound-round));
+  }
+  .sound-control[data-grow="right-wide"][data-open="true"] .sound-control__skin { clip-path: inset(0 0 0 0 round var(--sound-round)); }
+  .sound-control[data-grow="right-wide"] .sound-button { left: auto; right: 0; }
+  .sound-control[data-grow="right-wide"] .sound-control__range { left: auto; right: calc(var(--sound-height) + var(--space-1)); }
+}
+
+/* 動きを減らす設定の時は、札の伸び・つぶれをせず、バーを opacity だけで出し消しする（MOT-031） */
+@media (prefers-reduced-motion: reduce) {
+  .sound-control__skin,
+  .sound-control[data-open="true"] .sound-control__skin { transition: none; animation: none; }
+  .sound-control__range,
+  .sound-control[data-open="true"] .sound-control__range { transition: opacity var(--duration-fast) linear, visibility 0s; }
+}

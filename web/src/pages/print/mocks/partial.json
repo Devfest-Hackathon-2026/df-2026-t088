@@ -1,0 +1,11 @@
+{
+  "problems": [
+    {
+      "templateId": "rika-lever",
+      "questionText": "左の 2 の めもりに 30g。右の 3 の めもりに 何g つるすと つり合う？",
+      "params": { "left": { "pos": 2, "g": 30 }, "right": { "pos": 3 } },
+      "approved": true
+    }
+  ],
+  "unsupportedCount": 1
+}

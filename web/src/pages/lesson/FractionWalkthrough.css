@@ -1,0 +1,29 @@
+.fraction-walk__toggle, .fraction-walk button { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-1) var(--space-2); cursor: pointer; }
+.fraction-walk__toggle { margin-top: var(--space-2); }
+.fraction-walk button:disabled { opacity: .5; cursor: default; }
+.fraction-walk { color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-4); width: min(90vw, 600px); max-height: 90vh; overflow: auto; }
+.fraction-walk::backdrop { background: rgba(0, 0, 0, .45); }
+.fraction-walk__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.fraction-walk__header h2 { margin: 0; }
+.fraction-walk__example, .fraction-walk__equation { font-family: var(--font-hand); font-weight: bold; }
+.fraction-walk__text { min-height: 3em; }
+.fraction-walk__bars { display: grid; gap: var(--space-2); }
+.fraction-walk__row { display: flex; align-items: center; gap: var(--space-2); }
+.fraction-walk__row > span { width: 3em; }
+.fraction-walk__track { display: flex; width: min(100%, 320px); }
+.fraction-walk__track span { flex: 1; min-width: 0; text-align: center; padding: var(--space-1) 0; border: 1px solid var(--color-border); background: var(--color-bg); transition: background-color .6s ease; }
+.fraction-walk__track span.is-filled { background: var(--color-subject-rika); }
+.fraction-walk__controls { display: flex; align-items: center; justify-content: center; gap: var(--space-4); margin-top: var(--space-4); }
+@media (prefers-reduced-motion: reduce) { .fraction-walk__track span { transition: none; } }
+
+.fraction-walk__bars { animation: fraction-scene .6s ease both; }
+@keyframes fraction-scene { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .fraction-walk__bars { animation: none; } }
+
+.fraction-walk__step-3 .fraction-walk__row:first-child .fraction-walk__track span,
+.fraction-walk__step-4 .fraction-walk__row:last-child .fraction-walk__track span { animation: show-fraction-cuts 1s 1s both; }
+@keyframes show-fraction-cuts { from { border-left-color: transparent; border-right-color: transparent; } to { border-color: var(--color-border); } }
+@media (prefers-reduced-motion: reduce) { .fraction-walk__step-3 .fraction-walk__row:first-child .fraction-walk__track span, .fraction-walk__step-4 .fraction-walk__row:last-child .fraction-walk__track span { animation: none; } }
+
+/* D-239 767px 以下は、押せる物を --button-min-height 以上にする */
+@media (max-width: 767px) { .fraction-walk__toggle, .fraction-walk button { min-height: var(--button-min-height); } }

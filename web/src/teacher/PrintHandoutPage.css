@@ -1,0 +1,305 @@
+/* 先生のプリントの画面。スマホで片手で撮って配る前提で、主な操作は下に寄せる */
+.teacher-today--print {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  max-width: 100%;
+  min-height: 100dvh;
+  padding: var(--space-3) var(--space-3) var(--space-6);
+  color: var(--color-fg);
+  background: var(--color-bg);
+  overflow-x: hidden;
+}
+
+.teacher-today--print h1,
+.teacher-today--print h2 { margin: 0; color: var(--color-fg-strong); }
+
+.teacher-today--print h1 { font-size: var(--text-title); font-weight: var(--text-title-weight); line-height: 1.4; }
+.teacher-today--print h2 { font-size: var(--text-body); font-weight: 700; }
+
+/* 1 撮る → 2 囲む → 3 確かめて配る。いまの段だけ色を付ける */
+.teacher-print-head { display: grid; gap: var(--space-2); min-width: 0; }
+
+.teacher-print-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-small);
+}
+
+.teacher-print-steps li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-1);
+  color: var(--color-muted-fg);
+  border-bottom: var(--stroke-2) solid var(--color-grid);
+  overflow-wrap: anywhere;
+}
+
+.teacher-print-steps li.is-now { color: var(--color-fg-strong); font-weight: 700; border-bottom-color: var(--color-primary); }
+.teacher-print-steps li.is-done { color: var(--color-fg); border-bottom-color: var(--color-done); }
+
+.teacher-print-steps__number {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: var(--stroke-2) solid currentColor;
+  border-radius: 50%;
+  font-size: 0.8em;
+}
+
+.teacher-print-note { margin: 0; color: var(--color-muted-fg); font-size: var(--text-body); }
+.teacher-print-note--message {
+  padding: var(--space-2);
+  color: var(--color-fg-strong);
+  background: var(--color-now);
+  border-radius: var(--radius-hand);
+}
+
+/* 撮る：大きな 1 つのボタンと、写真から選ぶ控えめなボタン */
+.teacher-print-capture { display: grid; gap: var(--space-2); min-width: 0; }
+.teacher-print-capture p { margin: 0; }
+
+.teacher-print-capture__camera,
+.teacher-print-capture__library {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+}
+
+.teacher-print-capture__camera { min-height: calc(var(--button-min-height) * 1.6); font-size: var(--text-title); }
+.teacher-print-capture__camera svg { width: 2rem; height: 2rem; flex: none; }
+
+/* 入力は見えなくして、ラベル全体を押せるようにする（読み上げでは入力として読める） */
+.teacher-print-capture__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.teacher-print-capture__camera:focus-within,
+.teacher-print-capture__library:focus-within { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 0; }
+
+.teacher-print-lasso { display: grid; gap: var(--space-2); min-width: 0; }
+.teacher-print-source-photo { display: block; width: 100%; max-height: 45dvh; object-fit: contain; }
+.teacher-print-lasso__optional { display: grid; gap: var(--space-2); }
+.teacher-print-lasso__optional summary { min-height: var(--button-min-height); cursor: pointer; color: var(--color-link); }
+
+/* 主な操作の並び。スマホでは画面の下に貼り付けて、親指で届くようにする */
+.teacher-print-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin: 0 calc(var(--space-3) * -1);
+  padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
+  background: var(--color-bg);
+  border-top: var(--stroke-2) solid var(--color-grid);
+}
+
+.teacher-print-actions .button { flex: 1 1 8rem; }
+.teacher-print-actions--deliver { flex-wrap: nowrap; justify-content: space-between; }
+.teacher-print-actions--deliver .teacher-print-review__confirm { flex: 1 1 auto; min-width: 0; }
+.teacher-print-actions--deliver .button { flex: 0 0 auto; min-width: 6.5rem; }
+.teacher-print-actions .button[aria-disabled="true"] { opacity: 0.55; }
+
+.teacher-print-review {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.teacher-print-review__photo {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  padding: var(--space-2);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+}
+
+.teacher-print-review__photo img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.teacher-print-review__details {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.teacher-print-review__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-body);
+}
+
+.teacher-print-review__table caption {
+  padding: 0 0 var(--space-1);
+  color: var(--color-fg-strong);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  text-align: left;
+}
+
+.teacher-print-review__table th,
+.teacher-print-review__table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: var(--stroke-2) solid var(--color-border);
+  text-align: left;
+}
+
+.teacher-print-review__table th { width: 55%; }
+
+.teacher-print-review__table select {
+  min-width: 5rem;
+  min-height: var(--button-min-height);
+  padding: 0 var(--space-2);
+  color: var(--color-fg);
+  background: var(--color-bg);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  font: inherit;
+}
+
+.teacher-print-review__confirm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--button-min-height);
+  color: var(--color-fg-strong);
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.teacher-print-review__confirm input { width: 1.5rem; height: 1.5rem; flex: none; }
+
+/* 配った説明：1 件ずつのカード。ボタンは折り返す */
+.teacher-print-list { display: grid; gap: var(--space-2); min-width: 0; }
+.teacher-print-list ul { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+
+.teacher-print-list__item {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+}
+
+.teacher-print-list__text { margin: 0; color: var(--color-fg-strong); overflow-wrap: anywhere; }
+.teacher-print-list__link { justify-self: start; color: var(--color-fg); }
+
+.teacher-print-list__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  /* 1275×665 の 1 画面に収める（R-61）。上下の余白と段の間をすこし詰める */
+  .teacher-today--print { gap: var(--space-2); padding: var(--space-4) var(--space-4) 0; }
+
+  .teacher-print-head { grid-template-columns: auto minmax(0, 28rem); align-items: center; justify-content: space-between; }
+
+  .teacher-print-capture { max-width: 32rem; }
+
+  .teacher-print-actions { position: static; margin: 0; padding: 0; border-top: 0; background: transparent; }
+  .teacher-print-actions .button { flex: 0 0 auto; }
+
+  .teacher-print-review {
+    grid-template-columns: minmax(220px, 2fr) minmax(0, 3fr);
+    align-items: start;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  /* 「配る」の行は右の列（__details）の中にある。ここで grid-column: 2 を付けると、__details の中に 2 列目ができて、問題の表が押し下げられ「配る」が見えなくなる（#233 の実測） */
+
+  /* 写真の確認の段：上の並び（学級の行を含めて 235px）が高いので、写真を左、操作を右に置いて 1275×665 に収める（R-61）。
+     写真は縦に積むと 90px しか残らない。右の列に主ボタンと「一部だけ読み取る」を置く */
+  .teacher-print-lasso {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    column-gap: var(--space-4);
+  }
+  .teacher-print-source-photo { grid-row: 1 / span 2; max-height: 30dvh; }
+  .teacher-print-lasso > .teacher-print-actions,
+  .teacher-print-lasso__optional { grid-column: 2; }
+
+  .teacher-print-review__photo img { max-height: 300px; }
+
+  .teacher-today--reviewing { height: 100dvh; overflow: hidden; }
+  /* 上の並びの高さ（学級の行で 235px）が決まっていないので、残りの高さをそのまま使い、枠の中だけ縦に動かす（R-61） */
+  .teacher-print-review { grid-template-rows: minmax(0, 1fr); }
+  .teacher-print-review__details { align-self: stretch; min-height: 0; overflow-y: auto; }
+  .teacher-print-results { display: grid; gap: var(--space-2); }
+
+  /* プレビュー図を縮め、見比べ表と配布操作を同時に見せる。 */
+  .teacher-print-review .explain {
+    display: block;
+    padding: var(--space-2);
+  }
+
+  .teacher-print-review .explain > * { margin-top: var(--space-1); }
+  .teacher-print-review .explain__work { margin-top: var(--space-2); }
+  .teacher-print-review .explain__figure,
+  .teacher-print-review .explain__figure .lever,
+  .teacher-print-review .moon,
+  .teacher-print-review .explain__figure .moon__svg { height: 140px; }
+}
+
+.teacher-print-problem { display: grid; gap: var(--space-1); min-width: 0; padding: var(--space-2); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-hand); }
+.teacher-print-problem h3, .teacher-print-problem p { margin: 0; }
+.teacher-print-problem__text { color: var(--color-fg-strong); font-weight: var(--text-strong-weight); overflow-wrap: anywhere; }
+.teacher-print-problem .teacher-print-review__confirm { min-height: var(--button-min-height); }
+.teacher-print-review__details .teacher-print-actions--deliver { position: sticky; bottom: 0; z-index: 1; padding: var(--space-2); background: var(--color-bg); border-top: var(--stroke-2) solid var(--color-grid); }
+
+@media (max-width: 767px) {
+  .teacher-print-review__photo img { max-height: 200px; }
+}
+
+/* 分数の型：5 つの値を式の並びで 1 行に置き、式を大きく出して写真と見比べる。説明カードの代わり */
+.teacher-print-review__table--fraction th,
+.teacher-print-review__table--fraction td { width: 20%; padding: var(--space-1); text-align: center; }
+.teacher-print-review__table--fraction { table-layout: fixed; }
+.teacher-print-review__table--fraction th { font-size: var(--text-small); }
+.teacher-print-review__table--fraction th { overflow-wrap: anywhere; }
+.teacher-print-review__table--fraction select { width: 100%; min-width: 0; padding: 0 var(--space-1); }
+.teacher-print-review__fraction { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-1) var(--space-2); }
+.teacher-print-review__expression {
+  margin: 0;
+  color: var(--color-fg-strong);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+}
+.teacher-print-review__fraction .teacher-print-note { flex: 1 1 100%; }

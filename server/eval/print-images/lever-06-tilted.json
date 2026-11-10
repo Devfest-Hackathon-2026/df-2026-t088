@@ -1,0 +1,16 @@
+{
+  "id": "lever-06",
+  "version": "tilted",
+  "expected": {
+    "templateId": "rika-lever",
+    "params": {
+      "left": {
+        "pos": 6,
+        "g": 20
+      },
+      "right": {
+        "pos": 4
+      }
+    }
+  }
+}

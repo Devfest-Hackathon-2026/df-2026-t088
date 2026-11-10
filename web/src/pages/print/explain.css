@@ -1,0 +1,135 @@
+/* CMP-031 説明のカード（04_components-print.md、05_screens-print.md SEC-010-05）。767px 以下は 1 列、768px 以上は左 2 : 右 3 */
+.explain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+}
+
+.explain__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.explain__language { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-small); color: var(--color-muted-fg); }
+.explain__language select { max-width: 12em; padding: var(--space-1) var(--space-2); color: var(--color-fg); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-hand); }
+.explain__subject {
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-fg-strong);
+  font-size: var(--text-small);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+  border-radius: var(--radius-hand);
+}
+.explain__title {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+.explain__title:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 0; }
+.explain__approved {
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-done);
+  color: var(--color-fg-strong);
+  font-size: var(--text-small);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+  border-radius: var(--radius-hand);
+}
+
+.explain__problem-label { margin: 0 0 var(--space-1); font-size: var(--text-small); color: var(--color-muted-fg); }
+.explain__problem-box {
+  box-sizing: content-box;
+  padding: var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+  font-size: var(--text-body);
+  line-height: var(--text-body-line);
+  overflow-wrap: anywhere;
+}
+.explain__problem-box p { margin: 0; }
+
+.explain__status p { margin: 0; }
+.explain__step-text { font-family: var(--font-hand); font-size: var(--text-title); line-height: var(--text-title-line); color: var(--color-fg-strong); }
+.explain__note { margin-top: var(--space-2) !important; font-size: var(--text-body); line-height: var(--text-body-line); color: var(--color-fg); }
+.explain__dots { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-2) 0 0; font-size: var(--text-small); color: var(--color-muted-fg); }
+.explain__dot { display: inline-block; min-width: 1.4em; margin-right: var(--space-1); text-align: center; border-radius: 50%; color: var(--color-fg); }
+.explain__dot.is-now { background: var(--color-now); color: var(--color-fg-strong); }
+.explain__dot.is-done { background: var(--color-done); color: var(--color-fg-strong); }
+
+.explain__work { display: grid; gap: var(--space-3); align-content: start; min-width: 0; }
+.explain__figure { min-width: 0; }
+.explain__figure svg { display: block; width: 100%; height: auto; }
+
+.explain__reading { display: grid; gap: var(--space-2); font-size: var(--text-body); }
+.explain__reading-row { display: grid; grid-template-columns: 2em minmax(0, 1fr) 9em; align-items: center; gap: var(--space-2); }
+.explain__bar { display: block; height: var(--space-4); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); overflow: hidden; }
+.explain__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-figure-weight);
+  transform-origin: left center;
+  transition: transform var(--duration-walk) var(--ease-in-out);
+}
+
+.explain__controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.explain__choice-label { font-size: var(--text-body); color: var(--color-fg-strong); }
+.explain__play { margin-left: auto; }
+
+.explain__conclusion { padding: var(--space-3); border-left: var(--stroke-4) solid var(--color-done); }
+.explain__conclusion h3 { margin: 0 0 var(--space-1); font-size: var(--text-body); color: var(--color-fg-strong); }
+.explain__conclusion p { margin: 0; font-size: var(--text-body); line-height: var(--text-body-line); }
+.explain__retake { justify-self: start; }
+
+/* てこ（MOT-026）：うでは支点を中心に回る。おもりは吊るし位置で逆へ回してまっすぐ下げる */
+.lever__beam, .lever__weight-hang { transition: transform var(--duration-walk) var(--ease-in-out); }
+
+/* 月（MOT-026）：道に沿って、地球を中心に回す */
+.moon { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.explain__figure .moon__svg { flex: 1 1 200px; width: auto; min-width: 0; touch-action: none; }
+.moon__orbit, .moon__body { transition: transform var(--duration-walk) var(--ease-in-out); cursor: grab; }
+.moon__svg.is-dragging .moon__orbit, .moon__svg.is-dragging .moon__body { transition: none; cursor: grabbing; }
+.moon__earth-view {
+  flex: 0 0 130px;
+  padding: var(--space-2);
+  text-align: center;
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+}
+.moon__earth-view-title, .moon__shape-name { margin: 0; font-size: var(--text-small); line-height: var(--text-small-line); color: var(--color-fg-strong); }
+.explain__figure .moon__shape { width: 80px; height: 80px; margin: var(--space-1) auto; }
+
+@media (min-width: 768px) {
+  .explain {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-rows: repeat(4, auto) 1fr;
+    column-gap: var(--space-6);
+    row-gap: 0;
+    align-items: start;
+  }
+  /* 768×665 に収めるため、カードの余白を 1 段詰める（#233 の実測。カードの下の「つぎの 問題」が 34px 切れていた） */
+  .explain { padding: var(--space-3); }
+  .explain__problem-box { padding: var(--space-2); }
+  .explain > * { grid-column: 1; margin-top: var(--space-2); }
+  .explain > :first-child { margin-top: 0; }
+  .explain__head { grid-row: 1; }
+  .explain__problem { grid-row: 2; }
+  .explain__steps { grid-row: 3; }
+  .explain__conclusion { grid-row: 4; }
+  .explain__retake { grid-row: 5; align-self: end; }
+  .explain__work { grid-column: 2; grid-row: 1 / span 5; margin-top: 0; }
+  /* 問題の文が 5 行を超える時は、箱の中だけ縦に動かす（ページは動かさない） */
+  .explain__problem-box { max-height: calc(var(--text-body-line) * 5em); overflow-y: auto; }
+  .explain__figure { height: 300px; }
+  .explain__figure .lever { height: 300px; }
+  .moon { height: 300px; flex-wrap: nowrap; }
+  .explain__figure .moon__svg { height: 300px; }
+}
+
+/* reduced-motion：動かさず、次の状態へ置き換える */
+@media (prefers-reduced-motion: reduce) {
+  .lever__beam, .lever__weight-hang, .moon__orbit, .moon__body, .explain__bar-fill { transition: none; }
+}

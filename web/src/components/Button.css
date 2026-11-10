@@ -1,0 +1,60 @@
+.button {
+  min-height: var(--button-min-height);
+  padding: var(--space-2) var(--space-6);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  font-size: var(--text-body);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.button--primary {
+  background: var(--button-primary-bg);
+  color: var(--color-on-primary);
+}
+
+.button--secondary {
+  border-width: var(--stroke-2);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+}
+
+/* quiet：secondary を一段小さくした札。見た目の高さでも押せる 44px は保つ（D-128、D-149） */
+.button--quiet {
+  min-height: calc(var(--button-min-height) - var(--space-2));
+  padding: var(--space-1) var(--space-3);
+  border-width: var(--stroke-2);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font-size: var(--text-small);
+}
+
+.button--text {
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--color-muted-fg);
+  font-weight: var(--text-body-weight);
+  text-decoration: underline;
+}
+
+.button:active { transform: translateY(1px); }
+
+/* hover の傾きはマウスの端末だけ */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .button:not(.button--text):hover { transform: translateY(-2px) rotate(-0.5deg); }
+}
+
+/* 押した反応はタブレットでも返す */
+.button:not(.button--text):active { transform: translateY(1px); }
+
+/* 上の帯の「← ホーム」。矢印の絵と文字を横に並べる（D-149） */
+.home-back { display: inline-flex; align-items: center; gap: var(--space-1); }
+.home-back__arrow { flex: none; }
+
+/* 767px 以下の quiet と text も --button-min-height（52px）にする（D-235、D-239(1)）。768px 以上は 44px のまま */
+@media (max-width: 767px) {
+  .button--quiet, .button--text { min-height: var(--button-min-height); }
+}

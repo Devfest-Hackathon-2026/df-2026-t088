@@ -1,0 +1,30 @@
+/* MOT-024：動いている間は透明な面が入力を止める。clip-path は JS が毎フレーム更新する（06 の例外） */
+.back-wave {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-over-loading);
+  pointer-events: auto;
+}
+
+.back-wave__wave {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(110% 0, 110% 0, 110% 100%, 110% 100%);
+}
+
+.back-wave__wave--shallow { background: var(--color-sea-shallow); }
+.back-wave__wave--mid { background: var(--color-sea-mid); }
+.back-wave__wave--deep { background: var(--color-sea-deep); }
+
+/* MOT-032：紙の幕（D-251）。JS が出す・消すを切り替え、濃さは transition で動かす */
+.back-fade {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-over-loading);
+  pointer-events: auto;
+  background: var(--color-bg);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.back-fade--shown { opacity: 1; }

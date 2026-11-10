@@ -1,0 +1,511 @@
+/* PG-003 タイルの学習。モック mock/a-tiles を移した。値は tokens.css の名前で書く */
+
+.lesson {
+  /* タイルの色の名前は tokens.css に無いので、塗りだけに使える教科の色を借りる。赤、黄、緑は役割があるので使わない */
+  --lesson-piece-0: var(--color-subject-shakai);
+  --lesson-piece-1: var(--color-subject-eigo);
+  --lesson-piece-2: var(--color-subject-rika);
+  --lesson-tile-height: calc(var(--button-min-height) - var(--space-1));
+
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  /* 1画面に収まるように、上下の余白は小さくする */
+  padding: var(--space-4);
+}
+
+/* 右は右上の音と顔（CMP-043、D-245）の分を空ける。--corner-reserve は右の余白 --space-4 を含み、.lesson に同じ余白があるので、その差だけ足す */
+.lesson-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-4); min-width: 0; padding-right: calc(var(--corner-reserve) - var(--space-4)); }
+.lesson-header h1 { font-size: var(--text-display); line-height: var(--text-display-line); }
+.lesson-progress { font-family: var(--font-hand); color: var(--color-fg-strong); }
+.lesson-exit { margin-left: auto; }
+
+/* D-127 タイルを開いている間は左右2列（左 2 : 右 3）。767px 以下は1列で、問題 → 案内とヒント → タイルの順 */
+.lesson-header,
+.lesson-clear { grid-column: 1 / -1; }
+.lesson-support { margin-top: var(--space-2); padding-top: var(--space-2); border-top: var(--stroke-2) dashed var(--color-border); }
+.lesson-support > :last-child { margin-bottom: 0; }
+@media (min-width: 768px) {
+  .lesson.is-split {
+    align-items: start;
+    max-width: var(--content-max-width);
+  }
+  /* ヒントを全部開いても 1275×665 に収める（D-126、#369）。右の列を 2 : 3 から 1 : 1 にして、左の列のヒントの折り返しを減らす。
+     見出しは長い学習指導要領の言葉でも2行に収まる大きさにし、上下の余白・カードの余白・答えの欄の名前の行を詰める */
+  .lesson.is-split {
+    grid-template-columns: minmax(300px, 1fr) minmax(0, 1fr);
+    /* 学習指導要領の言葉の長い見出しが2行になっても収まるように、段の間を詰める（D-126） */
+    gap: var(--space-2) var(--space-3);
+    padding-block: var(--space-2);
+  }
+  .lesson.is-split .lesson-header h1 { font-size: var(--text-title); line-height: var(--text-title-line); }
+  .lesson.is-split .lesson-card { padding: var(--space-3) var(--space-4); }
+  .lesson.is-split .lesson-answer__label { width: auto; }
+  .lesson.is-split .lesson-message { margin-top: var(--space-1); }
+  .lesson.is-split .lesson-support { margin-top: 0; }
+  .lesson.is-split .lesson-hints { margin-bottom: var(--space-1); }
+  .lesson.is-split .lesson-tray { row-gap: var(--space-1); }
+  .lesson.is-split .lesson-tools { margin-top: var(--space-2); }
+  .lesson.is-split .lesson-note { margin-top: var(--space-1); }
+}
+
+/* #361 解き終えた「やったね」は、問題と解説（左）の横（右）に置く。縦に積むと、解説が長いマスで「盤面にもどる」が下に切れる（D-126）。
+   解説が長くても、左の欄の中で動かして、右の「やったね」と ボタンは動かさない */
+@media (min-width: 768px) {
+  .lesson.is-cleared {
+    grid-template-columns: minmax(0, 3fr) minmax(240px, 2fr);
+    align-items: start;
+    max-width: var(--content-max-width);
+    gap: var(--space-3);
+  }
+  .lesson.is-cleared .lesson-clear { grid-column: 2; grid-row: 2; }
+  .lesson.is-cleared > .lesson-card:not(.lesson-clear) { max-height: calc(100vh - 6 * var(--space-7)); overflow-y: auto; }
+}
+
+.lesson-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.lesson-card {
+  min-width: 0;
+  padding: var(--space-4);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  scroll-margin-top: var(--space-4);
+}
+
+/* 分数の形。数字は Yomogi（04_components） */
+.lesson-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 var(--space-1);
+  vertical-align: middle;
+  font-family: var(--font-hand);
+  line-height: var(--text-display-line);
+}
+.lesson-fraction > span { padding: 0 var(--space-1); }
+.lesson-fraction > :first-child { border-bottom: var(--stroke-2) solid currentColor; }
+.lesson-fraction-wrap { display: inline-flex; align-items: center; vertical-align: middle; }
+.lesson-whole { font-family: var(--font-hand); }
+/* 記号と続きの数を離さない */
+.lesson-keep { display: inline-flex; align-items: center; gap: var(--space-2); }
+
+/* 本人が埋める分子。分数の線の上に乗るので、枠は分数の形を崩さない大きさにする */
+.lesson-slot {
+  display: block;
+  width: 1.8em;
+  height: 1.4em;
+  margin-bottom: var(--space-1);
+  padding: 0;
+  border: var(--stroke-2) dashed var(--color-border-strong);
+  border-radius: var(--radius-slot);
+  background: var(--color-now);
+  color: var(--color-fg-strong);
+  font: inherit;
+  text-align: center;
+}
+.lesson-slot::placeholder { color: var(--color-muted-fg); opacity: 1; }
+
+.lesson-equation-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-fg-strong);
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  line-height: var(--text-title-line);
+}
+
+.lesson-task { color: var(--color-fg-strong); font-size: var(--text-body); font-weight: var(--text-strong-weight); }
+.lesson-pair { display: flex; align-items: center; gap: var(--space-2); width: 100%; }
+.lesson-choice { min-width: 0; }
+.lesson-after { margin-top: var(--space-2); color: var(--color-fg-strong); }
+
+.lesson-answer { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
+.lesson-answer__buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); width: 100%; }
+.lesson-answer__label { width: 100%; font-size: var(--text-small); line-height: var(--text-small-line); }
+.lesson-answer__input {
+  flex: 0 1 9em;
+  min-width: 0;
+  min-height: var(--button-min-height);
+  padding: var(--space-1) var(--space-2);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: inherit;
+}
+
+.lesson-message { min-height: calc(var(--text-body) * var(--text-body-line)); margin-top: var(--space-2); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+.lesson-message-text { display: inline-block; animation: lesson-message-in var(--duration-fast) ease-out; }
+@keyframes lesson-message-in { from { opacity: 0.2; } to { opacity: 1; } }
+.lesson-guide { margin-bottom: var(--space-2); }
+.lesson-note { margin-top: var(--space-2); color: var(--color-muted-fg); font-size: var(--text-small); line-height: var(--text-small-line); }
+.lesson-notice { min-height: calc(var(--text-small) * var(--text-body-line)); margin-top: var(--space-2); font-size: var(--text-small); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+.lesson-count { display: flex; align-items: center; gap: var(--space-1); min-height: calc(var(--text-body) * var(--text-body-line)); margin-top: var(--space-2); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+
+/* ものさし */
+.lesson-area-name { margin-top: var(--space-2); font-size: var(--text-small); font-weight: var(--text-strong-weight); }
+.lesson-tile-names { position: relative; height: calc(var(--text-small) * var(--text-small-line)); }
+.lesson-tile-name {
+  position: absolute;
+  left: calc(100% * var(--start) / var(--total));
+  width: calc(100% * var(--size) / var(--total));
+  color: var(--color-fg-strong);
+  font-family: var(--font-hand);
+  font-size: var(--text-small);
+  line-height: var(--text-small-line);
+  text-align: center;
+}
+.lesson-ruler-labels { display: flex; justify-content: space-between; color: var(--color-muted-fg); font-family: var(--font-hand); font-size: var(--text-small); line-height: var(--text-small-line); }
+.lesson-ruler {
+  position: relative;
+  height: calc(var(--lesson-tile-height) + var(--space-3));
+  border: var(--stroke-2) dashed var(--color-border);
+  border-radius: var(--radius-slot);
+}
+.lesson-ruler.is-over { border-style: solid; border-color: var(--color-border-strong); }
+.lesson-ruler-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(100% * var(--at) / var(--total));
+  border-left: var(--stroke-2) solid var(--color-border);
+}
+
+/* タイル。塗りは必ず線で囲む（R-03） */
+.lesson-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--lesson-tile-height);
+  padding: 0;
+  overflow: hidden;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-slot);
+  color: var(--color-fg-strong);
+  font-size: var(--text-small);
+  font-weight: var(--text-strong-weight);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.lesson-tile:disabled { cursor: default; }
+.lesson-piece-0 { background: var(--lesson-piece-0); }
+.lesson-piece-1 { background: var(--lesson-piece-1); }
+.lesson-piece-2 { background: var(--lesson-piece-2); }
+
+.lesson-ruler .lesson-tile {
+  position: absolute;
+  top: var(--space-1);
+  left: calc(100% * var(--start) / var(--total));
+  width: calc(100% * var(--size) / var(--total));
+}
+.lesson-tile.is-dragging { opacity: 0.3; }
+.lesson-tile.is-target { outline: var(--stroke-4) dashed var(--color-border-strong); outline-offset: calc(-1 * var(--stroke-4)); }
+.lesson-tile.is-selected { outline: var(--stroke-4) solid var(--color-border-strong); outline-offset: var(--stroke-2); }
+.lesson-tile.is-taken { opacity: 0.35; }
+
+.lesson-cells { position: absolute; inset: 0 auto 0 0; display: flex; width: calc(100% * var(--filled) / var(--units)); }
+.lesson-cell {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  border-right: var(--stroke-2) solid var(--color-border-strong);
+}
+/* 細いタイルにも名前が入るように、タイルの中の分数は余白を持たない */
+.lesson-tile .lesson-fraction { margin: 0; }
+.lesson-tile .lesson-fraction > span { padding: 0; }
+.lesson-cell.is-taken { background: var(--color-bg); opacity: 0.55; }
+
+/* タイル置き場。長さは、ものさしの上と同じにする */
+/* ものさしは枠の内側が長さになるので、同じ線の幅だけ内へ寄せる */
+.lesson-tray { container-type: inline-size; display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); margin-top: var(--space-2); padding-inline: var(--stroke-2); }
+/* 1画面に収まるように、タイルは横に並べて、入らない分だけ折り返す（縦に1枚ずつだと、ヒントやボタンが画面の下へ流れる） */
+.lesson-tray-row { display: flex; flex: none; flex-direction: column; align-items: flex-start; }
+/* 長さをくらべるタイルなので、狭い画面でも ものさしの上と同じ長さのままにする。押せる高さは保っている。
+   置き場の幅は ものさしと同じなので、置き場の幅（cqw）を基準に長さを決める */
+.lesson-tray .lesson-tile { width: calc(100cqw * var(--size) / var(--total)); overflow: visible; }
+.lesson-tile-count { white-space: nowrap; }
+/* 見た目の長さは変えず、押せる幅だけを 44px 以上に広げる（07 のタップ領域） */
+.lesson-tray .lesson-tile::after { content: ""; position: absolute; inset: 0 auto 0 0; width: max(100%, var(--button-min-height)); }
+.lesson-tray .lesson-tile.is-used-up { border-style: dashed; opacity: 0.4; cursor: default; }
+.lesson-tile-count { font-size: var(--text-small); line-height: var(--text-small-line); color: var(--color-muted-fg); }
+
+.lesson-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-toast);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.lesson-hints { margin-bottom: var(--space-2); padding-left: 1.4em; list-style: decimal; font-size: var(--text-small); }
+.lesson-tools { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.lesson-back-row { margin-top: var(--space-4); padding-top: var(--space-3); border-top: var(--stroke-2) dashed var(--color-border); scroll-margin-bottom: var(--space-4); }
+.lesson-back-text { margin-bottom: var(--space-2); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+
+/* 狭い画面の細いマスは、名前を入れると線が読めない。何のタイルかは置き場とものさしの上の名前で分かる */
+@media (max-width: 767px) {
+  .lesson-cell.is-narrow .lesson-fraction-wrap { display: none; }
+}
+
+.lesson-clear { display: grid; justify-items: start; gap: var(--space-2); scroll-margin-bottom: var(--space-4); }
+.lesson-clear-art { display: flex; align-items: flex-end; gap: var(--space-2); }
+.lesson-clear-mark { width: var(--cell-size); height: var(--cell-size); color: var(--color-fg-strong); }
+.lesson-clear-mark svg { width: 100%; height: 100%; }
+.lesson-clear h2 { font-size: var(--text-title); font-weight: var(--text-title-weight); line-height: var(--text-title-line); }
+
+/* CMP-020 まちがえた答えの図。目盛りは ものさしと同じ線で描く。ずれは色を足さず、点線と斜線で示す（R-03） */
+.lesson-compare { display: grid; gap: var(--space-1); margin-top: var(--space-3); padding-top: var(--space-3); border-top: var(--stroke-2) dashed var(--color-border); }
+.lesson-compare-title { font-size: var(--text-small); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+.lesson-compare-label { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-1); font-size: var(--text-small); line-height: var(--text-small-line); }
+.lesson-compare-value { display: inline-flex; align-items: center; color: var(--color-fg-strong); }
+.lesson-compare-track {
+  position: relative;
+  height: calc(var(--lesson-tile-height) / 2 + var(--space-2));
+  border: var(--stroke-2) dashed var(--color-border);
+  border-radius: var(--radius-slot);
+}
+.lesson-compare-bar,
+.lesson-compare-gap {
+  position: absolute;
+  top: var(--space-1);
+  bottom: var(--space-1);
+  left: calc(100% * var(--start) / var(--total));
+  width: calc(100% * var(--size) / var(--total));
+  border-radius: var(--radius-slot);
+}
+.lesson-compare-bar { border: var(--stroke-2) solid var(--color-border-strong); }
+.lesson-compare-bar.is-expected { background: var(--lesson-piece-0); }
+.lesson-compare-bar.is-answer { background: var(--lesson-piece-1); }
+/* 右端の先まで続く答えは、端を閉じない */
+.lesson-compare-bar.is-clipped { border-right-style: dashed; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.lesson-compare-gap { border: var(--stroke-2) dashed var(--color-border-strong); }
+.lesson-compare-gap.is-long {
+  background: repeating-linear-gradient(-45deg, transparent 0 var(--space-1), var(--color-border-strong) var(--space-1) calc(var(--space-1) + var(--stroke-2)));
+}
+/* 問題の大きさの位置を、答えの棒の上にも引く */
+.lesson-compare-guide {
+  position: absolute;
+  top: calc(-1 * var(--space-2));
+  bottom: calc(-1 * var(--space-1));
+  left: calc(100% * var(--at) / var(--total));
+  border-left: var(--stroke-2) dashed var(--color-border-strong);
+}
+.lesson-compare-text { margin-top: var(--space-1); font-size: var(--text-small); font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+
+/* まちがえた答えの図は、768px 以上では問題の右に置く。縦に積むと、図（約 270px）にヒントが重なって 1275×665 から縦にはみ出し、答えるボタンやヒントが下に流れる（#327、D-126、D-253）。
+   左：式・答えの欄・声かけ・ヒント、右：図。右の図が高くても左の行が伸びないよう、図は 7 行にまたがらせ、最後の行だけを伸ばす（1fr）。行と行の間は、各部品の上の余白で取る */
+@media (min-width: 768px) {
+  .lesson-card:has(> .lesson-compare) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(6, auto) 1fr;
+    column-gap: var(--space-4);
+    align-items: start;
+  }
+  .lesson-card:has(> .lesson-compare) > * { grid-column: 1; }
+  /* 縦に積んでいた時と同じ幅（ボタンは中身の幅）のままにする */
+  .lesson-card:has(> .lesson-compare) > :is(.fraction-walk__toggle, .lesson-tiles-button, .lesson-next) { justify-self: start; }
+  .lesson-card:has(> .lesson-compare) > .lesson-compare {
+    grid-column: 2;
+    grid-row: 1 / 8;
+    margin-top: 0;
+    padding: 0 0 0 var(--space-4);
+    border-top: 0;
+    border-left: var(--stroke-2) dashed var(--color-border);
+  }
+}
+
+/* CMP-021 手が止まった時の声かけ。文が無い間も読み上げの欄として残し、場所だけを取らない（display: none だと最初の文が読まれない） */
+.lesson-nudge { width: 100%; }
+.lesson-nudge:empty {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.lesson-nudge-text {
+  /* D-128 控えめに。枠も色の面も付けず、小さな灰色の文字だけにする */
+  display: inline-block;
+  color: var(--color-muted-fg);
+  font-size: var(--text-small);
+  animation: lesson-message-in var(--duration-normal) ease-out;
+}
+/* D-128 困った時のボタン（分かんない、次のヒント）は、主ボタンより一段小さな札にする。見た目の高さでも押せる 44px は保つ */
+.button.lesson-quiet-button {
+  min-height: calc(var(--button-min-height) - var(--space-2));
+  padding: var(--space-1) var(--space-3);
+  border-width: var(--stroke-2);
+  font-size: var(--text-small);
+}
+/* MOT-025 押してほしいボタンのまわりに、黄色のやわらかい光をほわん、ほわんと息づかせる（D-129）。
+   線の枠は出さない。動きを減らす設定では、光を出したまま止める（base.css） */
+.button.is-nudged {
+  box-shadow: 0 0 var(--space-3) var(--space-1) var(--color-now);
+  animation: lesson-nudge-breathe var(--duration-breathe) var(--ease-soft) infinite;
+}
+@keyframes lesson-nudge-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 var(--space-3) var(--space-1) var(--color-now); }
+}
+
+/* 数の問題（SCR-003、D-132）。値は tokens.css の名前で書く */
+/* CMP-022 数の札。横に6枚で折り返し、36 枚まで */
+.number-cards { display: grid; grid-template-columns: repeat(6, var(--button-min-height)); gap: var(--space-2); width: 100%; }
+/* 768px 以上は横に9枚。36 枚でも4段で、ヒントを開いても 1275×665 に収まる（D-126、D-132） */
+/* 高さを --space-2 だけ低くする（44px、押せる大きさは保つ）。52px の4段では 11px はみ出した（2026-11-09 に e2e で確かめた） */
+@media (min-width: 768px) {
+  .number-cards { grid-template-columns: repeat(9, var(--button-min-height)); }
+  .button.number-card { min-height: calc(var(--button-min-height) - var(--space-2)); }
+}
+.number-card {
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  font-family: var(--font-hand);
+  font-variant-numeric: tabular-nums;
+}
+.number-card.is-picked {
+  border-width: var(--stroke-3);
+  background: var(--button-primary-bg);
+  color: var(--color-on-primary);
+}
+.number-card__check { position: absolute; top: 0; left: var(--space-1); font-size: var(--text-small); line-height: 1; }
+/* 正解の後は押せないが、選んだ見た目のまま残す */
+.number-card:disabled { cursor: default; opacity: 1; }
+.number-card:disabled:not(.is-picked) { color: var(--color-muted-fg); }
+
+/* CMP-023 △ と □ の表。横向きで、列が多くても折り返さない */
+.number-table { margin-top: var(--space-3); border-collapse: collapse; font-family: var(--font-hand); font-variant-numeric: tabular-nums; }
+.number-table th,
+.number-table td { min-width: var(--button-min-height); padding: var(--space-1) var(--space-3); border: var(--stroke-2) solid var(--color-border-strong); text-align: center; }
+.number-table th { color: var(--color-fg-strong); }
+.number-table__input { flex: none; width: 5em; min-height: calc(var(--button-min-height) - var(--space-2)); text-align: center; }
+
+/* 商とあまり。2つの欄を横に並べる */
+.number-remainder { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); width: 100%; }
+.number-remainder__field { display: flex; align-items: center; gap: var(--space-2); }
+.number-remainder__field .lesson-answer__input { flex: none; width: 6em; }
+
+/* D-238 767px 以下の学習。問題の式を画面の上に、その時に押すボタンの列を下に固定し、間だけが縦に動く（ページごと動かし、上と下は position: sticky で留める）。
+   間の並びは ものさし → のこりのタイル → ヒント → 説明の文。カードの枠は外し（display: contents）、中の物を order で並べ替える。
+   768px 以上は何も変えない（高さ 599px 以下の左右2段も固定しない）。この塊は、上の .number-cards や .lesson-quiet-button より後に置く（同じ強さで後が勝つ） */
+@media (max-width: 767px) {
+  .lesson { --lesson-tile-height: var(--button-min-height); }
+
+  /* 押せる物は --button-min-height 以上（D-235、D-239）。タイルの幅は分数の大きさのまま */
+  .lesson .button--text,
+  .button.lesson-quiet-button,
+  .number-table__input { min-height: var(--button-min-height); }
+  .lesson-tray .lesson-tile::after { min-height: var(--button-min-height); }
+
+  /* 数の札は列の数を固定せず、枠の幅に入る数で折り返す。最大6列 */
+  .number-cards {
+    grid-template-columns: repeat(auto-fill, var(--button-min-height));
+    max-width: calc(6 * var(--button-min-height) + 5 * var(--space-2));
+  }
+
+  /* 上の帯は入らなければ2行に折り返し、題を潰さない（D-239）。戻る → 題 → 進み具合の順。音は右上へ移った（D-245） */
+  .lesson-header { align-items: center; gap: var(--space-1) var(--space-3); }
+  .lesson-header .lesson-exit { order: 1; margin-left: 0; }
+  .lesson-header h1 { order: 2; flex: 1 1 10em; min-width: 0; }
+  .lesson-header .lesson-progress { order: 3; }
+
+  .lesson.lesson-pinned {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-height: 100dvh;
+    padding-block: 0;
+  }
+  .lesson-pinned > .lesson-card,
+  .lesson-pinned .lesson-support { display: contents; }
+  .lesson-pinned > .lesson-card > *,
+  .lesson-pinned .lesson-support > * { order: 6; margin-block: 0; }
+
+  /* 上：問題の式だけを留める。題の帯は長い題で3行になり、留めると間が狭くなるので、ページと一緒に上へ流す */
+  .lesson-pinned > .lesson-header { order: 1; padding-block: var(--space-2) var(--space-1); }
+  .lesson-pinned .lesson-problem {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    order: 2;
+    margin-inline: calc(-1 * var(--space-4));
+    padding: var(--space-1) var(--space-4) var(--space-2);
+    border-bottom: var(--stroke-2) dashed var(--color-border);
+    background: var(--color-bg);
+  }
+
+  /* 間：まちがいの声と図 → ものさし → のこりのタイル → ヒント → 説明の文 */
+  .lesson-pinned .lesson-message,
+  .lesson-pinned .lesson-compare,
+  .lesson-pinned .lesson-after { order: 3; }
+  .lesson-pinned .lesson-area-name,
+  .lesson-pinned .lesson-ruler-labels,
+  .lesson-pinned .lesson-tile-names,
+  .lesson-pinned .lesson-ruler,
+  .lesson-pinned .lesson-count { order: 4; }
+  .lesson-pinned .lesson-notice,
+  .lesson-pinned .lesson-tray,
+  .lesson-pinned .lesson-note { order: 5; }
+  .lesson-pinned .lesson-hints { order: 7; }
+  .lesson-pinned .lesson-guide { order: 8; }
+  .lesson-pinned .lesson-tiles-button { order: 9; align-self: flex-start; }
+
+  /* 下：その時に押すボタンの列。内容が短くても画面の下に付く（margin-top: auto）。ヒントや内容を隠さないよう、下の余白は流れの中に取ってある */
+  .lesson-pinned .lesson-actions,
+  .lesson-pinned .lesson-answer:has(button),
+  .lesson-pinned .lesson-next {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    order: 10;
+    margin: auto calc(-1 * var(--space-4)) 0;
+    padding: var(--space-2) var(--space-4);
+    border-top: var(--stroke-2) dashed var(--color-border);
+    background: var(--color-bg);
+  }
+  .lesson-pinned .lesson-next { align-self: stretch; }
+  /* 答えの欄とボタンの列が両方ある時は、答えの欄をボタンの列の上に重ねて留める（重なって「こたえる」が隠れないように。高さは use-pinned-actions.ts） */
+  .lesson-pinned .lesson-answer:has(button) { bottom: var(--lesson-actions-height, 0px); order: 9; border-bottom: 0; }
+  /* 数の札や表のある答えの欄は高いので、欄ごと留めると問題の文を隠す。欄は札の場所（ヒントより前）に流し、「こたえる」の行だけを下に留める */
+  .lesson-pinned .lesson-answer:has(.number-cards, .number-table) {
+    position: static;
+    order: 4;
+    margin: 0;
+    padding: 0;
+    border-top: 0;
+    background: none;
+  }
+  .lesson-pinned .lesson-answer:has(.number-cards, .number-table) .lesson-answer__buttons {
+    position: sticky;
+    bottom: var(--lesson-actions-height, 0px);
+    z-index: 1;
+    margin-inline: calc(-1 * var(--space-4));
+    padding: var(--space-2) var(--space-4);
+    border-top: var(--stroke-2) dashed var(--color-border);
+    background: var(--color-bg);
+  }
+  .lesson-pinned .lesson-actions .lesson-tools,
+  .lesson-pinned .lesson-actions .lesson-note { margin-top: 0; }
+  .lesson-pinned .lesson-back-row { margin-top: var(--space-2); padding-top: var(--space-2); }
+  .lesson-pinned .lesson-answer { margin-top: 0; }
+  .lesson-back-row { scroll-margin-bottom: 0; }
+}

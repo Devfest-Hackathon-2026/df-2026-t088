@@ -1,0 +1,61 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html, body, #root { min-height: 100%; }
+
+body {
+  margin: 0;
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  /* 語の途中で折り返さない（「章のテ/スト」）。対応していないブラウザは今までどおり折り返す */
+  word-break: auto-phrase;
+  /* 方眼ノート。余白（左の記録）だけは紙の色で塗り直す */
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  /* タイルのドラッグや連打で文字が範囲選択されないようにする。入力欄だけは選べるように戻す */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+svg { display: block; }
+
+h1, h2 {
+  color: var(--color-fg-strong);
+  font-family: var(--font-hand);
+  font-weight: var(--text-display-weight);
+}
+
+ruby { ruby-align: center; }
+rt { font-size: var(--ruby-size); letter-spacing: 0; }
+
+:focus-visible {
+  outline: var(--stroke-3) solid var(--color-focus-ring);
+  outline-offset: 0;
+}
+
+/* 動きを止め、結果だけを出す */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 画面を移った時に、プログラムがフォーカスを置く見出し。枠は出さない（#371） */
+h1[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }

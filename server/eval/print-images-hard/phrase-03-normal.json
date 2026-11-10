@@ -1,0 +1,17 @@
+{
+  "id": "phrase-03",
+  "version": "normal",
+  "category": "paraphrase",
+  "expected": {
+    "templateId": "rika-lever",
+    "params": {
+      "left": {
+        "pos": 4,
+        "g": 30
+      },
+      "right": {
+        "pos": 6
+      }
+    }
+  }
+}

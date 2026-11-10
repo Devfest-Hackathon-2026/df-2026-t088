@@ -1,0 +1,33 @@
+/* PG-001 の上の帯の左の入口（D-250）。「出すもの」とカメラを横に並べる。高さは「← ホーム」と同じ quiet の札（D-149） */
+.home-entries {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.home-entries__assignments { gap: var(--space-2); }
+/* まだ出していない数の札。今を示す黄色の丸（--color-now） */
+.home-entries__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  padding: 0 var(--space-1);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-blob);
+  background: var(--color-now);
+  color: var(--color-fg-strong);
+  font-weight: var(--text-title-weight);
+  line-height: 1;
+}
+.home-entries__camera {
+  display: grid;
+  place-items: center;
+  width: calc(var(--button-min-height) - var(--space-2));
+  height: calc(var(--button-min-height) - var(--space-2));
+  padding: 0;
+}
+.home-entries__camera svg { width: 60%; height: 60%; }
+@media (max-width: 767px) {
+  .home-entries { gap: var(--space-1); }
+  .home-entries__camera { width: var(--button-min-height); height: var(--button-min-height); }
+}

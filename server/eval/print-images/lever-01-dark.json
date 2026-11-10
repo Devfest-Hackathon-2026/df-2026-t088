@@ -1,0 +1,16 @@
+{
+  "id": "lever-01",
+  "version": "dark",
+  "expected": {
+    "templateId": "rika-lever",
+    "params": {
+      "left": {
+        "pos": 2,
+        "g": 30
+      },
+      "right": {
+        "pos": 3
+      }
+    }
+  }
+}

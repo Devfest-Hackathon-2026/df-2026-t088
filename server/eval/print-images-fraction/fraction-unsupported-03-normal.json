@@ -1,0 +1,8 @@
+{
+  "id": "fraction-unsupported-03",
+  "version": "normal",
+  "kind": "unsupported",
+  "expected": {
+    "templateId": null
+  }
+}

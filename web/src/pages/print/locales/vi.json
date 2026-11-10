@@ -1,0 +1,10 @@
+{
+  "code": "vi",
+  "label": "Tiếng Việt",
+  "verification": { "checkedBy": null, "checkedAt": null },
+  "templates": {
+    "rika-lever": { "title": "", "steps": ["", ""], "conclusion": "" },
+    "rika-moon": { "title": "", "steps": ["", "", ""], "conclusion": "" },
+    "sansu-fraction-addsub": { "title": "", "steps": [], "conclusion": "" }
+  }
+}

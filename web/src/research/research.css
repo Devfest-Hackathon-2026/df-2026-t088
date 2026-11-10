@@ -1,0 +1,165 @@
+/* 大人向けのデモ画面。値は tokens.css の名前で書く */
+
+.research {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-7);
+}
+
+.research > * { min-width: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.research h1 { font-size: var(--text-title); line-height: var(--text-title-line); }
+.research .note { color: var(--color-muted-fg); font-size: var(--text-small); }
+.research .banner {
+  padding: var(--space-3) var(--space-4);
+  border: var(--stroke-2) dashed var(--color-border-strong);
+  border-radius: var(--radius-slot);
+  background: var(--color-now);
+  color: var(--color-fg-strong);
+}
+.research .server { font-size: var(--text-small); }
+.research .server--up { color: var(--color-fg-strong); }
+.research .server--down { padding-left: var(--space-3); border-left: var(--stroke-4) solid var(--color-stamp); color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+
+.research fieldset { margin: 0; padding: var(--space-3) var(--space-4); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); }
+.research legend { padding: 0 var(--space-2); font-weight: var(--text-strong-weight); }
+.research fieldset label { display: inline-flex; align-items: center; min-height: 44px; margin-right: var(--space-5); }
+
+.research .field { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-1); font-weight: var(--text-strong-weight); }
+.research input[type="text"],
+.research input[type="password"] {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: inherit;
+}
+.research select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: inherit;
+}
+.research ul.result ul { padding-left: var(--space-5); list-style: disc; }
+.research input[type="radio"] { width: 20px; height: 20px; margin-right: var(--space-2); vertical-align: middle; }
+
+.research .notice { min-height: 1.7em; color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+
+.research .steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+.research .step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+}
+.research .step__title { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-body); font-weight: var(--text-strong-weight); }
+.research .step__no {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-done);
+  font-family: var(--font-hand);
+}
+.research .step__responsible { color: var(--color-fg-strong); }
+.research .step__note { color: var(--color-muted-fg); font-size: var(--text-small); }
+.research .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.research .result { padding: var(--space-3); background: var(--color-now); border-radius: var(--radius-slot); }
+.research ul.result { display: grid; gap: var(--space-1); }
+
+.research .child { display: grid; gap: var(--space-3); padding: var(--space-4); border: var(--stroke-2) dashed var(--color-border-strong); border-radius: var(--radius-slot); }
+.research .child__problem { font-family: var(--font-hand); font-size: var(--text-title); }
+.research .child__columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-4); }
+.research .child h3 { font-size: var(--text-small); color: var(--color-muted-fg); }
+.research .child ol { display: grid; gap: var(--space-1); padding-left: var(--space-5); list-style: decimal; }
+.research .is-changed { background: var(--color-now); font-weight: var(--text-strong-weight); }
+
+.research .audit { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+.research table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
+.research th, .research td { padding: var(--space-2); border-bottom: var(--stroke-2) solid var(--color-border); text-align: left; vertical-align: top; }
+.research tr.is-denied td { font-weight: var(--text-strong-weight); }
+.research tr.is-denied td:first-child { border-left: var(--stroke-4) solid var(--color-stamp); }
+.research .audit__scroll { overflow-x: auto; }
+.research table { min-width: 560px; }
+.research .audit__hint { display: none; }
+@media (max-width: 640px) {
+  .research .audit__hint { display: block; }
+}
+
+/* 結果の文。押した段の中に出す。失敗は太字と左の線でも伝え、空のときは場所を取らない */
+.research .step__notice { margin: 0; color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+.research .step__notice:empty { display: none; }
+.research .step__notice.is-error { padding-left: var(--space-3); border-left: var(--stroke-4) solid var(--color-stamp); }
+
+/* 5 つの流れの一覧 */
+.research .flow { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); margin: var(--space-2) 0; font-family: var(--font-hand); color: var(--color-fg-strong); }
+.research .flow li + li::before { content: "→"; margin-right: var(--space-2); color: var(--color-muted-fg); }
+
+/* 研究テーマのタブ */
+.research .tabs { display: flex; gap: var(--space-2); border-bottom: var(--stroke-2) solid var(--color-border); }
+.research .tab { padding: var(--space-2) var(--space-4); border: var(--stroke-2) solid var(--color-border); border-bottom: 0; border-radius: var(--radius-slot) var(--radius-slot) 0 0; background: transparent; cursor: pointer; }
+.research .tab[aria-selected="true"] { background: var(--color-now); font-weight: var(--text-strong-weight); }
+.research .theme { display: grid; gap: var(--space-3); }
+.research .stages { display: grid; gap: var(--space-2); padding-left: var(--space-5); }
+.research .stage { color: var(--color-muted-fg); }
+.research .stage--done { color: var(--color-fg-strong); }
+.research .stage[aria-current="step"] { font-weight: var(--text-strong-weight); border-left: var(--stroke-4) solid var(--color-stamp); padding-left: var(--space-3); }
+.research .panel { display: grid; gap: var(--space-4); }
+
+/* 教材スタジオ。プレビュー部品 (#160) と 3 案の比較 (#163) を差し替える枠 */
+.research .studio-panel { display: grid; gap: var(--space-3); }
+.research .studio-panel__mock { font-weight: var(--text-strong-weight); }
+.research .studio-panel__steps { display: grid; gap: var(--space-3); padding: 0; list-style: none; }
+.research .studio-panel__card { display: grid; gap: var(--space-2); min-width: 0; padding: var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); background: var(--color-bg); }
+.research .studio-panel__card h2,
+.research .studio-panel__comparison h3 { margin: 0; font-size: var(--text-body); }
+.research .studio-panel__card .field { min-width: 0; }
+.research .studio-panel__card input,
+.research .studio-panel__card select { width: 100%; min-width: 0; min-height: 44px; padding: var(--space-2) var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); background: var(--color-bg); color: var(--color-fg-strong); font: inherit; }
+.research .studio-panel__status { min-height: 1.5em; margin: 0; font-weight: var(--text-strong-weight); }
+.research .studio-panel__validation { margin: 0; color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+.research .studio-panel__issues { display: grid; gap: var(--space-1); margin: 0; padding-left: var(--space-5); }
+.research .studio-panel__preview-slot { min-height: 100px; }
+.research .studio-panel__preview,
+.research .studio-panel__comparison { min-height: 100px; padding: var(--space-3); border: var(--stroke-2) dashed var(--color-border-strong); border-radius: var(--radius-slot); background: var(--color-now); }
+.research .studio-panel__preview p,
+.research .studio-panel__comparison p { margin-bottom: 0; }
+.research .studio-panel__comparison { display: grid; align-content: start; gap: var(--space-2); }
+
+/* 見る段階。選択肢は小さい画面でも折り返し、キーボードで選べるラジオにする */
+.research .viewing-tiers { display: grid; gap: var(--space-3); min-width: 0; }
+.research .viewing-tiers h2,
+.research .viewing-tiers h3 { font-size: var(--text-body); }
+.research .viewing-tiers__choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: var(--space-2); min-width: 0; }
+.research .viewing-tiers__choices label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-width: 0; min-height: 44px; margin: 0; padding: var(--space-2); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); cursor: pointer; }
+.research .viewing-tiers__choices label:has(input:checked) { background: var(--color-now); }
+.research .viewing-tiers__choices input { flex: 0 0 auto; width: 20px; height: 20px; margin: 0; }
+.research .viewing-tiers__choices .viewing-tier--planned { border-style: dashed; color: var(--color-muted-fg); }
+.research .viewing-tier__status { width: 100%; padding-left: calc(20px + var(--space-2)); font-size: var(--text-small); }
+.research .viewing-tiers__detail { min-width: 0; padding: var(--space-3); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); }
+.research .viewing-tiers__detail dl { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2); margin: var(--space-3) 0 0; }
+.research .viewing-tiers__detail dl > div { min-width: 0; }
+.research .viewing-tiers__detail dt { font-weight: var(--text-strong-weight); }
+.research .viewing-tiers__detail dd { margin: 0; overflow-wrap: anywhere; }
+.research .viewing-tiers__planned-note,
+.research .viewing-tiers__denied { margin: 0; padding-left: var(--space-3); border-left: var(--stroke-4) solid var(--color-border-strong); font-weight: var(--text-strong-weight); }
+@media (min-width: 640px) {
+  .research .viewing-tiers__detail dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

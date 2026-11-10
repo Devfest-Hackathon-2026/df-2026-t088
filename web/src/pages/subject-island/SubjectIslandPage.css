@@ -1,0 +1,75 @@
+/* PG-005 教科の島（D-91）。上の帯は PG-004 の上の帯と同じ並び。音と顔は右上の CMP-043 へ移ったので、右に --corner-reserve を空ける（D-245） */
+.subject-island {
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+.subject-island__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--corner-reserve) var(--space-2) var(--space-7);
+  background: var(--color-bg);
+  border-bottom: var(--stroke-3) solid var(--color-border-strong);
+}
+
+.subject-island__body {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  /* 上下は --space-5。4年の算数の16章（4段）も 1275×665 に収める（D-126、D-130） */
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+}
+
+.subject-island__title {
+  margin: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: var(--stroke-4) solid var(--island-color);
+  font-family: var(--font-hand);
+  font-size: var(--text-display);
+  font-weight: var(--text-display-weight);
+  line-height: var(--text-display-line);
+  color: var(--color-fg-strong);
+}
+
+.subject-island__notice {
+  max-width: 32em;
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--text-body-line);
+}
+
+.subject-island__chapters { display: grid; justify-items: center; gap: var(--space-4); }
+.subject-island__chapters h2 { margin: 0; font: var(--text-title-weight) var(--text-title) / var(--text-title-line) var(--font-hand); }
+/* 札の間は縦横とも --space-6。札を一回り小さくして、4年の16章も 1275×665 に収める（D-134、D-126） */
+.subject-island__chapters ul { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-6); margin: 0; padding: 0; list-style: none; }
+.subject-island__chapter {
+  width: var(--chapter-card-width);
+  min-height: var(--chapter-card-min-height-island);
+  padding: var(--space-3);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-top: var(--chapter-band) solid var(--island-color);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: var(--text-strong-weight) var(--text-small) / var(--text-small-line) var(--font-body);
+  cursor: pointer;
+}
+/* 鍵の章（D-133）。押せるが盤面へは入らない。マウスは既定の矢印 */
+.subject-island__chapter.is-locked {
+  border-color: var(--color-muted-fg);
+  background: var(--color-grid);
+  color: var(--color-muted-fg);
+  font-weight: var(--text-body-weight);
+  cursor: default;
+}
+.subject-island__lock { display: inline-block; width: var(--space-4); height: var(--space-4); margin-right: var(--space-1); vertical-align: middle; }
+.subject-island__lock svg { display: block; width: 100%; height: 100%; }
+.subject-island__chapter.is-done { background: var(--color-done); }
+
+@media (max-width: 600px) {
+  .subject-island__bar { padding-left: var(--space-4); padding-right: var(--corner-reserve); }
+}
+@media (max-width: 767px) { .subject-island__chapter { width: var(--chapter-card-width-narrow); } }

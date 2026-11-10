@@ -1,0 +1,24 @@
+.meter {
+  display: block;
+  height: 14px;
+  padding: var(--stroke-2);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+  overflow: hidden;
+  /* 塗りが0でも 4px は見せる。伸びる塗りとは別に、左端に固定で敷く */
+  background: linear-gradient(var(--meter-color, var(--color-now)), var(--meter-color, var(--color-now))) left / var(--space-1) 100% no-repeat;
+  background-origin: content-box;
+  background-clip: content-box;
+}
+
+/* 伸びは width ではなく transform で動かす */
+.meter-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--meter-color, var(--color-now));
+  transform: scaleX(var(--meter-ratio, 0));
+  transform-origin: left center;
+  transition: transform var(--duration-meter) var(--ease-out);
+}

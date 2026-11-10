@@ -1,0 +1,8 @@
+{
+  "id": "decoy-02",
+  "version": "normal",
+  "category": "decoy",
+  "expected": {
+    "templateId": null
+  }
+}

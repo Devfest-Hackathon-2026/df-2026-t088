@@ -1,0 +1,322 @@
+/* PG-006〜PG-008（D-135〜D-138）。768px 以上は 1275×665 で縦スクロールなし（D-126）。寸法は docs/design/home/06_ux_design.md */
+.home {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 100dvh;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+/* ファーストディスプレイの帯と枠は --content-max-width（1040）より広く取る。
+   1275 の画面で提出物の名前を1行に収め、縦スクロールなしにする（D-126、home の R-27） */
+.home { --home-max-width: 1240px; }
+.home__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--home-max-width);
+  margin: 0 auto;
+  min-height: 48px;
+  /* 右上の音と顔（CMP-043）に重ねない（D-245）。--corner-reserve は右の余白 --space-4 を含むので、画面の余白の分を引く */
+  padding-right: calc(var(--corner-reserve) - var(--space-4));
+}
+/* 上の帯の「教科をえらぶ」（D-248）。見出しの右に寄せ、縮めない。カメラが続く */
+.home__bar .home__subjects { flex: none; margin-left: auto; }
+.home__title {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+/* 上の帯の右のカメラの並び。見た目は CMP-001 quiet を 44px の正方形にする（D-149、D-164）。.button--quiet の横の余白を消すため帯の中で書く */
+.home__bar .home__camera {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: calc(var(--button-min-height) - var(--space-2));
+  height: calc(var(--button-min-height) - var(--space-2));
+  padding: 0;
+}
+.home__camera svg { width: 60%; height: 60%; }
+
+.home__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--home-max-width);
+  margin: 0 auto;
+}
+
+/* 紙のカード（CMP-014 と同じ描き方） */
+.home-frame {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+}
+.home-frame__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+.home-frame__head h2 {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-body);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+  color: var(--color-fg-strong);
+}
+.home-frame__empty { margin: 0; font-size: var(--text-body); line-height: var(--text-body-line); }
+.home-frame__error { display: grid; justify-items: start; gap: var(--space-2); }
+.home-frame__error p { margin: 0; }
+.home-frame__loading { display: grid; gap: var(--space-3); padding: var(--space-2) 0; }
+.home-frame__loading span { display: block; height: 0; border-top: var(--stroke-2) dashed var(--color-muted-fg); }
+
+/* PG-006 の文字と余白（D-157、D-242）。帯と枠・枠と枠は --space-4、枠の内側は上下 --space-4・左右 --space-5。
+   PG-007・PG-008 の枠は変えない（Issue #212 の範囲外）ので、.home--first の中だけにかける */
+.home--first { gap: var(--space-4); }
+.home--first .home-frame { gap: var(--space-2); padding: var(--space-4) var(--space-5); }
+.home--first .home-frame__head h2 {
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line);
+}
+
+/* CMP-024 提出物の行 */
+/* 長い名前の行に合わせて列が広がらないよう、列は枠の幅まで */
+.home-rows { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.home-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding-top: var(--space-2);
+  border-top: var(--stroke-2) dashed var(--color-border);
+}
+.home-rows > .home-row:first-child { padding-top: 0; border-top: 0; }
+.home-row__text { flex: 1; min-width: 0; }
+.home-row__name, .home-row__due { margin: 0; }
+.home-row__name {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-body);
+  line-height: var(--text-small-line);
+  font-weight: var(--text-strong-weight);
+  color: var(--color-fg-strong);
+}
+/* 押せる範囲は 1 行でも --button-min-height（44px 以上）。上下の余白を負の margin で相殺し、行の高さは変えない（#373）。
+   2 行に折り返しても文字は余白の内側にあり、下の期限の文字と重ならない */
+.home-row__link {
+  --link-pad: calc((var(--button-min-height) - 1lh) / 2);
+  display: inline-flex;
+  align-items: center;
+  padding-block: var(--link-pad);
+  margin-block: calc(-1 * var(--link-pad));
+  min-width: 0;
+  overflow-wrap: anywhere;
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.home-row__due { font-size: var(--text-small); line-height: var(--text-small-line); }
+/* 赤（--color-stamp）は紙との差が 4.5 に足りないので文字には使わず、印と左の線にだけ使う（ui の R-03） */
+.home-row__overdue { padding-left: var(--space-2); border-left: var(--stroke-4) solid var(--color-stamp); color: var(--color-fg-strong); }
+.home-row__stamp { color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+.home-row__stamp > span[aria-hidden] { color: var(--color-stamp); }
+.home-row.is-done .home-row__name, .home-row.is-late .home-row__name { color: var(--color-fg); font-weight: var(--text-body-weight); }
+.home-row__action { flex: none; }
+/* PG-006 の行は低くして3件を見せる。「出した」は上の帯のボタンと同じ 44px で、色は secondary のまま（D-232、D-158） */
+.home--first .home-rows { gap: var(--space-1); }
+.home--first .home-row { min-height: calc(var(--button-min-height) - var(--space-2)); padding-top: var(--space-1); }
+.home--first .home-row__action {
+  min-height: calc(var(--button-min-height) - var(--space-2));
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-small);
+}
+
+/* 教科の札。アプリにある教科は色、道徳・総合・学級活動は鉛筆の線（HM-26） */
+.home-subject {
+  flex: none;
+  padding: 0 var(--space-2);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--subject-color, transparent);
+  color: var(--color-fg-strong);
+  font-size: var(--text-small);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-small-line);
+}
+.home-subject.is-plain { border-style: dashed; }
+
+/* CMP-025 時間割の表。今日の列は「今ここ」の色と札（D-137）。教科名と札は語の途中で折り返さない（D-244）。
+   語の切れ目は Ruby の <wbr>（copy.ts の学級活動）だけにし、keep-all で日本語の字の間では切らない */
+.home-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: var(--text-small); }
+.home-table th, .home-table td {
+  height: 28px;
+  padding: 0 var(--space-1);
+  border: var(--stroke-2) solid var(--color-grid);
+  text-align: center;
+  line-height: 1.2;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+.home-table thead th { font-family: var(--font-hand); color: var(--color-fg-strong); }
+.home-table tbody th { width: 2.5em; font-family: var(--font-hand); color: var(--color-muted-fg); }
+.home-table thead td { width: 2.5em; border: 0; }
+.home-table .is-focus { background: var(--color-now); color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+.home-table__tag {
+  margin-left: var(--space-1);
+  padding: 0 var(--space-1);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+
+/* PG-007、PG-008 */
+.home__sub-body { width: 100%; max-width: var(--home-max-width); margin: 0 auto; flex: 1; min-height: 0; }
+.home__columns { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); align-items: start; }
+.home__timetable { display: grid; grid-template-columns: minmax(220px, 1fr) 3fr; gap: var(--space-3); align-items: start; }
+.home-week--large .home-table th, .home-week--large .home-table td { height: 48px; font-size: var(--text-body); }
+.home-day__list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.home-day__list li { display: flex; align-items: center; gap: var(--space-3); min-height: 48px; border-top: var(--stroke-2) dashed var(--color-border); }
+.home-day__list li:first-child { border-top: 0; }
+.home-day__period { width: 1.5em; font-family: var(--font-hand); font-size: var(--text-body); color: var(--color-muted-fg); text-align: center; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  /* 行が多い時は列の中だけ縦に動かし、ページは動かさない（PG-007） */
+  .home--sub { height: 100dvh; }
+  .home__columns .home-frame { max-height: 100%; overflow: hidden; }
+  .home-rows--scroll { overflow-y: auto; }
+}
+
+@media (min-width: 768px) {
+  /* 1275×665 で縦スクロールなし（D-126）。本文は出すものと期限1つで、枠は中身の高さで止める（D-249） */
+  .home--first { height: 100dvh; }
+  .home--first .home__body { flex: 1; min-height: 0; }
+}
+
+/* 768〜1023px は、帯と枠の間と枠の余白を詰める（D-126） */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .home--first, .home__body { gap: var(--space-3); }
+  .home--first .home-frame { padding: var(--space-3); }
+  .home--first .home-frame__head { min-height: 0; white-space: nowrap; }
+  .home--first .home-frame__head h2 { font-size: var(--text-body); line-height: var(--text-small-line); }
+  /* PG-008 の時間割の表は「今日」の札を曜日の下に置き、札が曜日に重ならないようにする（CMP-025、Issue 422） */
+  .home-table thead th { line-height: 1; }
+  .home-table__tag { display: block; margin: var(--space-1) auto 0; width: fit-content; }
+}
+
+/* 768〜1023 は出すものと期限の行を1行のまま（札・題名・期限・「出した」）にし、題名だけ2行まで折り返す（D-242） */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .home--first .home-row__link {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* PG-006（/home）の 767px 以下は D-231 に従う。上の帯は1行のまま、見出しは本文の大きさに縮めて折り返してよい。主ボタンの固定は、末尾の 767px 以下の塊（D-239）で決める */
+@media (max-width: 767px) {
+  .home--first .home__bar .home__title { min-width: 0; font-size: var(--text-body); line-height: var(--text-body-line); white-space: normal; }
+}
+
+/* 上の帯：島の地図の見出し（D-147〜D-149）。音と顔は右上の CMP-043（D-245）。見出しは1行。入らない時は <wbr> の所で2行にしてよい（D-248）ので、
+   767px 以下は上の塊で、768〜1023px は下の塊で nowrap を外す。768〜1023px は「教科をえらぶ」が横を取るので、見出しを本文の大きさにして帯の高さを抑える（D-126） */
+.home__title { white-space: nowrap; }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .home--first .home__title { white-space: normal; min-width: 0; font-size: var(--text-body); line-height: var(--text-body-line); }
+}
+/* 767px 以下と高さ 599px 以下の上書きは、上の帯・顔のボタンの決まりより後に置く（同じ強さでは後が勝つ） */
+/* 767px 以下は1列（D-156、D-249） */
+@media (max-width: 767px) {
+  .home__columns, .home__timetable { grid-template-columns: minmax(0, 1fr); }
+  .home-frame__head { min-height: var(--button-min-height); }
+  /* PG-006 の枠の見出しは本文の大きさにし、ひらがなの見出し（出すものときげん）を語の途中で折り返さない（D-244） */
+  .home--first .home-frame__head h2 { font-size: var(--text-body); line-height: var(--text-body-line); white-space: nowrap; }
+
+  /* 上の帯（D-239 の1）。音と顔は右上の CMP-043 に移ったので、1行目は戻るボタンと右に --corner-reserve の余白、2行目は題。題は潰さず折り返してよい（D-245）。
+     右上の2つは1行目の高さにあるので、余白は戻るボタンの右に取り、2行目の題は幅いっぱいに使う */
+  .home--sub .home__bar { flex-wrap: wrap; row-gap: var(--space-2); padding-right: 0; }
+  .home--sub .home-back { margin-right: calc(var(--corner-reserve) - var(--space-4)); }
+  .home--sub .home__title { flex: 1 1 100%; min-width: 0; white-space: normal; }
+  .home__bar .home__camera { width: var(--button-min-height); height: var(--button-min-height); margin-left: auto; }
+
+  /* 週の表（D-239 の3）。表の枠の中だけ横に動かし、左の列（コマ）は固定する。ページは動かさない。PG-006 には表が無い（D-249） */
+  .home--sub .home-table-wrap { min-width: 0; overflow-x: auto; }
+  .home--sub .home-table-wrap .home-table { min-width: 420px; }
+  .home--sub .home-table tbody th, .home--sub .home-table thead td:first-child { position: sticky; left: 0; z-index: 1; background: var(--color-bg); }
+
+  /* 一覧の行（D-239 の4）。1行目に題を全部、2行目に状態（期限・出した）と押す所 */
+  .home-row { flex-wrap: wrap; row-gap: var(--space-1); }
+  .home-row__text { display: contents; }
+  .home-row__name { flex: 1 1 100%; order: 1; min-width: 0; }
+  .home-row__due { flex: 1 1 0; order: 2; min-width: 0; }
+  .home-row__action { order: 3; margin-left: auto; }
+  /* PG-006 の行を低くする 44px（D-232）は 768px 以上だけ。767px 以下は指で押せる高さにする（D-235） */
+  .home--first .home-row, .home--first .home-row__action { min-height: var(--button-min-height); }
+  .home-row__link { display: inline-flex; align-items: center; min-height: var(--button-min-height); text-align: left; }
+
+  /* 主ボタン（D-239 の2）。画面の下に固定し、ページの最後に固定の分の余白を取る */
+  .home--first { padding-bottom: calc(var(--button-min-height) + var(--space-4) * 2); }
+  .home__bar .home__subjects {
+    position: fixed;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    left: var(--space-4);
+    z-index: 5;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+  }
+}
+
+/* 高さ 599px 以下（横向きのスマホ）。枠を画面の高さに閉じ込めず、主ボタンは下に固定する（D-239 の2） */
+@media (max-height: 599px) {
+  .home--first, .home--sub { height: auto; min-height: 100dvh; }
+  .home--first { padding-bottom: calc(var(--button-min-height) + var(--space-4) * 2); }
+  .home__bar .home__subjects {
+    position: fixed;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    left: var(--space-4);
+    z-index: 5;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+  }
+}

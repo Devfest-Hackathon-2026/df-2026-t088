@@ -1,0 +1,33 @@
+.print-demand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+.print-demand__heading h2,
+.print-demand__heading p { margin: 0; }
+.print-demand__heading h2 { font-size: var(--text-small); }
+.print-demand__heading p { font-size: var(--text-small); }
+.print-demand__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding-left: 1.4rem;
+  font-size: var(--text-small);
+}
+.print-demand__list li { padding-right: var(--space-1); }
+.print-demand__list li span + span { margin-left: var(--space-1); font-weight: var(--text-strong-weight); }
+@media (max-width: 767px) {
+  .print-demand { align-items: flex-start; flex-direction: column; }
+}
+/* 768px 以上は1画面に収める（D-126）。見出しと説明を1行に並べ、帯の高さを詰める */
+@media (min-width: 768px) {
+  .print-demand { padding: var(--space-1) var(--space-3); }
+  .print-demand__heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-3); }
+}

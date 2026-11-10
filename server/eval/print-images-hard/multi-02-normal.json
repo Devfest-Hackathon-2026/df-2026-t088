@@ -1,0 +1,17 @@
+{
+  "id": "multi-02",
+  "version": "normal",
+  "category": "multi",
+  "expected": {
+    "templateId": "rika-lever",
+    "params": {
+      "left": {
+        "pos": 3,
+        "g": 20
+      },
+      "right": {
+        "pos": 2
+      }
+    }
+  }
+}

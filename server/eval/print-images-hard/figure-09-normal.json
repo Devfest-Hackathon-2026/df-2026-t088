@@ -1,0 +1,17 @@
+{
+  "id": "figure-09",
+  "version": "normal",
+  "category": "figure-only",
+  "expected": {
+    "templateId": "rika-lever",
+    "params": {
+      "left": {
+        "pos": 5,
+        "g": 20
+      },
+      "right": {
+        "pos": 1
+      }
+    }
+  }
+}

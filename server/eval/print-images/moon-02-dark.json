@@ -1,0 +1,8 @@
+{
+  "id": "moon-02",
+  "version": "dark",
+  "expected": {
+    "templateId": "rika-moon",
+    "params": {}
+  }
+}

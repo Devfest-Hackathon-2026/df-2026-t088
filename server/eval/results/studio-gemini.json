@@ -1,0 +1,379 @@
+{
+  "source": "gemini",
+  "summary": {
+    "total": 30,
+    "passed": 30,
+    "passRate": 1,
+    "retryCount": 1,
+    "retryRate": 0.03333333333333333,
+    "durationP50Ms": 1264.94,
+    "durationP95Ms": 2170.47
+  },
+  "results": [
+    {
+      "promptIndex": 1,
+      "prompt": "分母がちがう分数のたし算を、タイルで考える教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 2170.47,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 1,
+      "prompt": "分母がちがう分数のたし算を、タイルで考える教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1370.62,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 1,
+      "prompt": "分母がちがう分数のたし算を、タイルで考える教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1441.55,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 2,
+      "prompt": "分母がちがう分数のひき算を、タイルで考える教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1364.82,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 2,
+      "prompt": "分母がちがう分数のひき算を、タイルで考える教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1222.06,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 2,
+      "prompt": "分母がちがう分数のひき算を、タイルで考える教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1256.5,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 3,
+      "prompt": "分数のたし算で分母をそろえる意味が分かる教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1222.65,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 3,
+      "prompt": "分数のたし算で分母をそろえる意味が分かる教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1145.2,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 3,
+      "prompt": "分数のたし算で分母をそろえる意味が分かる教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1217.42,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 4,
+      "prompt": "分数のひき算で分母をそろえる意味が分かる教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1331.77,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 4,
+      "prompt": "分数のひき算で分母をそろえる意味が分かる教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1264.94,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 4,
+      "prompt": "分数のひき算で分母をそろえる意味が分かる教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1153.66,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 5,
+      "prompt": "同じ大きさの分数を見つける教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1083.03,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 5,
+      "prompt": "同じ大きさの分数を見つける教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1431.1,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 5,
+      "prompt": "同じ大きさの分数を見つける教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1276.94,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 6,
+      "prompt": "分数の大きさを比べる教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1256.32,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 6,
+      "prompt": "分数の大きさを比べる教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1187.06,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 6,
+      "prompt": "分数の大きさを比べる教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1318.8,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 7,
+      "prompt": "分数のたし算で分子と分母を両方たしてしまう間違いを考える教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1312.47,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 7,
+      "prompt": "分数のたし算で分子と分母を両方たしてしまう間違いを考える教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1252.87,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 7,
+      "prompt": "分数のたし算で分子と分母を両方たしてしまう間違いを考える教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 2,
+      "retryCount": 1,
+      "elapsedMs": 2643.65,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 8,
+      "prompt": "分数のひき算で分子と分母を両方ひいてしまう間違いを考える教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1294.57,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 8,
+      "prompt": "分数のひき算で分子と分母を両方ひいてしまう間違いを考える教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1442.59,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 8,
+      "prompt": "分数のひき算で分子と分母を両方ひいてしまう間違いを考える教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1212.92,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 9,
+      "prompt": "分数のたし算を図と式で確かめる教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1286.47,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 9,
+      "prompt": "分数のたし算を図と式で確かめる教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 985.19,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 9,
+      "prompt": "分数のたし算を図と式で確かめる教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1058.01,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 10,
+      "prompt": "分数のひき算を図と式で確かめる教材を作ってください",
+      "strategy": "visual",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1236.48,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 10,
+      "prompt": "分数のひき算を図と式で確かめる教材を作ってください",
+      "strategy": "numeric",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1270.98,
+      "validation": {
+        "ok": true
+      }
+    },
+    {
+      "promptIndex": 10,
+      "prompt": "分数のひき算を図と式で確かめる教材を作ってください",
+      "strategy": "misconception",
+      "passed": true,
+      "attempts": 1,
+      "retryCount": 0,
+      "elapsedMs": 1304.16,
+      "validation": {
+        "ok": true
+      }
+    }
+  ],
+  "evaluatedAt": "2026-11-09T11:35:55.828Z",
+  "ai": {
+    "mode": "vertex",
+    "model": "gemini-3.5-flash-lite"
+  }
+}

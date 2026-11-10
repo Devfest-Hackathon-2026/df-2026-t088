@@ -1,0 +1,893 @@
+{
+  "repetitions": 20,
+  "groups": [
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "tried": 20,
+      "passed": 20,
+      "failures": {}
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "tried": 20,
+      "passed": 20,
+      "failures": {}
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "tried": 20,
+      "passed": 20,
+      "failures": {}
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "tried": 20,
+      "passed": 20,
+      "failures": {}
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "tried": 20,
+      "passed": 20,
+      "failures": {}
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "tried": 20,
+      "passed": 20,
+      "failures": {}
+    }
+  ],
+  "examples": [
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "+",
+      "problem": "1/3+1/4",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-both",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母がちがうときは、分母どうしを計算しないよ。まず同じ大きさのタイルにそろえよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "sum-num-only",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分子だけを計算すると、そろえる前の大きさのままになるよ。分母をそろえた後の分子で計算しよう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    },
+    {
+      "pattern": "same-den-sum",
+      "operator": "-",
+      "problem": "3/4-1/3",
+      "accepted": true,
+      "hint": "分母をそろえたら、分母はそのままで、分子だけをたそう"
+    }
+  ],
+  "evaluatedAt": "2026-11-09T04:26:13.806Z",
+  "ai": {
+    "mode": "mock"
+  }
+}

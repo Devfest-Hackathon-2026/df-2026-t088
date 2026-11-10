@@ -1,0 +1,50 @@
+/* 学級のようす（SCR-T10）。全幅で、上の並び・見出し・タブは動かさず、表の中だけ縦に動かす（D-126） */
+.class-page {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+/* 見出しは読み上げのためだけに残し、画面には出さない（D-184） */
+.class-page__title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* 狭い幅（768px 未満。D-175 の対象外）でも横にはみ出さないよう、期間の欄は次の行へ折り返す */
+.class-page__tabbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-4); margin: var(--space-3) 0 var(--space-2); }
+.class-page__tabs { display: flex; gap: var(--space-2); }
+.class-page__tab {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot); /* 上の並び（手描きの枠）と形を分ける（D-191） */
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font: inherit;
+  cursor: pointer;
+}
+.class-page__tab[aria-selected="true"] { background: var(--color-now); color: var(--color-fg-strong); font-weight: var(--text-strong-weight); }
+.class-page__tab:hover { border-color: var(--color-border-strong); }
+.class-page__tab:active { transform: translateY(1px); }
+.class-page__tab:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 0; }
+.class-page__period { display: flex; align-items: center; gap: 0.5rem; }
+.class-page__period select { min-height: 44px; font: inherit; }
+.class-page__panel { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+/* 学びの輪のタブ：図とアシスタントを並べ、タブの中だけ縦に動かす（D-126） */
+.class-page__loop { display: flex; flex-direction: column; gap: var(--space-3); flex: 1; min-height: 0; overflow: hidden; padding-bottom: var(--space-2); }
+.class-page__loop .loop-assistant { flex: 1; min-height: 0; }
+.class-page__loop .loop-assistant__items { flex: 1; min-height: 0; overflow-y: auto; }
+/* 1024px 以上は左に図、右にアシスタントを並べ、アシスタントの一覧の中だけ縦に動かす（D-217） */
+@media (min-width: 1024px) {
+  .class-page__loop { display: grid; grid-template-columns: var(--teacher-loop-ring-width) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); align-items: stretch; }
+  /* 図が枠より高いとき（1275×665 など）は、図の枠の中だけ縦に動かす。切れたままだと「3 先生が直し方を選ぶ」が読めない（#535） */
+  .class-page__loop .learning-loop { align-self: start; max-height: 100%; overflow-y: auto; }
+}
+/* 768px 未満は1画面に収めず、ページごと縦に動かす（学びの輪の図が縦に並び、100vh では表が潰れて押せなくなるため。D-126 は 768px 以上の決まり） */
+@media (max-width: 767px) {
+  .class-page { height: auto; min-height: 100vh; }
+  .stumbles__scroll { flex: none; }
+  .class-page__loop { overflow: visible; }
+  .class-page__loop .loop-assistant { flex: none; }
+  .class-page__loop .loop-assistant__items { overflow-y: visible; }
+}

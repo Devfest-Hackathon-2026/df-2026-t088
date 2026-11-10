@@ -1,0 +1,35 @@
+/* CMP-043 右上の音と顔（D-245、D-246）。右と上は --space-4、左から 音・顔、間 --space-3。
+   768px 以上は画面に固定、767px 以下はページの上に置いてページと一緒に動かす。重なりは --z-corner */
+.corner {
+  --corner-size: calc(var(--button-min-height) - var(--space-2));
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: var(--z-corner);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* 顔のボタン。見た目は CMP-015 と同じ（線 --stroke-2、--radius-blob） */
+.corner__face {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--corner-size);
+  height: var(--corner-size);
+  padding: 0;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-blob);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+}
+.corner__face svg { width: 66%; height: 66%; }
+.corner__face:active { transform: translateY(1px); }
+/* ログインの前は顔を出さず、場所だけ空けて音の座標を変えない（D-246） */
+.corner__face-space { flex: none; width: var(--corner-size); height: var(--corner-size); }
+
+/* 767px 以下は指で押せる大きさにし、ページの上に置く（ページと一緒に動く）。音の丸の大きさは SoundButton.css が --button-min-height にする */
+@media (max-width: 767px) {
+  .corner { --corner-size: var(--button-min-height); position: absolute; }
+}

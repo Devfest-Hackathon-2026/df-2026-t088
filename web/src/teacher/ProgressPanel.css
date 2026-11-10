@@ -1,0 +1,72 @@
+/* 「子どもの進み」の表（SCR-T10）。枠の高さは親が与え、表の枠の中だけ縦にも横にも動かす。
+   番号と名前の列は左に、見出しの行は上に止める（R-51）。親（ClassPage）のタブパネルは min-height: 0; flex: 1 にする。
+   列の幅は設計の値（番号 56px・名前 128px・章 --progress-cell-width・最後に学んだ日 112px）に固定する。88px では「11/10（火）」が切れたので 112px にした */
+.progress-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; color: var(--color-fg); }
+.progress-panel__note { margin: 0 0 var(--space-2); flex: none; }
+/* 枠は表の大きさに合わせる（表が細ければ枠も細く、高ければ枠も高く。親の高さを超えたら枠の中で動く） */
+.progress-panel__scroll { flex: 0 1 auto; min-height: 0; max-width: 100%; width: fit-content; overflow: auto; border: var(--stroke-2) solid var(--color-border); }
+/* スクロールバーは、つかんで動かす所を大きくする（既定より太く、つまみも長く） */
+.progress-panel__scroll::-webkit-scrollbar { width: 18px; height: 18px; }
+.progress-panel__scroll::-webkit-scrollbar-track { background: var(--color-bg); }
+.progress-panel__scroll::-webkit-scrollbar-thumb { background: var(--color-muted-fg); border: 4px solid var(--color-bg); border-radius: 9px; min-width: 48px; min-height: 48px; }
+.progress-panel__scroll::-webkit-scrollbar-thumb:hover { background: var(--color-border); }
+.progress-panel__scroll::-webkit-scrollbar-corner { background: var(--color-bg); }
+.progress-panel__table {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: calc(56px + 128px + var(--progress-count) * var(--progress-cell-width) + 112px);
+  font-size: var(--text-small);
+}
+.progress-panel__c-number { width: 56px; }
+.progress-panel__c-name { width: 128px; }
+.progress-panel__c-chapter { width: var(--progress-cell-width); }
+.progress-panel__c-date { width: 112px; }
+.progress-panel__table th, .progress-panel__table td {
+  box-sizing: border-box;
+  height: var(--teacher-row-height);
+  padding: 0 var(--space-1);
+  border-top: var(--stroke-2) solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+/* 今日学んだ人の数と、今日だけの絞り込み（#538）。画面の高さを増やさないよう、行は細く */
+.progress-panel__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin: 0 0 var(--space-1); }
+.progress-panel__bar p { margin: 0; }
+.progress-panel__filter { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 44px; }
+.progress-panel__sort { all: unset; box-sizing: border-box; cursor: pointer; font: inherit; font-weight: 800; color: inherit; }
+.progress-panel__sort:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 2px; }
+.progress-panel__table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: auto;
+  border-top: 0;
+  background: var(--color-bg);
+  color: var(--color-muted-fg);
+  box-shadow: 0 var(--stroke-2) 0 var(--color-border);
+  vertical-align: bottom;
+  white-space: normal;
+}
+/* 章の見出しは短い名前。1行に収まらなければ折り返して、最後まで出す。
+   2行で切っていたときは、6年の算数で 10 列のうち 9 列が「…」になり、どの単元か読めなかった（#532） */
+.progress-panel__chapter {
+  display: block;
+  overflow-wrap: anywhere;
+  line-height: var(--text-small-line);
+}
+/* 番号と名前の列は左に止める */
+.progress-panel__sticky { position: sticky; z-index: 1; background: var(--color-bg); }
+.progress-panel__table thead .progress-panel__sticky { z-index: 3; }
+.progress-panel__sticky--number { left: 0; }
+.progress-panel__sticky--name { left: 56px; }
+/* 行全体を1つのリンクにする（D-177） */
+.progress-panel__row { position: relative; }
+.progress-panel__row td:first-child a { color: var(--color-fg-strong); font-weight: var(--text-strong-weight); text-decoration: none; }
+.progress-panel__row td:first-child a::after { content: ""; position: absolute; inset: 0; }
+.progress-panel__row:hover, .progress-panel__row:hover .progress-panel__sticky { background: var(--color-now); }
+.progress-panel__row td:first-child a:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--stroke-3)); }

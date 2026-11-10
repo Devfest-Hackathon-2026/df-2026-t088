@@ -1,0 +1,58 @@
+/* 提出の状況（SCR-T05）。色と文字は docs/design/ui の決まり。1275×665 で縦スクロールなし（30人・6件） */
+.teacher-submissions {
+  box-sizing: border-box;
+  min-height: 100vh;
+  /* 学級のようすと同じく全幅。左右の余白は --space-4 だけ（D-187） */
+  padding: 1rem var(--space-4);
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+.teacher-submissions h1 { margin: 0; font-size: 1.5rem; }
+.teacher-submissions__question { margin: 0.25rem 0 0.5rem; font-size: 1.125rem; }
+.teacher-submissions__bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+.teacher-submissions button {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-slot); /* 上の並び（手描きの枠）と形を分ける（D-191） */
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.teacher-submissions__table { width: 100%; border-collapse: collapse; font-size: var(--text-small); table-layout: fixed; }
+/* 列の幅を決めておき、行を開いても左の3列が動かないようにする（D-193） */
+.teacher-submissions__table thead th:nth-child(1) { width: 9rem; }
+.teacher-submissions__table thead th:nth-child(2) { width: 18%; }
+.teacher-submissions__table thead th:nth-child(3) { width: 4.5rem; }
+.teacher-submissions__table th, .teacher-submissions__table td {
+  padding: 0.3rem 0.5rem;
+  border-top: var(--stroke-2) solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.4;
+}
+.teacher-submissions__table thead th { border-top: 0; color: var(--color-muted-fg); }
+.teacher-submissions__table tbody th { font-weight: 800; color: var(--color-fg-strong); }
+.teacher-submissions__due { white-space: nowrap; }
+.teacher-submissions__count { font-weight: 800; color: var(--color-fg-strong); white-space: nowrap; }
+.teacher-submissions__late { margin: 0.25rem 0 0; padding-left: 0.5rem; border-left: var(--stroke-4) solid var(--color-stamp); }
+.teacher-submissions__late strong { margin-right: 0.5rem; }
+/* 1人ずつ折らずに並べる。区切りは間の空きだけ（D-193） */
+.teacher-submissions__names { display: inline; margin: 0; padding: 0; list-style: none; }
+.teacher-submissions__names li { display: inline-block; margin-right: 1em; white-space: nowrap; }
+.teacher-submissions__many summary { font-weight: 800; color: var(--color-fg-strong); cursor: pointer; }
+.teacher-submissions__many[open] summary { margin-bottom: 0.25rem; }
+.teacher-submissions__key { display: grid; gap: 0.5rem; max-width: 24rem; }
+.teacher-submissions__key input { min-height: 44px; font: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* 768px 以上は1画面に収める（D-126）。番号の一覧が長い時は表の中だけ縦に動かし、ページは動かさない */
+@media (min-width: 768px) {
+  .teacher-submissions { display: flex; flex-direction: column; height: 100vh; min-height: 0; }
+  .teacher-submissions__scroll { flex: 1; min-height: 0; overflow-y: auto; }
+  .teacher-submissions__table thead th { position: sticky; top: 0; background: var(--color-bg); }
+}
+@media (max-width: 767px) {
+  .teacher-submissions__table { display: block; overflow-x: auto; }
+}

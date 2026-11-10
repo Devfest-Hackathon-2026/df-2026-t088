@@ -1,0 +1,32 @@
+/* CMP-019 立て直しの画面。方眼ノートの上に CMP-011 と同じ紙を中央に置く */
+.recovery {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: var(--space-4);
+}
+
+.recovery__paper {
+  display: grid;
+  width: min(var(--panel-width), 100%);
+  gap: var(--space-4);
+  justify-items: center;
+  padding: var(--space-6);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  text-align: center;
+}
+
+.recovery__paper p { margin: 0; }
+
+.recovery__title {
+  margin: 0;
+  color: var(--color-fg-strong);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line);
+}
+
+.recovery__title:focus { outline: none; }

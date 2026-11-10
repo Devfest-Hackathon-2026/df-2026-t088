@@ -1,0 +1,22 @@
+{
+  "hosting": {
+    "public": "web/dist",
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "education-server",
+          "region": "asia-northeast1"
+        }
+      },
+      {
+        "source": "/research/**",
+        "destination": "/research/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

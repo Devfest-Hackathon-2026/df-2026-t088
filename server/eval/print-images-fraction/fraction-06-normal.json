@@ -1,0 +1,19 @@
+{
+  "id": "fraction-06",
+  "version": "normal",
+  "kind": "single",
+  "expected": {
+    "templateId": "sansu-fraction-addsub",
+    "params": {
+      "left": {
+        "num": 1,
+        "den": 2
+      },
+      "op": "-",
+      "right": {
+        "num": 1,
+        "den": 6
+      }
+    }
+  }
+}

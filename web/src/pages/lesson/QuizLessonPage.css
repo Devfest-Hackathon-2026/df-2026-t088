@@ -1,0 +1,12 @@
+.quiz-card { display: grid; gap: var(--space-3); }
+.quiz-copy { margin: 0; font-size: var(--text-body); }
+.quiz-subject { margin: 0; color: var(--color-fg-strong); font-size: var(--text-title); line-height: var(--text-title-line); }
+.quiz-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--space-2); }
+.quiz-choices .button { min-height: var(--button-min-height); }
+.quiz-answer { margin-top: 0; }
+.quiz-hints { display: grid; gap: var(--space-2); margin: 0; padding-left: var(--space-5); }
+.quiz-hints li { padding-left: var(--space-1); }
+.quiz-answer-reveal { margin: 0; font-weight: var(--text-strong-weight); color: var(--color-fg-strong); }
+.quiz-answer-reveal span { margin: 0 var(--space-1); }
+/* 間違えた選択肢。disabled は使わず、打ち消し線と薄い文字で押せないと示す（CMP-001） */
+.quiz-choices .quiz-choice.is-wrong { color: var(--color-muted-fg); text-decoration: line-through; cursor: default; }

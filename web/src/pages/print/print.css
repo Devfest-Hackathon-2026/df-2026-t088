@@ -1,0 +1,249 @@
+/* PG-010 しゃしんで しつもん（D-164〜D-172）。768px 以上は 1275×665 で縦スクロールなし（D-126）。
+   寸法は docs/design/ui/05_screens-print.md の「寸法」。home.css と同じ見た目を、ここだけで書く */
+.print {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  /* 767px 以下は svh。スマホでアドレスバーが隠れて画面が伸び縮みしないように（768px 以上は下の dvh で固定） */
+  min-height: 100svh;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+/* 上の帯。767px 以下は 2 段（1 段目 ホーム、2 段目 見出しと段）。音と顔は右上の CMP-043 で、帯は右に --corner-reserve を空ける（D-245） */
+.print__bar {
+  /* 767px 以下は折り返す並び。1 段目にホーム、::after で段を切り、2 段目に見出しと段階。
+     見出しの横に段階が入らない幅では、段階だけ次の行へ回る（05_screens-print.md SEC-010-01） */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 var(--space-3);
+  width: 100%;
+  max-width: var(--content-max-width);
+  min-height: 48px;
+  margin: 0 auto;
+}
+/* 段を切るだけの空の行。行の間の余白が2つ分にならないよう、行の間は 0 にして、見出しと段階の上に余白を付ける */
+.print__bar::after { content: ""; order: 2; flex-basis: 100%; }
+.print__back { grid-area: back; order: 1; margin-right: calc(var(--corner-reserve) - var(--space-4)); }
+.print__title {
+  grid-area: title;
+  order: 3;
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+.print__steps {
+  grid-area: steps;
+  order: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.print__count {
+  grid-area: count;
+  font-family: var(--font-hand);
+  font-size: var(--text-body);
+  color: var(--color-fg-strong);
+}
+.print-step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-hand);
+  font-size: var(--text-small);
+  line-height: var(--text-small-line);
+  color: var(--color-muted-fg);
+}
+.print-step[data-state="now"] {
+  background: var(--color-now);
+  color: var(--color-fg-strong);
+  font-weight: 800;
+}
+.print-step[data-state="done"] { color: var(--color-fg); }
+/* 767px 以下は数字だけ。今の段だけ名前を出す */
+.print-step:not([data-state="now"]) .print-step__name { display: none; }
+
+.print__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.print__file { display: none; }
+
+.print__main {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--content-max-width);
+  min-height: 0;
+  margin: 0 auto;
+}
+.print__main p { margin: 0; }
+/* 学級コードで開いたときの、学級の名前 */
+.print__class {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-body);
+  line-height: var(--text-body-line);
+  color: var(--color-fg-strong);
+}
+.print__actions { display: grid; gap: var(--space-2); justify-items: stretch; }
+.print__alert {
+  font-size: var(--text-body);
+  line-height: var(--text-body-line);
+  color: var(--color-fg-strong);
+}
+
+/* とる */
+.print-take { align-items: center; justify-content: center; text-align: center; }
+.print-take__art { width: 120px; height: auto; color: var(--color-fg-strong); }
+.print-take__lead {
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+.print-take__note { font-size: var(--text-body); line-height: var(--text-body-line); color: var(--color-muted-fg); }
+.print-take .print__actions { width: min(100%, 360px); }
+/* 375px は 2 つのボタンを画面の下半分へ（片手の親指で届く所） */
+.print-take { justify-content: flex-start; }
+.print-take .print__actions { margin-top: auto; }
+
+/* かこむ */
+/* 767px 以下は svh。写真の高さがスクロールでアドレスバーに合わせて変わらないように（768px 以上は calc の dvh） */
+.print-lasso { --lasso-max-h: 55svh; }
+.print-lasso__side { display: grid; align-content: start; gap: var(--space-3); }
+.print-lasso__lead {
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+.print-lasso__note { font-size: var(--text-body); line-height: var(--text-body-line); }
+
+/* 囲む線（CMP-032）。写真は枠に収め、なぞる SVG は写真と同じ大きさで重ねる */
+.lasso {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  border-radius: var(--radius-hand);
+}
+.lasso:focus-visible { outline: var(--stroke-3) solid var(--color-focus-ring); outline-offset: 0; }
+.lasso__desc {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.lasso__stage { position: relative; display: inline-block; max-width: 100%; line-height: 0; }
+.lasso__img {
+  display: block;
+  max-width: 100%;
+  max-height: var(--lasso-max-h, 55svh);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.lasso__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* なぞる線が画面のスクロールやピンチに取られないように */
+  touch-action: none;
+  cursor: crosshair;
+}
+.lasso__dim { fill: var(--color-scrim); }
+.lasso__edge, .lasso__line { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.lasso__edge { stroke: var(--color-border-strong); stroke-width: 10px; }
+.lasso__line { stroke: var(--color-figure-lasso); stroke-width: 6px; }
+.lasso__handle {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-figure-lasso);
+  pointer-events: none;
+}
+
+/* まつ・失敗 */
+.print-wait { align-items: center; justify-content: center; text-align: center; }
+.print-wait__thumb {
+  max-width: 100%;
+  max-height: 160px;
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+}
+.print-wait__lead {
+  font-family: var(--font-hand);
+  font-size: var(--text-title);
+  line-height: var(--text-title-line);
+  color: var(--color-fg-strong);
+}
+.print-wait__note { font-size: var(--text-body); color: var(--color-muted-fg); }
+.print-wait .print__actions { width: min(100%, 360px); }
+
+/* せつめい。767px 以下はカードを縦に積む */
+.print-explain { gap: var(--space-6); }
+.print-explain__note { font-size: var(--text-body); line-height: var(--text-body-line); }
+.print-explain__nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); }
+
+@media (min-width: 768px) {
+  /* 上下の余白と帯の下の間を詰める。768×665 の説明の 1 枚目で「つぎの 問題」が切れていた（#233 の実測） */
+  .print { height: 100dvh; overflow: hidden; gap: var(--space-2); padding-block: var(--space-2); }
+  .print__bar {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr;
+    grid-template-areas: "back title steps count";
+    /* --corner-reserve は右の余白 --space-4 を含むので、ページの余白の分を引く */
+    padding-right: calc(var(--corner-reserve) - var(--space-4));
+  }
+  .print__bar::after { display: none; }
+  .print__back { margin-right: 0; }
+  .print__title, .print__steps { margin-top: 0; }
+  /* 「1 / 2 問」を縦に折り返さない。折り返すと帯が 150px 近くになる（#233 の実測） */
+  .print__count { grid-area: count; justify-self: start; white-space: nowrap; }
+  /* 段の名前は、帯に収まる 1024px 以上で全部出す。768〜1023px は今の段だけ（見出しを 1 行にして、説明のカードを 665px に収めるため。#233 の実測） */
+  .print__bar { column-gap: var(--space-2); }
+  .print__title { white-space: nowrap; }
+
+  .print-take { justify-content: center; }
+  .print-take .print__actions { margin-top: 0; }
+  .print-take__art { width: 160px; }
+
+  .print-lasso {
+    --lasso-max-h: calc(100dvh - 48px - 32px - var(--space-3) - var(--space-4));
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+  .print-wait__thumb { max-height: 240px; }
+
+  .print-explain { gap: var(--space-3); }
+  .print-explain__nav { margin-top: auto; }
+}
+
+@media (min-width: 1024px) {
+  .print-step:not([data-state="now"]) .print-step__name { display: inline; }
+}

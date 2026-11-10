@@ -1,0 +1,86 @@
+.six__bracket { border: var(--stroke-2) solid var(--color-border); border-bottom: 0; text-align: center; margin-bottom: 0; }
+.six__whole { width: min(100%, 320px); }
+.six__paint-scale { width: min(100%, 24em); table-layout: fixed; border-collapse: collapse; text-align: center; margin-block: .4em; }
+.six__paint-scale th, .six__paint-scale td { padding: .2em .3em; border: 1px solid var(--color-border); }
+.six__factor-match { background: var(--color-subject-sansu); border-radius: .2em; padding-inline: .25em; }
+.six__bag-demo { display: flex; gap: .6em; margin-block: .4em; }
+.six__bag { display: grid; grid-template-columns: repeat(2, 1.6em); gap: .15em; padding: .3em; border: 2px solid var(--color-border); border-radius: .4em; text-align: center; }
+.six__bag > span:nth-child(n+3) { opacity: 0; transform: translateY(-.4em); transition: opacity .6s, transform .6s; }
+.six__bag-demo.is-doubled .six__bag > span { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .six__bag > span:nth-child(n+3) { transition: none; } }
+.six__sharing svg { display: block; width: min(100%, 430px); font-size: 13px; }
+.six__sharing-unit { fill: none; stroke: var(--color-border); stroke-width: 1; stroke-dasharray: 3 3; opacity: .6; }
+.six__share-focus { fill: none; stroke: var(--color-subject-kokugo); stroke-width: 3; }
+.six__formula-line { display: flex; align-items: center; flex-wrap: wrap; gap: .4em; font-size: 1.2em; }
+.six__written-fraction { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; min-width: 1.5em; }
+.six__written-fraction > span { padding: .1em .25em; }
+.six__written-fraction > span:first-child { border-bottom: 2px solid currentColor; }
+.six__division-scroll { max-width: 100%; overflow-x: auto; }
+.six__division-scroll svg { display: block; max-width: none; font-size: 15px; }
+.six__juice-piece { fill: var(--color-subject-sansu); stroke: var(--color-border); stroke-width: 1; transition: transform 1.6s ease; }
+@media (prefers-reduced-motion: reduce) { .six__juice-piece { transition: none; } }
+.six__strip, .six__fraction-grid { display: grid; width: min(100%, 320px); border: 1px solid var(--color-border); }
+.six__strip span, .six__fraction-grid span, .six__division-group span { border: 1px solid var(--color-border); min-height: 30px; text-align: center; background: var(--color-bg); }
+.six__strip .is-filled, .six__fraction-grid .is-filled, .six__division-group .is-filled { background: var(--color-subject-sansu); }
+.six__fraction-grid .is-overlap { background: var(--color-subject-kokugo); animation: six-reveal .8s ease both; }
+.six__pair, .six__repeat, .six__groups, .six__expression, .six__tree { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.six__division-group { display: grid; width: 150px; border: var(--stroke-2) solid var(--color-border); padding: var(--space-1); animation: six-reveal .8s ease both; }
+.six__expression > div { display: grid; border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2); }
+.six__expression .is-selected, .six__sort .is-selected { background: var(--color-subject-sansu); }
+.six__expression p { flex-basis: 100%; }
+.six__data table, .six__survey { border-collapse: collapse; width: min(100%, 520px); }
+.six__data th, .six__data td, .six__survey th, .six__survey td { border: 1px solid var(--color-border); padding: var(--space-2); text-align: left; }
+.six__data-dot { display: inline-block; animation: six-reveal .8s ease both; margin-right: var(--space-1); }
+.six__sort { position: relative; height: 60px; max-width: 100%; }
+.six__mean-bars { display: flex; gap: .75em; margin-block: .5em; }
+.six__mean-column { display: grid; text-align: center; min-width: 3em; }
+.six__mean-track { position: relative; height: 5em; border-bottom: 2px solid var(--color-border); }
+.six__mean-fill { position: absolute; inset: auto .4em 0; background: var(--color-subject-sansu); border: 1px solid var(--color-border); transition: height 1s ease; }
+.six__mean-level { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--color-border); z-index: 1; }
+@media (prefers-reduced-motion: reduce) { .six__mean-fill { transition: none; } }
+.six__sort > span { position: absolute; left: 0; top: 4px; width: 42px; padding-block: var(--space-2); border: var(--stroke-2) solid var(--color-border); text-align: center; transition: transform 1.2s ease, background-color .8s; }
+.six__scatter { position: relative; width: min(90%, 420px); height: 60px; margin: 16px; }
+.six__scatter-axis { position: absolute; top: 18px; width: 100%; border-top: 1px solid var(--color-border); }
+.six__scatter > span { position: absolute; top: 0; transform: translateX(-50%); }
+.six__scatter small { display: block; }
+.six__spread { position: absolute; top: 54px; border-top: 3px solid var(--color-border); animation: six-reveal .8s ease; }
+.six__branch { display: flex; align-items: center; gap: var(--space-2); border: 1px solid var(--color-border); padding: var(--space-2); }
+.six__branch p { display: flex; gap: var(--space-3); border-bottom: 1px solid var(--color-border); animation: six-reveal .8s ease both; margin: var(--space-1) 0; }
+.six__branch small { color: var(--color-muted-fg); }
+.six__estimate svg, .six__symmetry svg, .six__scale svg { width: min(100%, 420px); max-height: 230px; overflow: visible; }
+.six__original { fill: var(--color-subject-sansu); fill-opacity: .45; stroke: var(--color-border); stroke-width: 2; }
+.six__outline { fill: none; stroke: var(--color-border); stroke-width: 2; }
+.six__axis { fill: none; stroke: var(--color-border); stroke-width: 2; stroke-dasharray: 5 4; }
+.six__moving-point { fill: var(--color-subject-kokugo); }
+.six__fold, .six__turn { transform-origin: 130px 80px; transition: transform 1.4s ease; }
+.six__scaled { transition: transform 1.4s ease; }
+@keyframes six-reveal { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .six__fold, .six__turn, .six__scaled, .six__sort > span { transition: none; } .six__data-dot, .six__branch p, .six__division-group, .six__spread, .six__fraction-grid .is-overlap { animation: none; } }
+
+.six__histogram svg, .six__map svg { width: min(100%, 420px); max-height: 250px; }
+.six__map-segment { animation: six-reveal .4s ease both; }
+@media (prefers-reduced-motion: reduce) { .six__map-segment { animation: none; } }
+.six__grid-line { stroke: var(--color-border); stroke-width: 1; opacity: .25; }
+.six__histogram-focus { fill: var(--color-subject-kokugo); stroke: var(--color-border); transition: fill .8s; }
+
+.six__subdivision .six__bracket { width: 100%; box-sizing: border-box; }
+.six__cut-strip { position: relative; height: 48px; margin-bottom: 36px; border: var(--stroke-2) solid var(--color-border); box-sizing: border-box; }
+.six__original-fill { position: absolute; inset: 0 auto 0 0; background: var(--color-subject-sansu); }
+.six__old-cut, .six__new-cut { position: absolute; top: 0; bottom: 0; border-left: var(--stroke-2) solid var(--color-border); transform-origin: top; z-index: 2; }
+.six__new-cut { animation: six-draw-cut .65s ease both; }
+.six__cut-labels { position: absolute; top: 100%; left: 0; right: 0; height: 32px; display: grid; text-align: center; align-items: stretch; }
+.six__cut-labels > span { display: grid; place-items: center; min-width: 0; }
+.six__cut-labels.is-subdividing { opacity: 0; transition: opacity .4s; }
+.six__fine-labels { animation: six-show-labels .45s ease both; }
+.six__chosen-part { background: var(--color-subject-kokugo); }
+.six__source-outline { position: absolute; inset: -5px auto -5px 0; border: 2px dashed var(--color-border); box-sizing: border-box; pointer-events: none; z-index: 4; }
+.six__equal-groups { position: absolute; inset: 0 auto 0 0; display: grid; z-index: 3; animation: six-group-focus 2.5s ease both; }
+.six__equal-groups > span { border: 3px solid var(--color-border); border-radius: 6px; margin: 2px; }
+.six__original-fill.is-clearing { animation: six-clear-fill 1.2s ease both; }
+.six__selected-fill { position: absolute; inset: 0 auto 0 0; background: var(--color-subject-kokugo); animation: six-select-fill 1.2s ease both; }
+@keyframes six-group-focus { 0% { opacity: 0; } 25%, 80% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes six-clear-fill { to { opacity: 0; } }
+@keyframes six-select-fill { from { opacity: 0; } to { opacity: 1; } }
+@keyframes six-draw-cut { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes six-show-labels { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .six__new-cut, .six__fine-labels, .six__equal-groups, .six__original-fill.is-clearing, .six__selected-fill { animation-duration: .001s; animation-delay: 0s !important; } .six__cut-labels.is-subdividing { transition: none; } }

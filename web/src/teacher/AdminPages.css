@@ -1,0 +1,159 @@
+/* 課題・時間割の管理（SCR-T06〜T08、#196）と先生の入口。色と文字は docs/design/ui の決まり（トークンだけ使う）。
+   押せない理由と状態は、文字と左の線（--stroke-4）を併用する */
+.teacher-nav ul { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.teacher-nav a {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
+  padding: 0 0.75rem;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: 0; /* 上の並びは真四角。中の操作（角の丸い四角）と見分ける（D-192） */
+  color: var(--color-fg-strong);
+  font-weight: 800;
+  text-decoration: none;
+}
+.teacher-nav a[aria-current="page"] { background: var(--color-fg-strong); color: var(--color-bg); }
+
+.admin-page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  /* 学級のようすと同じく全幅。左右の余白は --space-4 だけ（D-187） */
+  padding: 1rem var(--space-4);
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+.admin-page h1 { margin: 0.5rem 0; font-size: 1.5rem; }
+/* 見出しを画面に出さず、読み上げのためだけに残す（D-189） */
+.admin-page .admin-page__title-hidden { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.admin-page p { margin: 0.25rem 0; }
+.admin-page button, .admin-page .admin-page__button {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  /* 上の並び（手描きの枠 --radius-hand）と見分けるため、操作のボタンは角の少し丸い四角にする（D-190） */
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+}
+/* リンクをボタンの形にしたもの（新しく配る・直す）も、文字を上下の真ん中に置く */
+.admin-page .admin-page__button { display: inline-flex; align-items: center; box-sizing: border-box; }
+/* 「保存」は主なボタン（CMP-001 primary：赤の塗り、3px の線）にする（D-190） */
+.admin-page .admin-page__primary { background: var(--button-primary-bg); color: var(--color-on-primary); border-width: var(--stroke-3); }
+.admin-page input, .admin-page select { min-height: 44px; font: inherit; }
+.admin-page__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }
+.admin-page__notice { font-weight: 800; color: var(--color-fg-strong); }
+.admin-page__problem {
+  margin: 0.25rem 0 0;
+  padding-left: 0.5rem;
+  border-left: var(--stroke-4) solid var(--color-stamp);
+  color: var(--color-fg-strong);
+  font-size: var(--text-small);
+}
+.admin-page__error {
+  padding-left: 0.5rem;
+  border-left: var(--stroke-4) solid var(--color-stamp);
+  font-weight: 800;
+}
+.admin-page__confirm {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: var(--stroke-2) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+}
+.admin-page__confirm p { margin: 0; }
+.admin-page__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.admin-page__actions--end { margin-left: auto; }
+
+.problem-order select { max-inline-size: 100%; }
+.problem-order input[readonly] { flex: 1 1 18rem; min-inline-size: 0; }
+.problem-order button[aria-disabled="true"] { color: var(--color-muted-fg); cursor: default; }
+
+.admin-page__scroll { overflow-x: auto; }
+
+/* 時間割（SCR-T08）は 1275×665 に収める。上の並び・説明・ボタン・「保存する」は動かさず、表の中だけ縦に動かす（D-126、D-186）。
+   表の見出し（曜日とコマの増減）は止めておく */
+@media (min-width: 768px) {
+  .admin-page--fill { display: flex; flex-direction: column; height: 100vh; min-height: 0; padding-top: var(--space-2); padding-bottom: var(--space-2); }
+  .admin-page--fill h1 { margin: var(--space-1) 0; }
+  .admin-page--fill .admin-page__bar { margin: var(--space-3) 0 var(--space-1); }
+  .admin-page--fill > * { flex-shrink: 0; }
+  .admin-page--fill .admin-page__scroll--fill { flex: 0 1 auto; min-height: 0; overflow: auto; margin-bottom: var(--space-2); }
+  .admin-page--fill .admin-page__scroll--fill thead { position: sticky; top: 0; z-index: 1; background: var(--color-bg); }
+  /* 6時間目まで1画面に見えるよう、セルの上下の余白だけ詰める */
+  .admin-page--fill .admin-page__table th, .admin-page--fill .admin-page__table td { padding-top: var(--space-1); padding-bottom: var(--space-1); }
+  .admin-page--fill .admin-timetable__controls button { min-height: 40px; }
+}
+.admin-page__table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
+.admin-page__table th, .admin-page__table td {
+  padding: 0.3rem 0.5rem;
+  border-top: var(--stroke-2) solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.4;
+}
+.admin-page__table thead th { border-top: 0; color: var(--color-muted-fg); }
+.admin-page__table tbody th { font-weight: 800; color: var(--color-fg-strong); }
+.admin-page__table td select { min-height: 44px; max-width: 100%; }
+.admin-page__nowrap { white-space: nowrap; }
+.admin-page__count { font-weight: 800; color: var(--color-fg-strong); white-space: nowrap; }
+
+.admin-form { display: grid; gap: 0.75rem; max-width: 36rem; }
+.admin-form__field { display: grid; gap: 0.25rem; }
+.admin-form__field label, .admin-form__field legend { font-weight: 800; }
+.admin-form__field input[type="text"], .admin-form__field input[type="date"] { width: 100%; box-sizing: border-box; }
+.admin-form__row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.admin-form__fieldset { margin: 0; padding: 0; border: 0; display: grid; gap: 0.25rem; }
+.admin-form__fieldset label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+.admin-form__note { font-size: var(--text-small); color: var(--color-muted-fg); }
+
+/* 768px 以上は表の中だけ動かす。375px は表を横に動かせる枠に入れる（09_admin.md の SCR-T08） */
+@media (max-width: 767px) {
+  .admin-page__table { display: block; overflow-x: auto; }
+}
+.teacher-nav-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.teacher-approver-key { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; color: var(--color-fg-strong); }
+.teacher-approver-key input { box-sizing: border-box; width: 12rem; height: 44px; }
+.teacher-approver-key .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* 先生の管理（SCR-T12、#351）。1275×665 に収める：見出しと足す欄は動かさず、一覧の中だけ縦に動かす（D-126、D-207） */
+.members-page__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-4); }
+.members-page__add { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }
+.members-page__add input[type="email"] { box-sizing: border-box; width: 22rem; max-width: 100%; }
+@media (min-width: 768px) {
+  .members-page { display: flex; flex-direction: column; height: 100vh; min-height: 0; padding-top: var(--space-2); padding-bottom: var(--space-2); }
+  .members-page > * { flex-shrink: 0; }
+  .members-page .members-page__list { flex: 0 1 auto; min-height: 0; overflow: auto; margin-bottom: var(--space-2); }
+  .members-page .members-page__list thead { position: sticky; top: 0; z-index: 1; background: var(--color-bg); }
+}
+
+/* 入っているときの上の並びの右側（学級の名前・コード・子ども用のリンク・ログアウト）。承認キーの欄の代わりに出す。1 行に収め、狭い幅では折り返す（D-126） */
+.teacher-workspace { box-sizing: border-box; max-width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-left: auto; color: var(--color-fg-strong); }
+.teacher-workspace input { box-sizing: border-box; height: 44px; min-width: 0; padding: 0 var(--space-2); border: var(--stroke-2) solid var(--color-border-strong); border-radius: var(--radius-slot); background: var(--color-bg); color: var(--color-fg); font: inherit; }
+.teacher-workspace input[readonly] { background: var(--color-bg); cursor: text; }
+.teacher-workspace__button { min-height: 44px; padding: 0 1rem; border: var(--stroke-2) solid var(--color-border-strong); border-radius: var(--radius-slot); background: var(--color-bg); color: var(--color-fg-strong); font: inherit; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.teacher-workspace__name { width: 10rem; max-width: 100%; }
+.teacher-workspace__link { width: 14rem; max-width: 100%; }
+.teacher-workspace__code { font-weight: bold; letter-spacing: 0.1em; }
+.teacher-workspace__field { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.5rem; min-width: 0; max-width: 100%; }
+.teacher-workspace__capture { flex-basis: 100%; justify-content: flex-end; }
+.teacher-workspace__check { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; font-weight: 800; }
+.teacher-workspace .teacher-workspace__check input { width: 1.5rem; height: 1.5rem; padding: 0; }
+.teacher-workspace__note { font-size: var(--text-small); }
+.teacher-workspace__status { margin: 0; flex-basis: 100%; text-align: right; }
+
+/* 先生のログイン画面。見出し・説明・ボタンを画面のまん中に置く */
+.teacher-gate { display: flex; align-items: center; justify-content: center; }
+.teacher-gate__card { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: var(--space-4); max-width: 32rem; width: 100%; text-align: center; }
+.teacher-gate__card h1, .teacher-gate__card p { margin: 0; }
+.teacher-gate__failed { font-weight: 800; color: var(--color-fg-strong); }
+.teacher-gate__login { padding: 0 var(--space-6); }
+.teacher-workspace__field--link { flex-wrap: nowrap; }
+.teacher-workspace__field--link label { white-space: nowrap; }
+.teacher-workspace__field--code { white-space: nowrap; }
+.teacher-gate__card h1 { font-size: var(--text-title); font-weight: var(--text-title-weight); color: var(--color-fg-strong); }

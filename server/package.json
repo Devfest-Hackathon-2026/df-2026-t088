@@ -1,0 +1,23 @@
+{
+  "name": "education-server",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "24.x" },
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "node --watch src/server.ts",
+    "eval:parts": "node scripts/eval-parts.ts",
+    "test": "node --test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "2.32.0",
+    "@hono/node-server": "^2.1.6",
+    "hono": "^4.10.0",
+    "jose": "6.2.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

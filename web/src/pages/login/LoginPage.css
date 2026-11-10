@@ -1,0 +1,61 @@
+/* PG-009 ログイン（D-145）。縦1列を上下左右の真ん中に置き、残りは紙の余白にする */
+.login {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  text-align: center;
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  color: var(--color-fg-strong);
+}
+.login__title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-hand);
+  font-size: var(--text-display);
+  font-weight: var(--text-display-weight);
+  line-height: var(--text-display-line);
+  color: var(--color-fg-strong);
+}
+.login__lead {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-body);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  color: var(--color-fg-strong);
+}
+.login__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+/* 2つとも同じ幅（長い方の文に合わせ、最小 320px） */
+.login__provider {
+  min-width: 320px;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-3);
+}
+.login__logo { flex: none; width: 20px; height: 20px; }
+.login__failed {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-body);
+  color: var(--color-fg-strong);
+}
+.login__unregistered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 24em;
+}
+.login__notice, .login__email { margin: 0; font-size: var(--text-body); overflow-wrap: anywhere; }
+.login__email { font-weight: var(--text-title-weight); }

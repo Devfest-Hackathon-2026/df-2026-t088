@@ -1,0 +1,89 @@
+/* CMP-040 アバターの写真。色と寸法は tokens.css の変数 */
+.avatar-photo {
+  display: block;
+  color: var(--color-fg-strong);
+}
+
+/* 顔の丸：親の大きさいっぱい */
+.avatar-photo--face {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.avatar-photo--roster {
+  width: var(--photo-roster-size);
+  height: var(--photo-roster-size);
+  border-radius: 50%;
+}
+
+/* 上の写真（四角）。チェキの中では 128px */
+.avatar-photo--square {
+  width: var(--account-photo-size);
+  height: var(--account-photo-size);
+}
+
+/* チェキ：ふちは左右と上 8px、下 32px。絵は 128px の四角 */
+.avatar-photo-cheki {
+  --cheki-edge: var(--space-2);
+  --cheki-bottom: calc(var(--space-2) * 4);
+  position: relative;
+  box-sizing: border-box;
+  width: var(--photo-cheki-width);
+  padding: var(--cheki-edge) var(--cheki-edge) var(--cheki-bottom);
+  background: var(--color-bg);
+  border: var(--stroke-2) solid var(--color-border-strong);
+  color: var(--color-fg-strong);
+}
+
+.avatar-photo-cheki .avatar-photo--square {
+  width: calc(var(--photo-cheki-width) - var(--cheki-edge) * 2 - var(--stroke-2) * 2);
+  height: auto;
+  aspect-ratio: 1;
+  outline: var(--stroke-2) solid var(--color-border-strong);
+}
+
+/* なし：線だけ。ふちは付けず、絵が幅いっぱい */
+.avatar-photo-cheki--none {
+  --cheki-edge: 0px;
+  --cheki-bottom: 0px;
+}
+.avatar-photo-cheki--none .avatar-photo--square { outline: none; }
+
+/* マスキングテープ：角2つ */
+.avatar-photo-cheki--tape::before,
+.avatar-photo-cheki--tape::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-2) * -1);
+  width: calc(var(--space-2) * 5);
+  height: calc(var(--space-2) * 2);
+  background: color-mix(in srgb, var(--color-now) 70%, transparent);
+}
+.avatar-photo-cheki--tape::before { left: calc(var(--space-2) * -1); transform: rotate(-35deg); }
+.avatar-photo-cheki--tape::after { right: calc(var(--space-2) * -1); transform: rotate(35deg); }
+
+/* 星：下のふちに小さな星 */
+.avatar-photo-cheki__stars {
+  position: absolute;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: var(--space-1);
+  width: calc(100% - var(--space-2) * 2);
+  height: calc(var(--space-2) * 2);
+}
+
+/* マス：盤面のマスと同じ太い線と、手描きのゆがんだ角 */
+.avatar-photo-cheki--cell {
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-blob);
+}
+
+/* スタンプ：絵の右下 */
+.avatar-photo__stamp {
+  position: absolute;
+  right: calc(var(--cheki-edge) + var(--space-1));
+  bottom: calc(var(--cheki-bottom) + var(--space-1));
+  width: calc(var(--space-2) * 4);
+  height: calc(var(--space-2) * 4);
+}

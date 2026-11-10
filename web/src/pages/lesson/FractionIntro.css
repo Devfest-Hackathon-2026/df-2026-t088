@@ -1,0 +1,67 @@
+/* 図解の画面も 1275×665 に収める（D-126、#369）。横の長さは盤面の幅まで広げて見出しを2行に収め、帯の上下の余白を詰める */
+.lesson.fraction-intro { max-width: var(--content-max-width); }
+.fraction-intro__bar { display: flex; max-width: 480px; margin: var(--space-2) 0; }
+.fraction-intro__bar span { flex: 1; min-width: 0; padding: var(--space-2) 0; text-align: center; border: 1px solid var(--color-border); background: var(--color-bg); transition: background-color .6s ease; }
+.fraction-intro__bar span.is-filled { background: var(--color-subject-rika); }
+.fraction-intro__formula { font-family: var(--font-hand); font-size: var(--text-display); }
+.fraction-intro__controls { display: flex; gap: var(--space-4); }
+.fraction-intro__controls button { font: inherit; color: var(--color-fg-strong); background: var(--color-bg); border: var(--stroke-2) solid var(--color-border); border-radius: var(--radius-slot); padding: var(--space-2) var(--space-4); cursor: pointer; }
+.fraction-intro__controls button:disabled { opacity: .5; }
+@media (prefers-reduced-motion: reduce) { .fraction-intro__bar span { transition: none; } }
+
+.fraction-intro__scene { animation: fraction-scene .6s ease both; }
+@keyframes fraction-scene { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .fraction-intro__scene { animation: none; } }
+
+.fraction-intro__portion { display: flex; align-items: center; gap: var(--space-2); }
+.fraction-intro__portion .fraction-intro__bar { flex: 1; min-width: 0; }
+.fraction-intro__receive { white-space: nowrap; }
+.fraction-intro__recipient { font-family: var(--font-hand); }
+.receive-1, .receive-2, .receive-3 { animation: portion-arrives .6s ease both; }
+.receive-1 { animation-delay: 1s; }
+.receive-2 { animation-delay: 3s; }
+.receive-3 { animation-delay: 5s; }
+@keyframes portion-arrives { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+.fraction-intro__recipient span { display: inline-block; }
+@media (prefers-reduced-motion: reduce) { .receive-1, .receive-2, .receive-3 { animation: none; } }
+
+.fraction-intro__split-demo { position: relative; display: flex; width: 100%; max-width: 480px; margin: var(--space-4) 0; }
+.fraction-intro__half { width: 50%; padding: var(--space-2) 0; text-align: center; border: 1px solid var(--color-border); background: var(--color-bg); }
+.fraction-intro__half.is-filled { background: var(--color-subject-rika); }
+.fraction-intro__new-cuts { position: absolute; inset: 0; pointer-events: none; }
+.fraction-intro__new-cuts i { position: absolute; top: 0; bottom: 0; border-left: 2px solid var(--color-border); transform: scaleY(0); transform-origin: top; animation: fraction-cut .65s ease forwards; }
+.fraction-intro__new-cuts i:nth-child(1) { left: 16.666%; animation-delay: 1s; }
+.fraction-intro__new-cuts i:nth-child(2) { left: 33.333%; animation-delay: 2s; }
+.fraction-intro__new-cuts i:nth-child(3) { left: 66.666%; animation-delay: 3s; }
+.fraction-intro__new-cuts i:nth-child(4) { left: 83.333%; animation-delay: 4s; }
+.fraction-intro__six-labels { position: absolute; top: 100%; left: 0; width: 100%; display: flex; animation: fraction-show .5s 4.6s both; }
+.fraction-intro__six-labels span { flex: 1; text-align: center; }
+@keyframes fraction-cut { to { transform: scaleY(1); } }
+@keyframes fraction-show { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .fraction-intro__new-cuts i { animation: none; transform: none; } .fraction-intro__six-labels { animation: none; } }
+
+.fraction-decimal-1 .fraction-intro__bar span.is-filled { animation: decimal-count .45s ease both; }
+.fraction-decimal-1 .fraction-intro__bar span:nth-child(1) { animation-delay: .3s; }
+.fraction-decimal-1 .fraction-intro__bar span:nth-child(2) { animation-delay: .8s; }
+.fraction-decimal-1 .fraction-intro__bar span:nth-child(3) { animation-delay: 1.3s; }
+.fraction-decimal-1 .fraction-intro__bar span:nth-child(4) { animation-delay: 1.8s; }
+.fraction-decimal-1 .fraction-intro__bar span:nth-child(5) { animation-delay: 2.3s; }
+.fraction-intro__comparison { animation: fraction-show .6s 1.5s both; }
+@keyframes decimal-count { from { background: var(--color-bg); } to { background: var(--color-subject-rika); } }
+@media (prefers-reduced-motion: reduce) { .fraction-decimal-1 .fraction-intro__bar span.is-filled, .fraction-intro__comparison { animation: none; } }
+
+/* D-239(2) 767px 以下と高さ 599px 以下は、「つぎへ」を含むボタンの列を画面の下に固定する。カードの中の最後の物なので、図の長さに関わらず最初の表示に入る */
+@media (max-width: 767px), (max-height: 599px) {
+  .fraction-intro__controls {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    flex-wrap: wrap;
+    margin: 0 calc(-1 * var(--space-4));
+    padding: var(--space-2) var(--space-4);
+    border-top: var(--stroke-2) dashed var(--color-border);
+    background: var(--color-bg);
+  }
+  .fraction-intro__controls button { min-height: var(--button-min-height); }
+}
+@media (max-width: 767px) { .fraction-intro__controls { gap: var(--space-2); } }

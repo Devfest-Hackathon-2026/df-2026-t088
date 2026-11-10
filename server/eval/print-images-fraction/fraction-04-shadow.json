@@ -1,0 +1,19 @@
+{
+  "id": "fraction-04",
+  "version": "shadow",
+  "kind": "single",
+  "expected": {
+    "templateId": "sansu-fraction-addsub",
+    "params": {
+      "left": {
+        "num": 5,
+        "den": 6
+      },
+      "op": "-",
+      "right": {
+        "num": 1,
+        "den": 3
+      }
+    }
+  }
+}

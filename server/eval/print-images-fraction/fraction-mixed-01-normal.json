@@ -1,0 +1,19 @@
+{
+  "id": "fraction-mixed-01",
+  "version": "normal",
+  "kind": "mixed",
+  "expected": {
+    "templateId": "sansu-fraction-addsub",
+    "params": {
+      "left": {
+        "num": 1,
+        "den": 2
+      },
+      "op": "+",
+      "right": {
+        "num": 1,
+        "den": 3
+      }
+    }
+  }
+}

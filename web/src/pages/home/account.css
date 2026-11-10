@@ -1,0 +1,200 @@
+/* CMP-028 アカウントのパネルの中身。外枠は components/Panel.css の .panel--account。色と寸法は tokens.css の変数 */
+
+/* 上のまとまり（高さ約 80px、いつも見える） */
+.account-top {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--account-photo-size) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  min-height: calc(var(--account-photo-size) + var(--space-2));
+  padding-right: var(--button-min-height);
+  flex: none;
+}
+.account-top__photo { display: flex; color: var(--color-fg-strong); }
+.account-top__text { display: grid; gap: var(--space-1); min-width: 0; }
+.account-top__name {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: var(--text-strong-weight);
+  line-height: var(--text-body-line);
+  color: var(--color-fg-strong);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.account-top__level { margin: 0; font-size: var(--text-small); line-height: var(--text-small-line); }
+.account-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-fg-strong);
+}
+.account-close svg { width: 24px; height: 24px; }
+.account-close:active { transform: translateY(1px); }
+
+/* タブ（上のタブ、アバターの種類のタブ） */
+.account-tabs { display: flex; gap: var(--space-2); flex: none; }
+.account-tab { flex: 1 1 0; min-width: 0; }
+.account-tab[aria-selected="true"] {
+  border-width: var(--stroke-3);
+  border-color: var(--color-border-strong);
+  background: var(--color-now);
+}
+.account-kinds { gap: 2px; }
+.account-kinds .account-tab { padding-left: 0; padding-right: 0; letter-spacing: -0.05em; white-space: nowrap; }
+
+/* タブの中身。間は上から --space-3 */
+.account-content { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.account-tabpanel { display: flex; flex-direction: column; gap: var(--space-3); }
+.account-tabpanel[hidden] { display: none; }
+
+/* くわしく */
+.account-section { display: grid; gap: var(--space-1); }
+.account-section__title { margin: 0; font-size: var(--text-small); font-weight: var(--text-strong-weight); line-height: var(--text-small-line); }
+.account-subjects { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.account-subject { display: flex; align-items: center; gap: var(--space-2); height: 32px; font-size: var(--text-small); }
+.account-subject__dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.account-subject__name { flex: none; width: 64px; }
+.account-subject__meter { flex: 1; min-width: 0; }
+.account-subject__count { flex: none; min-width: 6em; text-align: right; font-variant-numeric: tabular-nums; }
+.account-subject__level { flex: none; min-width: 2.5em; }
+.account-small { margin: 0; font-size: var(--text-small); line-height: var(--text-small-line); overflow-wrap: anywhere; }
+.account-small--muted { color: var(--color-muted-fg); }
+.account-small:empty { display: none; }
+.account-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.account-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-hand);
+}
+.account-confirm__question { margin: 0; font-size: var(--text-body); font-weight: var(--text-strong-weight); }
+.account-confirm__actions { display: flex; gap: var(--space-2); }
+
+/* アバター */
+.account-avatar { display: flex; flex-direction: column; gap: var(--space-2); }
+.account-slot {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(var(--photo-cheki-width) + var(--space-6));
+  overflow: hidden;
+}
+.account-confirm__text { margin: 0; text-align: center; font-size: var(--text-body); line-height: var(--text-body-line); }
+.account-confirm__text:empty { display: none; }
+.account-confirm { display: flex; gap: var(--space-2); }
+.account-confirm .button { flex: 1; padding-left: var(--space-3); padding-right: var(--space-3); }
+.account-avatar > .account-slot + .account-confirm__text:not(:empty) { margin-top: var(--space-1); }
+
+/* 候補の升目：5列、間 --space-2、2行まで。かざりは行の頭に名前を出す */
+.account-choices-area {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  min-height: calc(2 * var(--photo-choice-size) + var(--space-2) + 2 * var(--text-small) * 1.2);
+}
+.account-choices { display: grid; grid-template-columns: repeat(5, minmax(0, var(--photo-choice-size))); justify-content: center; align-items: start; gap: var(--space-2); }
+.account-choices-area > .account-choices:only-child { justify-content: start; }
+.account-row-head { margin: 0; font-size: var(--text-small); line-height: 1.2; color: var(--color-muted-fg); }
+.account-row-head + .account-choices { margin-top: calc(var(--space-2) * -1); }
+.account-choice {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: var(--photo-choice-size);
+  padding: 0;
+  overflow: hidden;
+  border: var(--stroke-2) solid var(--color-border);
+  border-radius: var(--radius-slot);
+  background: var(--color-bg);
+  color: var(--color-fg-strong);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+.account-choice[aria-checked="true"], .account-choice[aria-pressed="true"] {
+  border-width: var(--stroke-3);
+  border-color: var(--color-border-strong);
+  background: var(--color-now);
+}
+.account-choice:active { transform: translateY(1px); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .account-choice:not(.account-choice--locked):hover { transform: translateY(-2px) rotate(-0.5deg); }
+}
+.account-choice--locked {
+  display: grid;
+  grid-template-rows: var(--photo-choice-size) auto;
+  height: auto;
+  border: 0;
+  background: none;
+  color: var(--color-muted-fg);
+}
+.account-choice--locked:active { transform: none; }
+.account-choice__lock {
+  display: grid;
+  place-items: center;
+  border: var(--stroke-2) dashed var(--color-border);
+  border-radius: var(--radius-slot);
+}
+.account-choice__lock svg { width: 50%; height: 50%; }
+.account-choice__level { font-size: var(--text-small); line-height: var(--text-small-line); }
+.account-choice__gear { display: grid; place-items: center; width: 100%; height: 100%; }
+.account-choice__gear svg { width: 75%; height: 75%; }
+.account-choice__face { display: block; width: calc(var(--photo-choice-size) - var(--space-3)); height: calc(var(--photo-choice-size) - var(--space-3)); }
+.account-choice__stamp { width: calc(var(--photo-choice-size) - var(--space-5)); height: calc(var(--photo-choice-size) - var(--space-5)); }
+
+/* 本物の写真の絵を縮めて見せる */
+.account-scaled { position: relative; display: block; overflow: hidden; }
+.account-scaled__inner { position: absolute; left: 0; top: 0; transform: scale(var(--scale)); transform-origin: 0 0; }
+.account-scaled--top { --scale: 0.75; width: calc(var(--account-photo-size) * var(--scale)); height: calc(var(--account-photo-size) * var(--scale)); }
+.account-scaled--cheki { --scale: 0.34; width: calc(var(--photo-cheki-width) * var(--scale)); aspect-ratio: 6 / 7; }
+
+.account-shutter { display: flex; align-items: center; justify-content: center; gap: var(--space-2); width: 100%; min-height: 56px; }
+.account-camera { flex: none; width: 24px; height: 24px; }
+
+/* MOT-030：カシャ（光）→ ういーん（せり出し）。動かすのは transform と opacity だけ */
+.account-flash {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg);
+  opacity: 0;
+  pointer-events: none;
+  animation: account-flash var(--duration-shutter-flash) linear both;
+}
+.account-print {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  animation: account-print var(--duration-shutter-print) var(--ease-out) both;
+}
+.account-confirm, .account-confirm__text { animation: account-fade var(--duration-normal) var(--ease-out) both; }
+@keyframes account-flash { 0% { opacity: 0; } 50% { opacity: 0.9; } 100% { opacity: 0; } }
+@keyframes account-print { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes account-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .account-flash, .account-print, .account-confirm, .account-confirm__text { animation: none; }
+}
+
+/* 767px 以下は全幅。タブの中身だけ縦に動かし、種類のタブは折り返す */
+@media (max-width: 767px) {
+  .account-content { overflow-y: auto; }
+  .account-kinds { flex-wrap: wrap; }
+  .account-kinds .account-tab { flex: 1 1 30%; }
+  .account-choices { grid-template-columns: repeat(5, minmax(0, var(--photo-choice-size))); }
+}
+
+/* 767px 以下は「とじる」も押せる大きさ（--button-min-height）にする（D-235） */
+@media (max-width: 767px) {
+  .account-close { width: var(--button-min-height); height: var(--button-min-height); }
+}

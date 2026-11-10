@@ -1,0 +1,49 @@
+/* CMP-027 デバッグの学年（開発中だけ）。どの画面でも右下に固定する。子ども向けの部品ではないと分かるよう点線の枠にする */
+.debug-grade {
+  position: fixed;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  z-index: var(--z-over-loading);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.debug-grade__toggle,
+.debug-grade__box {
+  border: var(--stroke-2) dotted var(--color-border-strong);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-size: var(--text-small);
+  line-height: var(--text-small-line);
+}
+
+.debug-grade__toggle {
+  height: 32px;
+  padding: 0 var(--space-2);
+  cursor: pointer;
+}
+
+.debug-grade__box {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+}
+
+.debug-grade__option {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 var(--space-1);
+  border: var(--stroke-2) dotted transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* 選んでいる学年は太字と実線の枠で示す。色だけに頼らない */
+.debug-grade__option.is-checked {
+  border: var(--stroke-2) solid var(--color-border-strong);
+  font-weight: var(--text-strong-weight);
+}

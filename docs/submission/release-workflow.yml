@@ -1,0 +1,171 @@
+# これは .github/workflows/release.yml の写し（提出用）。
+# 鍵ファイルを使わず、Workload Identity 連携で Cloud Run と Firebase Hosting に置く。
+# 元の .github/ は提出に入らないため、審査員が読めるようここに置いている。
+# 元との違いは、この冒頭のコメントだけ（scripts/release-workflow-copy.test.mjs が確かめる）。
+
+name: Release
+
+# release ブランチに入ったときだけ動く。手順と決めごとは docs/dev/deploy.md の「release で公開する」
+# 1. 提出の確認を通す（失敗したら何も公開しない）
+# 2. 確認済みのコピーを提出用リポジトリの main に push する
+# 3. 同じコミットから、server を Cloud Run に、画面を Firebase Hosting に置き、公開 URL を確かめる
+# 手で動かす（workflow_dispatch）ときに deploy_only を選ぶと、1・2 を飛ばして 3 だけを行う。
+# 提出用リポジトリに触らずに公開版だけを確かめるためのもの。release ブランチを選んで動かす（GCP 側の条件）
+on:
+  push:
+    branches:
+      - release
+  workflow_dispatch:
+    inputs:
+      deploy_only:
+        description: 提出用リポジトリには反映せず、公開版（Cloud Run と Hosting）だけを置く
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# 2 回続けて merge しても、前の公開が終わるまで次を始めない
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  PROJECT_ID: df-2026-t088-dev-513801
+  REGION: asia-northeast1
+  SERVICE: education-server
+  RUNTIME_SERVICE_ACCOUNT: education-server-runtime@df-2026-t088-dev-513801.iam.gserviceaccount.com
+  DEPLOYER_SERVICE_ACCOUNT: github-release-deployer@df-2026-t088-dev-513801.iam.gserviceaccount.com
+  # 鍵ファイルは使わない。この repo の release ブランチから動いたときだけ通る（GCP 側の条件）
+  WORKLOAD_IDENTITY_PROVIDER: projects/861049962494/locations/global/workloadIdentityPools/github/providers/df-2026-t088-dev
+  GEMINI_MODEL: gemini-3.5-flash-lite
+  GEMINI_LOCATION: global
+  SUBMISSION_REPO: Devfest-Hackathon-2026/df-2026-t088
+  SITE_URL: https://df-2026-t088-dev-513801.web.app
+
+jobs:
+  submission:
+    name: 提出用リポジトリへ反映
+    if: github.event_name == 'push' || !inputs.deploy_only
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: 提出の確認（FAIL があれば止まる）
+        run: node scripts/prepare-submission.mjs --keep | tee "$RUNNER_TEMP/prepare.log"
+        shell: bash -o pipefail {0}
+
+      # WARN のうち「このままでは提出できません」は、提出してはいけない印なので止める
+      - name: 提出できない警告が無いことを確かめる
+        run: |
+          if grep -q 'このままでは提出できません' "$RUNNER_TEMP/prepare.log"; then
+            grep -A2 'このままでは提出できません' "$RUNNER_TEMP/prepare.log"
+            echo "::error::提出の確認に「このままでは提出できません」が残っています"
+            exit 1
+          fi
+
+      - name: 提出用リポジトリの main に push する
+        env:
+          SUBMISSION_REPO_TOKEN: ${{ secrets.SUBMISSION_REPO_TOKEN }}
+        run: |
+          if [ -z "$SUBMISSION_REPO_TOKEN" ]; then
+            echo "::error::Secret SUBMISSION_REPO_TOKEN がありません（docs/dev/deploy.md の「release で公開する」）"
+            exit 1
+          fi
+          copy_dir=$(sed -n 's/^\[INFO\] コピーの場所：//p' "$RUNNER_TEMP/prepare.log" | tail -n 1)
+          if [ -z "$copy_dir" ] || [ ! -d "$copy_dir" ]; then
+            echo "::error::提出用のコピーが見つかりません"
+            exit 1
+          fi
+          target="$RUNNER_TEMP/submission"
+          git clone --depth 1 "https://x-access-token:${SUBMISSION_REPO_TOKEN}@github.com/${SUBMISSION_REPO}.git" "$target"
+          # 提出用リポジトリの中身を、確認済みのコピーと同じにする（.git は残す）
+          find "$target" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$copy_dir"/. "$target"/
+          cd "$target"
+          git config user.name "df-2026-t088 release"
+          git config user.email "release@df-2026-t088.invalid"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "提出用リポジトリは最新です"
+          else
+            git commit -m "df-2026-t088-dev ${GITHUB_SHA::7} を反映" -m "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
+            git push origin HEAD:main
+          fi
+
+  deploy:
+    name: Cloud Run と Firebase Hosting に置く
+    needs: submission
+    # 提出の確認が通ったときだけ置く。deploy_only で提出を飛ばしたときは、確認なしで置く
+    if: >-
+      always() && (needs.submission.result == 'success'
+      || (github.event_name == 'workflow_dispatch' && inputs.deploy_only && needs.submission.result == 'skipped'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.DEPLOYER_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: server を Cloud Run に置く
+        run: |
+          # 先生の Google ログインと学級（ワークスペース）は、repo の変数 TEACHER_LOGIN が on のときだけ渡す（guest のときは、秘密なしでお試しの学級だけ）。
+          # 空なら今までどおり承認キーだけで動く。秘密（クライアントの秘密・Cookie の署名の鍵）は Secret Manager から渡す
+          LOGIN_ENV=""
+          LOGIN_SECRETS=""
+          if [ "${{ vars.TEACHER_LOGIN }}" = "on" ]; then
+            LOGIN_ENV=",TEACHER_LOGIN=on,TEACHER_SIGNUP=${{ vars.TEACHER_SIGNUP }},PUBLIC_BASE_URL=${{ vars.PUBLIC_BASE_URL }},GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}"
+            LOGIN_SECRETS=",GOOGLE_CLIENT_SECRET=teacher-google-client-secret:latest,SESSION_SECRET=teacher-session-secret:latest"
+          elif [ "${{ vars.TEACHER_LOGIN }}" = "guest" ]; then
+            # ログインなしで学級を作れる形。秘密は要らない（鍵は起動のたびに作る）
+            LOGIN_ENV=",TEACHER_LOGIN=guest,PUBLIC_BASE_URL=${{ vars.PUBLIC_BASE_URL }}"
+          fi
+          gcloud run deploy "$SERVICE" --source ./server --region "$REGION" --project "$PROJECT_ID" \
+            --service-account "$RUNTIME_SERVICE_ACCOUNT" --allow-unauthenticated --max-instances=1 \
+            --set-env-vars="GEMINI_MODE=vertex,GEMINI_MODEL=${GEMINI_MODEL},GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${GEMINI_LOCATION},PRINT_CHILD_CAPTURE=${{ vars.PRINT_CHILD_CAPTURE }},PRINT_FIRESTORE_DATABASE=${{ vars.PRINT_FIRESTORE_DATABASE }},LOOP_BIGQUERY_DATASET=${{ vars.LOOP_BIGQUERY_DATASET }},LOOP_BIGQUERY_SCHOOL_ID=${{ vars.LOOP_BIGQUERY_SCHOOL_ID }},TRUSTED_PROXY_HOPS=${{ vars.TRUSTED_PROXY_HOPS }},LOOP_DEMO_MIN_GROUP=${{ vars.LOOP_DEMO_SEND == 'on' && '1' || '' }}${LOGIN_ENV}" \
+            --set-secrets="LOOP_APPROVER_KEY=loop-approver-key:1${LOGIN_SECRETS}" --quiet
+          # 前に流れを向けない版を置いたことがあっても、必ず最新の版に流す
+          gcloud run services update-traffic "$SERVICE" --to-latest --region "$REGION" --project "$PROJECT_ID" --quiet
+
+      # 子どもの画面から学びの輪へ送るのは、repo の変数 LOOP_DEMO_SEND が on のときだけ（審査・デモで輪を実際に回すため。2026-11-10 持ち主の判断）。
+      # 送るのは型と問題と時刻だけで、source は demo。名前・番号・写真・自由な文は送らない。空なら送らない
+      # プリント撮影の読み取りは、repo の変数 PRINT_READ_MODE が api のときだけ本物の API を呼ぶ（空なら見本の応答）。
+      # 子どもの写真を Gemini に送ってよいかは運営に確認中（#70）なので、コードを変えずに変数だけで切り替える
+      - name: 画面を build する
+        working-directory: web
+        env:
+          VITE_DEFAULT_GRADE: ${{ vars.DEFAULT_GRADE }}
+          VITE_PRINT_READ: ${{ vars.PRINT_READ_MODE }}
+          VITE_PRINT_CHILD_CAPTURE: ${{ vars.PRINT_CHILD_CAPTURE }}
+          VITE_LOOP_SEND: ${{ vars.LOOP_DEMO_SEND }}
+        run: |
+          unset VITE_LOOP_API_URL
+          npm ci
+          npm run build
+
+      - name: 画面を Firebase Hosting に置く
+        run: npx --yes firebase-tools@15.35.0 deploy --only hosting --project "$PROJECT_ID" --non-interactive
+
+      - name: 公開 URL を確かめる
+        run: |
+          for path in / /research/ /teacher/; do
+            curl --fail --silent --show-error --output /dev/null "${SITE_URL}${path}"
+          done
+          curl --fail --silent --show-error "${SITE_URL}/api/health" | grep -q '"status":"ok"'
+          echo "公開しました: ${SITE_URL}"

@@ -1,0 +1,246 @@
+/* 正本は docs/design/ui/03_tokens.md。生の値はこのファイルにだけ書く。
+   primitive → semantic → component の順に参照する */
+
+:root {
+  /* primitive */
+  --paper-50: #fafaf5;
+  --grid-200: #dfe7f1;
+  --graphite-600: #4a4c52;
+  --ink-500: #566480;
+  --ink-700: #3a4a6b;
+  --ink-900: #1f2942;
+  --red-400: #ff6b6b;
+  --red-600: #d93a3a;
+  --teal-300: #4ecdc4;
+  --yellow-300: #ffe066;
+  --pink-300: #ff8f8f;
+  --green-300: #9fdc6f;
+  --orange-300: #ffbf6b;
+  --purple-300: #b9a5f2;
+  --blue-300: #8fb8f7;
+  --rose-300: #f39ac6;
+  --olive-300: #d6cb58;
+  --clay-300: #d2a97f;
+  --sea-100: #e9fbf8;
+  --sea-200: #a4e6e0;
+  --sea-300: #5cc8d6;
+  --sea-400: #2fa6c9;
+  --foam-0: #ffffff;
+  --bird-50: #fdfdf8;
+  --palm-500: #3f9a58;
+  --trunk-400: #b08a5e;
+  --meadow-200: #cfe8a8;
+  --meadow-300: #aed68b;
+  --sand-200: #f3e3bf;
+  --desk-300: #e8dcc4;
+  --edge-100: #f2efe6;
+
+  /* semantic：色 */
+  --color-bg: var(--paper-50);
+  --color-grid: var(--grid-200);
+  --color-margin-line: var(--red-400);
+  --color-fg: var(--ink-700);
+  --color-fg-strong: var(--ink-900);
+  --color-muted-fg: var(--ink-500);
+  --color-border: var(--ink-700);
+  --color-border-strong: var(--ink-900);
+  --color-primary: var(--red-400);
+  --color-on-primary: var(--ink-900);
+  --color-now: var(--yellow-300);
+  --color-done: var(--teal-300);
+  --color-stamp: var(--red-600);
+  --color-focus-ring: var(--ink-900);
+  --color-scrim: rgb(31 41 66 / 0.4);
+  --color-subject-kokugo: var(--pink-300);
+  --color-subject-sansu: var(--teal-300);
+  --color-subject-rika: var(--green-300);
+  --color-subject-shakai: var(--orange-300);
+  --color-subject-eigo: var(--purple-300);
+  --color-subject-ongaku: var(--blue-300);
+  --color-subject-taiiku: var(--rose-300);
+  --color-subject-zuko: var(--olive-300);
+  --color-subject-katei: var(--clay-300);
+  --color-subject-seikatsu: var(--meadow-300);
+  /* 分野の識別。PG-004 の札の上の帯、道、色の見本（D-97） */
+  --color-domain-number: var(--blue-300);
+  --color-domain-shape: var(--orange-300);
+  --color-domain-change: var(--purple-300);
+  --color-domain-data: var(--green-300);
+  --color-sea-shallow: var(--sea-200);
+  --color-sea-mid: var(--sea-300);
+  --color-sea-deep: var(--sea-400);
+  --color-tissue: var(--sea-100);
+  --color-foam: var(--foam-0);
+  --color-fish-shadow: rgb(20 80 111 / 0.34);
+  --color-bird: var(--bird-50);
+  --color-pencil-line: var(--graphite-600);
+  --color-wind-line: rgb(255 255 255 / 0.75);
+  --color-palm-leaf: var(--palm-500);
+  --color-palm-trunk: var(--trunk-400);
+  --color-sand: var(--sand-200);
+  --color-meadow: var(--meadow-200);
+  --color-meadow-low: var(--meadow-300);
+  --color-desk: var(--desk-300);
+  --color-paper-edge: var(--edge-100);
+  --color-diorama-shadow: rgb(31 41 66 / 0.22);
+  /* PG-010 の図（CMP-031〜034）。値は docs/design/ui/03_tokens.md */
+  --color-figure-beam: var(--orange-300);
+  --color-figure-weight: var(--blue-300);
+  --color-figure-light: var(--yellow-300);
+  --color-figure-earth: var(--blue-300);
+  --color-figure-moon-dark: var(--ink-500);
+  --color-figure-lasso: var(--yellow-300);
+
+  /* semantic：文字 */
+  --font-hand: "Yomogi", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --font-body: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --text-display: 34px;
+  --text-display-weight: 400;
+  --text-display-line: 1.2;
+  --text-title: 30px;
+  --text-title-weight: 400;
+  --text-title-line: 1.3;
+  --text-body: 18px;
+  --text-body-weight: 500;
+  --text-body-line: 1.7;
+  --text-small: 16px;
+  --text-small-weight: 500;
+  --text-small-line: 1.35;
+  --text-strong-weight: 800;
+  --ruby-size: 0.6em;
+
+  /* semantic：余白とレイアウト */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --grid-size: 28px;
+
+  /* semantic：形と重なり */
+  --radius-hand: 255px 18px 225px 18px / 18px 225px 18px 255px;
+  --radius-blob: 52% 48% 55% 45% / 46% 54% 47% 53%;
+  --radius-slot: 10px 12px 8px 14px;
+  --stroke-2: 2px;
+  --stroke-3: 3px;
+  --stroke-4: 4px;
+  --z-walker: 2;
+  --z-toast: 3;
+  /* CMP-043 右上の音と顔。画面の中身より上、戻る波・読み込み中（6）より下（D-245） */
+  --z-corner: 4;
+  --z-over-loading: 6;
+
+  /* semantic：動き */
+  --duration-fast: 120ms;
+  --duration-normal: 180ms;
+  --duration-meter: 500ms;
+  --duration-walk: 620ms;
+  --duration-hop: 310ms;
+  --duration-paper: 240ms;
+  --duration-peek: 360ms;
+  --duration-peek-back: 480ms;
+  --duration-wave: 3000ms;
+  --duration-zoom: 1200ms;
+  --duration-breathe: 2000ms;
+  --duration-draw: 5000ms;
+  --duration-scribble: 1200ms;
+  --duration-draw-hold: 800ms;
+  --duration-step-hold: 1200ms;
+  /* MOT-030 シャッター：光、せり出し */
+  --duration-shutter-flash: 150ms;
+  --duration-shutter-print: 600ms;
+  --delay-loading: 300ms;
+  --duration-loading-min: 500ms;
+  /* MOT-031 音のボタンの札が伸びる。行き過ぎて戻る分を含む（D-241） */
+  --duration-goo: 520ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-soft: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-zoom: cubic-bezier(0.6, -0.3, 0.2, 1);
+  --ease-goo: linear(0, 0.22 8%, 0.62 18%, 0.98 30%, 1.13 40%, 1.12 48%, 1.03 60%, 0.98 72%, 1.005 86%, 1);
+
+  /* component */
+  --button-min-height: 52px;
+  --button-primary-bg: var(--color-primary);
+  --content-max-width: 1040px;
+  --card-width: 400px;
+  --card-width-wide: 560px;
+  --card-max-height-narrow: 50dvh;
+  --board-pane-ratio: 50%;
+  --face-size: 52px;
+  /* CMP-043 右上の音と顔の分。上の帯が右に空ける幅（--space-4 ＋ ボタン2つ ＋ --space-3）。767px 以下はボタンが --button-min-height（D-245） */
+  --corner-reserve: calc(var(--space-4) + 2 * (var(--button-min-height) - var(--space-2)) + var(--space-3));
+  /* CMP-040 アバターの写真の大きさ */
+  --account-photo-size: 72px;
+  --photo-cheki-width: 144px;
+  --photo-roster-size: 32px;
+  --photo-choice-size: 64px;
+  --account-drawer-width: 400px;
+  --drawer-width: 360px;
+  --cell-size: 54px;
+  --cell-size-test: 64px;
+  --cell-size-side: 42px;
+  --board-cols: 4;
+  --board-col-step: 96px;
+  --board-step: 136px;
+  --board-box-width: 512px;
+  --board-box-height: 460px;
+  /* CMP-007 PG-002 のすごろくの道の砂色の帯（D-110） */
+  --board-road-width: 34px;
+  /* 盤面（PG-002）の枠を左の欄に収める単位と、それを掛けた値（D-112）。767px 以下は画面の幅から。
+     枠の大きさは章のマスの数で変わり（D-113）、768px 以上は左の欄の中でしか cqw / cqh が使えないので、board.css の .road-field で定義し直す */
+  --board-unit: clamp(0.7px, calc((100vw - 2 * var(--space-4)) / 512), 1px);
+  --cell-size-wide: calc(54 * var(--board-unit));
+  --cell-size-test-wide: calc(64 * var(--board-unit));
+  --cell-size-side-wide: calc(42 * var(--board-unit));
+  --board-col-step-wide: calc(96 * var(--board-unit));
+  --board-step-wide: calc(136 * var(--board-unit));
+  --board-road-width-wide: calc(34 * var(--board-unit));
+  --board-box-width-wide: calc(512 * var(--board-unit));
+  --board-box-height-wide: calc(460 * var(--board-unit));
+  --walker-width-road-wide: calc(46 * var(--board-unit));
+  --cell-text-wide: calc(30 * var(--board-unit));
+  --cell-text-side-wide: calc(16 * var(--board-unit));
+  --island-size: 124px;
+  --tag-min-height: 48px;
+  --tag-min-width: 88px;
+  --walker-width: 62px;
+  --walker-width-road: 46px;
+  --panel-width: 440px;
+  --chapter-card-width: 200px;
+  --chapter-card-width-narrow: 180px;
+  --chapter-card-min-height: 88px;
+  /* PG-005 教科の島の章札。PG-004 より一回り低くし、札の間を広げる（D-134） */
+  --chapter-card-min-height-island: 76px;
+  --chapter-band: 10px;
+  --chapter-row-height: 170px;
+  --chapter-row-height-narrow: 118px;
+  /* CMP-007 PG-004 のすごろくの道と、CMP-017 の章の番号の丸（D-109） */
+  --chapter-road-width: 50px;
+  --chapter-road-width-narrow: 38px;
+  --chapter-badge-size: 32px;
+  --toast-duration: 4000ms;
+
+  /* component：アバターの大きさ。04_components.md の CMP-002 の値を名前にした */
+  --avatar-size-side: 128px;
+  --avatar-size-drawer: 128px;
+  --loading-art-width: 200px;
+  --avatar-size-mirror: 160px;
+  --avatar-size-levelup: 180px;
+
+  /* component：先生の画面の学級のようす（teacher の SCR-T10、SCR-T04。D-177、D-179、D-180） */
+  --teacher-row-height: 40px;
+  --progress-cell-width: 60px;
+  --progress-bar-height: 4px;
+  --progress-bar-height-table: 12px;
+  --teacher-chapter-card-cols: 4;
+  --teacher-chapter-card-height: 96px;
+  --teacher-loop-ring-width: 560px;
+}
+
+/* 767px 以下は右上の音と顔が --button-min-height になる（CMP-043、D-245） */
+@media (max-width: 767px) {
+  :root { --corner-reserve: calc(var(--space-4) + 2 * var(--button-min-height) + var(--space-3)); }
+}

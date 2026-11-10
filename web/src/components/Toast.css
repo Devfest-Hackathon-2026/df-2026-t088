@@ -1,0 +1,33 @@
+/* 消えるまでの長さは use-game が --toast-duration を読んで決める */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  z-index: var(--z-toast);
+  /* left が 50% なので、幅を決めないと画面の半分で折り返す */
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--space-4));
+  margin: 0;
+  padding: var(--space-2) var(--space-6);
+  border: var(--stroke-3) solid var(--color-border-strong);
+  border-radius: var(--radius-hand);
+  background: var(--color-now);
+  color: var(--color-fg-strong);
+  font-weight: var(--text-strong-weight);
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  pointer-events: none;
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.toast.is-shown {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* 狭い画面の盤面はカードが下に固定されるので、その上に出す。--card-height は盤面にいる間だけある */
+@media (max-width: 1023px) {
+  .toast { bottom: calc(var(--card-height, 84px) + var(--space-3)); }
+}
